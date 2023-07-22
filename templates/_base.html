@@ -1,0 +1,89 @@
+{% load static %}
+<!doctype html>
+<html class="no-js" lang="en">
+
+<!-- Mirrored from htmldemo.net/pallas/pallas/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 21 Jul 2023 08:15:35 GMT -->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>
+            {% block title %}
+                Pallas
+            {% endblock title %}
+        </title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- Favicon -->
+        <link rel="shortcut icon" type="image/x-icon" href="{% static 'pallas/img/favicon.ico' %}">
+        
+        <!-- CSS 
+        ========================= -->
+
+        <!-- Plugins CSS -->
+        <link rel="stylesheet" href="{% static 'pallas/css/plugins.css' %}">
+        
+        <!-- Main Style CSS -->
+        <link rel="stylesheet" href="{% static 'pallas/css/style.css' %}">
+
+    </head>
+
+    <body>
+        <!--header area start-->
+        {% include "header/header.html" %}
+        <!--header area end-->
+
+        <!--Offcanvas menu area start-->
+        {% include "main/home/menu/offcanvas_menu.html" %}
+        <!--Offcanvas menu area end-->
+
+        <!--breadcrumbs area start-->
+        <div class="breadcrumbs_area">
+            <div class="container">   
+                <div class="row">
+                    <div class="col-12">
+                        <div class="breadcrumb_content">
+                            <ul>
+                                <li><a href="index.html">home</a></li>
+                                <li>{% block page_name %}{% endblock page_name %}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>         
+        </div>
+        <!--breadcrumbs area end-->
+
+        {% block content %}
+          
+        {% endblock content %}
+        
+        <!--brand newsletter area start-->
+        {% include "main/home/newsletter/brand_newsletter_area.html" %}
+        <!--brand area end-->
+
+        <!--footer area start-->
+        {% include "footer/footer.html" %}
+        <!--footer area end-->
+    
+        <!-- modal area start-->
+        {% include "main/home/model area/modal_fade.html" %}
+        <!-- modal area end-->
+        
+        <!--news letter popup start-->
+        {% include "main/home/newsletter/newsletter_popup.html" %}
+        <!--news letter popup start-->
+
+
+        <!-- JS
+        ============================================ -->
+
+        <!-- Plugins JS -->
+        <script src="{% static 'pallas/js/plugins.js' %}"></script>
+
+        <!-- Main JS -->
+        <script src="{% static 'pallas/js/main.js' %}"></script>
+
+    </body>
+<!-- Mirrored from htmldemo.net/pallas/pallas/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 21 Jul 2023 08:16:14 GMT -->
+</html>
