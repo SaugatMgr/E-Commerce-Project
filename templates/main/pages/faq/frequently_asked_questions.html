@@ -1,0 +1,10 @@
+{% extends "_base.html" %}
+{% block title %}
+    Frequently Asked Questions
+{% endblock title %}
+
+{% block content %}
+    {% block page_name %}Frequently Asked Questions{% endblock page_name %}
+    {% include "main/pages/faq/faq_content_area.html" %}
+    {% include "main/pages/faq/accordion_area.html" %}
+{% endblock content %}
