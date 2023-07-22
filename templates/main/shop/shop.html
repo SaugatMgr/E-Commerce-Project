@@ -1,0 +1,34 @@
+<!--shop  area start-->
+<div class="shop_area shop_reverse mt-50 mb-50">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 col-md-12">
+               <!--sidebar widget start-->
+                <aside class="sidebar_widget">
+                    <div class="shop_sidebar_banner mb-50">
+                        <a href="#"><img src="assets/img/bg/banner16.jpg" alt=""></a>
+                    </div>
+                    {% include "main/shop/categories.html" %}
+                    {% include "main/shop/filter.html" %}
+                    {% include "main/shop/manufacturer.html" %}
+                    {% include "main/shop/select_by_color.html" %}
+                    {% include "main/shop/top_rated_products.html" %}
+                </aside>
+                <!--sidebar widget end-->
+            </div>
+            <div class="col-lg-9 col-md-12">
+                <!--shop wrapper start-->
+                <!--shop toolbar start-->
+                {% include "main/shop/right side/shop_toolbar.html" %}
+                <!--shop toolbar end-->
+
+                {% include "main/shop/right side/shop_content.html" %}
+
+                {% include "main/shop/right side/shop_toolbar_bottom.html" %}
+                <!--shop toolbar end-->
+                <!--shop wrapper end-->
+            </div>
+        </div>
+    </div>
+</div>
+<!--shop  area end-->
