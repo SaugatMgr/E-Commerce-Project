@@ -6,7 +6,7 @@
                     <nav>  
                         <ul>
                             <li class="active">
-                                <a  href="index.html">
+                                <a  href="{% url 'home' %}">
                                     <i class="zmdi zmdi-home"></i>
                                     home 
                                 </a>
@@ -34,8 +34,8 @@
                                 </ul>
                             </li>
 
-                            <li><a href="about.html"><i class="zmdi zmdi-comments"></i> about Us</a></li>
-                            <li><a href="contact.html"><i class="zmdi zmdi-account-box-mail"></i>  Contact Us</a></li>
+                            <li><a href="{% url 'about' %}"><i class="zmdi zmdi-comments"></i> about Us</a></li>
+                            <li><a href="{% url 'contact' %}"><i class="zmdi zmdi-account-box-mail"></i>  Contact Us</a></li>
                         </ul>  
                     </nav> 
                 </div>
