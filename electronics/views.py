@@ -1,10 +1,10 @@
 from django.views.generic import ListView, TemplateView
 
-from .models import Electronics
+from .models import Product
 
 
 class HomePageView(ListView):
-    model = Electronics
+    model = Product
     template_name = "main/home/home.html"
 
 
