@@ -25,8 +25,11 @@ class HomePageView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["product_category"] = Category.objects.all()[:9]
-        context["product_category_rem"] = Category.objects.all()[9:12]
+        all_categories = Category.objects.all()
+        
+        context["categories"] = all_categories
+        context["product_category"] = all_categories[:9]
+        context["product_category_rem"] = all_categories[9:12]
         context["product_sub_category"] = SubCategory.objects.all()
 
         return context
