@@ -1873,7 +1873,7 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
 .categories_menu_toggle > ul > li ul.categories_mega_menu {
   position: absolute;
   left: 120%;
-  width: 630px;
+  width: 300px;
   -webkit-box-shadow: 1px 0 6px 0 rgba(0, 0, 0, 0.3);
   box-shadow: 1px 0 6px 0 rgba(0, 0, 0, 0.3);
   background: #fff;
@@ -1929,7 +1929,6 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
 }
 .categories_menu_toggle > ul > li ul.categories_mega_menu > li {
   padding: 0 15px;
-  width: 33%;
   float: left;
 }
 @media only screen and (min-width: 768px) and (max-width: 991px) {
