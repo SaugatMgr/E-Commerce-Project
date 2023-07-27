@@ -6,10 +6,8 @@ from .models import (
     Category,
     SubCategory,
     Tag,
+    Review,
+    Contact,
 )
 
-admin.site.register(Product)
-admin.site.register(Image)
-admin.site.register(Category)
-admin.site.register(SubCategory)
-admin.site.register(Tag)
+admin.site.register([Product, Image, Category, SubCategory, Tag, Review, Contact, ])
