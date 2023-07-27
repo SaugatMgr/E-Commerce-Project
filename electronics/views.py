@@ -27,14 +27,24 @@ class HomePageView(ListView):
         context = super().get_context_data(**kwargs)
 
         all_categories = Category.objects.all()
-        filter_product = Product.objects.filter(views_count__gte=0).order_by("-views_count")
-             
+        
+        all_products = Product.objects.all()
+        filter_product_by_views = Product.objects.filter(views_count__gte=0)
+        
+        filter_product_by_higher_views = filter_product_by_views.order_by("-views_count")
+        products_by_date = filter_product_by_views.order_by("-added_date")
+            
         context["categories"] = all_categories
         context["product_category"] = all_categories[:9]
         context["product_category_rem"] = all_categories[9:12]
         context["product_sub_category"] = SubCategory.objects.all()
 
-        context["best_sellers"] = filter_product
+        context["today_deals_categories_first"] = all_categories.first()
+        context["today_deals_categories"] = all_categories[1:8]
+        context["today_deals_products"] = products_by_date
+
+        context["best_sellers"] = filter_product_by_higher_views
+        context["all_products"] = all_products
         
         return context
 
