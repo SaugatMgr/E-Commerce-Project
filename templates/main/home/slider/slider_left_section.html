@@ -1,0 +1,47 @@
+<div class="col-lg-3">
+    <div class="categories_menu">
+         <div class="categories_title">
+             <h2 class="categori_toggle">Categories</h2>
+         </div>
+         <div class="categories_menu_toggle">
+             <ul>
+                 {% for category in product_category %}
+                     <li class="menu_item_children categorie_list">
+                         <a href="#"> 
+                             {{ category.name }} 
+                             <i class="fa fa-angle-right"></i>
+                         </a>
+                         <ul class="categories_mega_menu">
+                             <li class="menu_item_children">
+                                 <a href="#">
+                                     All {{ category.name }}
+                                 </a>
+                                 <ul class="categorie_sub_menu">
+                                     {% for sub_cat in product_sub_category %}
+                                         {% if sub_cat.category.name == category.name %}
+                                             <li>
+                                                 <a href="#">
+                                                     {{ sub_cat.name }}
+                                                 </a>
+                                             </li>
+                                         {% endif %}
+                                     {% endfor %}
+                                 </ul>
+                             </li>
+                         </ul>
+                     </li>
+                 {% endfor %}
+                 
+                 {% for category in product_category_rem %}
+                     <li class="hidden">
+                         <a href="shop-left-sidebar.html">
+                             {{ category.name }}
+                         </a>
+                     </li>
+                 {% endfor %}
+                     
+                 <li><a href="#" id="more-btn"><i class="fa fa-plus" aria-hidden="true"></i> More Categories</a></li>
+             </ul>
+         </div>
+     </div>
+ </div>

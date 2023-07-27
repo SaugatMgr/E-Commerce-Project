@@ -1,100 +1,10 @@
 <section class="slider_section mt-20">
     <div class="container">
         <div class="row">
-            <div class="col-lg-3">
-               <div class="categories_menu">
-                    <div class="categories_title">
-                        <h2 class="categori_toggle">Categories</h2>
-                    </div>
-                    <div class="categories_menu_toggle">
-                        <ul>
-                            {% for category in product_category %}
-                                <li class="menu_item_children categorie_list">
-                                    <a href="#"> 
-                                        {{ category.name }} 
-                                        <i class="fa fa-angle-right"></i>
-                                    </a>
-                                    <ul class="categories_mega_menu">
-                                        <li class="menu_item_children">
-                                            <a href="#">
-                                                All {{ category.name }}
-                                            </a>
-                                            <ul class="categorie_sub_menu">
-                                                {% for sub_cat in product_sub_category %}
-                                                    {% if sub_cat.category.name == category.name %}
-                                                        <li>
-                                                            <a href="#">
-                                                                {{ sub_cat.name }}
-                                                            </a>
-                                                        </li>
-                                                    {% endif %}
-                                                {% endfor %}
-                                            </ul>
-                                        </li>
-                                    </ul>
-                                </li>
-                            {% endfor %}
-                            
-                            {% for category in product_category_rem %}
-                                <li class="hidden">
-                                    <a href="shop-left-sidebar.html">
-                                        {{ category.name }}
-                                    </a>
-                                </li>
-                            {% endfor %}
-                                
-                            <li><a href="#" id="more-btn"><i class="fa fa-plus" aria-hidden="true"></i> More Categories</a></li>
-                        </ul>
-                    </div>
-                </div>
-           </div>
+            {% include "main/home/slider/slider_left_section.html" %}
             <div class="col-lg-9">
-                <!--shipping area start-->
-                <div class="shipping_area">
-                    <div class="single_shipping">
-                        <div class="shipping_icone">
-                            <i class="zmdi zmdi-local-shipping zmdi-hc-fw"></i>
-                        </div>
-                        <div class="shipping_content">
-                            <p>Free Shipping On Orders Over $99</p>
-                        </div>
-                    </div>
-                    <div class="single_shipping">
-                        <div class="shipping_icone">
-                            <i class="zmdi zmdi-replay-5"></i>
-                        </div>
-                        <div class="shipping_content">
-                            <p>30 – Day Returns Moneyback Guarantee</p>
-                        </div>
-                    </div>                
-                    <div class="single_shipping last_child">
-                        <div class="shipping_icone">
-                            <i class="zmdi zmdi-phone-in-talk"></i>
-                        </div>
-                        <div class="shipping_content">
-                            <p>24/7 Support Online Consultations</p>
-                        </div>
-                    </div>           
-                </div>
-                <!--shipping area end-->
-                <div class="slider_area owl-carousel">
-                    <div class="single_slider" data-bgimg="assets/img/slider/slider1.jpg">
-                        <div class="slider_content content_position_center">
-                            <h1>New</h1>
-                            <h2>Designer Funiture! </h2>
-                            <span>elite collections! </span>
-                            <a href="shop.html">shop now</a>
-                        </div>
-                    </div>
-                    <div class="single_slider d-flex align-items-center" data-bgimg="assets/img/slider/slider2.jpg">
-                        <div class="slider_content content_position_left">
-                            <h1>New</h1>
-                            <h2>Designer Funiture! </h2>
-                            <span>elite collections! </span>
-                            <a href="shop.html">shop now</a>
-                        </div>
-                    </div>
-                </div>
+                {% include "main/home/slider/shipping_area_section.html" %}
+                {% include "main/home/slider/slider_banner_area.html" %}
             </div>
         </div>
     </div>   
