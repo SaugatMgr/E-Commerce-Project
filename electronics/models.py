@@ -59,8 +59,12 @@ class Product(models.Model):
         return reverse("product_detail", kwargs={"slug": self.slug})
 
 class Image(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    images = models.ImageField(upload_to="product_images/")
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE,
+        related_name="images"
+    )
+    images = models.ImageField(upload_to="product/product_images/")
 
     def __str__(self):
         return self.product.name
