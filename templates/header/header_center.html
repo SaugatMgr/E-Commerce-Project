@@ -15,7 +15,9 @@
                                 <select class="select_option" name="select" id="categori">
                                     <option selected value="1">All Categories</option>
                                     {% for category in categories %}
-                                        <option value="{{ forloop.counter2 }}">{{ category.name }}</option>
+                                        <option value="{{ forloop.counter }}">
+                                            {{ category.name }}
+                                        </option>
                                     {% endfor %}
                                 </select>                        
                            </div>
