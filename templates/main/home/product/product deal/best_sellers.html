@@ -9,7 +9,7 @@
             {% for best_seller in best_sellers %}
                 <div class="small_product_items">
                     <div class="product_thumb">
-                        <a href="#">
+                        <a href="{% url 'product_detail' best_seller.slug %}">
                             <img src="{{ best_seller.product_img_thumbnail.url }}"
                                  alt="{{ best_seller.name }}"
                                  style="width: 106.69px;height: 106.69px;">
@@ -17,7 +17,11 @@
                     </div>
                     <div class="product_content" style="width: 146.71px;height:106.69px;">
                         <div class="product_name">
-                            <h3><a href="#">{{ best_seller.name }}</a></h3>
+                            <h3>
+                                <a href="{% url 'product_detail' best_seller.slug %}">
+                                {{ best_seller.name }}
+                                </a>
+                            </h3>
                         </div>
                         <div class="product_rating">
                             <ul>

@@ -33,7 +33,7 @@
                             {% if product.category.name == today_deals_categories_first.name %}
                                 <div class="single_deals_product">
                                     <div class="product_thumb">
-                                        <a href="product-details.html">
+                                        <a href="{% url 'product_detail' product.slug %}">
                                             <img src="{{ product.product_img_thumbnail.url }}"
                                                 alt="{{ product.name }}"
                                                 style="width: 326.24px;height: 276.04px;">
@@ -51,7 +51,7 @@
                                     <div class="product_content">
                                         <div class="product_name">
                                             <h3>
-                                                <a href="product-details.html">
+                                                <a href="{% url 'product_detail' product.slug %}">
                                                     {{ product.name }}
                                                 </a>
                                             </h3>
@@ -105,7 +105,7 @@
                                 {% if product.category.name == today_deals_category.name %}
                                     <div class="single_deals_product">
                                         <div class="product_thumb">
-                                            <a href="product-details.html">
+                                            <a href="{% url 'product_detail' product.slug %}">
                                                 <img src="{{ product.product_img_thumbnail.url }}"
                                                     alt="{{ product.name }}"
                                                     style="width: 326.24px;height: 276.04px;">
@@ -120,7 +120,7 @@
                                         <div class="product_content">
                                             <div class="product_name">
                                                 <h3>
-                                                    <a href="product-details.html">
+                                                    <a href="{% url 'product_detail' product.slug %}">
                                                         {{ product.name }}
                                                     </a>
                                                 </h3>
