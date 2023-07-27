@@ -1,3 +1,4 @@
+{% load humanize %}
 <!--product details start-->
 <div class="product_details mt-50 mb-50">
     <div class="container">
@@ -6,35 +7,26 @@
                <div class="product-details-tab">
                     <div id="img-1" class="zoomWrapper single-zoom">
                         <a href="#">
-                            <img id="zoom1" src="assets/img/product/productbig1.jpg" data-zoom-image="assets/img/product/productbig1.jpg" alt="big-1">
+                            <img id="zoom1" src="{{ product.product_img_thumbnail.url }}" 
+                                            data-zoom-image="{{ product.product_img_thumbnail.url }}" 
+                                            alt="{{ product.name }}"
+                                            style="width: 574.4px;height: 574.4px;">
                         </a>
                     </div>
                     <div class="single-zoom-thumb">
                         <ul class="s-tab-zoom owl-carousel single-product-active" id="gallery_01">
-                            <li>
-                                <a href="#" class="elevatezoom-gallery active" data-update="" data-image="assets/img/product/productbig2.jpg" data-zoom-image="assets/img/product/productbig2.jpg">
-                                    <img src="assets/img/product/productbig2.jpg" alt="zo-th-1"/>
-                                </a>
-
-                            </li>
-                            <li >
-                                <a href="#" class="elevatezoom-gallery active" data-update="" data-image="assets/img/product/productbig3.jpg" data-zoom-image="assets/img/product/productbig3.jpg">
-                                    <img src="assets/img/product/productbig3.jpg" alt="zo-th-1"/>
-                                </a>
-
-                            </li>
-                            <li >
-                                <a href="#" class="elevatezoom-gallery active" data-update="" data-image="assets/img/product/productbig4.jpg" data-zoom-image="assets/img/product/productbig4.jpg">
-                                    <img src="assets/img/product/productbig4.jpg" alt="zo-th-1"/>
-                                </a>
-
-                            </li>
-                            <li >
-                                <a href="#" class="elevatezoom-gallery active" data-update="" data-image="assets/img/product/productbig5.jpg" data-zoom-image="assets/img/product/productbig5.jpg">
-                                    <img src="assets/img/product/productbig5.jpg" alt="zo-th-1"/>
-                                </a>
-
-                            </li>
+                            {% for img in product.images.all %}
+                                <li>
+                                    <a href="#" class="elevatezoom-gallery active" 
+                                                data-update="" 
+                                                data-image="{{ img.images.url }}" 
+                                                data-zoom-image="{{ img.images.url }}">
+                                        <img src="{{ img.images.url }}" 
+                                             alt="{{ product.name }}"
+                                             style="width: 102.35px;height:102.35px;">
+                                    </a>
+                                </li>
+                            {% endfor %} 
                         </ul>
                     </div>
                 </div>
@@ -43,11 +35,19 @@
                 <div class="product_d_right">
                    <form action="#">
                        
-                        <h1>Aliquam lobortis</h1>
+                        <h1>{{ product.name }}</h1>
                         <div class="product_nav">
                             <ul>
-                                <li class="prev"><a href="product-details.html"><i class="fa fa-angle-left"></i></a></li>
-                                <li class="next"><a href="product-grouped.html"><i class="fa fa-angle-right"></i></a></li>
+                                <li class="next">
+                                    <a href="product-grouped.html">
+                                        <i class="fa fa-angle-right"></i>
+                                    </a>
+                                </li>
+                                <li class="prev">
+                                    <a href="{% url 'product_detail' product.slug %}">
+                                        <i class="fa fa-angle-left"></i>
+                                    </a>
+                                </li>
                             </ul>
                         </div>
                         <div class="product_rating">
@@ -60,12 +60,12 @@
                             </ul>
                         </div>
                         <div class="price_box">
-                            <span class="current_price">$70.00</span>
+                            <span class="current_price">Rs.{{ product.price|intcomma }}</span>
                             <span class="old_price">$80.00</span>
                             
                         </div>
                         <div class="product_desc">
-                            <p>eget velit. Donec ac tempus ante. Fusce ultricies massa massa. Fusce aliquam, purus eget sagittis vulputate, sapien libero hendrerit est, sed commodo augue nisi non neque. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tempor, lorem et placerat vestibulum, metus nisi posuere nisl</p>
+                            <p>{{ product.description|linebreaksbr }}</p>
                         </div>
                         <div class="product_variant color">
                             <h3>Available Options</h3>
@@ -89,7 +89,7 @@
                             </ul>
                         </div>
                         <div class="product_meta">
-                            <span>Category: <a href="#">Clothing</a></span>
+                            <span>Category: <a href="#">{{ product.category.name }}</a></span>
                         </div>
                         
                     </form>
