@@ -34,6 +34,7 @@ class Product(models.Model):
     price = models.IntegerField()
     description = models.TextField()
     product_img_thumbnail = models.ImageField(upload_to="product/", blank=True)
+    views_count = models.PositiveBigIntegerField()
     added_date = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     updated_date = models.DateTimeField(auto_now=True, null=True, blank=True)
 
