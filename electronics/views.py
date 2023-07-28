@@ -1,4 +1,6 @@
+from django.shortcuts import redirect, render
 from django.views.generic import (
+    View,
     TemplateView,
     ListView,
     DetailView,
@@ -11,10 +13,13 @@ from .models import (
     Image,
     Category,
     SubCategory,
+    Review,
+    Contact,
 )
 from .forms import (
     AddProductForm,
     AddImagesForm,
+    ReviewForm,
 )
 
 
@@ -61,3 +66,30 @@ class ProductDetailView(DetailView):
     template_name = "main/home/product/product detail/product_details.html"
     context_object_name = "product"
     
+class ReviewView(View):
+    def post(self, request, *args, **kwargs):
+        form = ReviewForm(request.POST)
+        product_id = request.POST["product"]
+        current_product = Product.objects.get(pk=product_id)
+        
+        if form.is_valid():
+            form = Review(
+                name=request.POST["name"],
+                email=request.POST["email"],
+                msg=request.POST["msg"],
+                user=self.request.user,
+                product=current_product
+            )
+            form.save()
+            return redirect("product_detail", current_product.slug)
+        else:
+            product=current_product
+            return render(
+                request,
+                "main/home/product/product detail/product_details.html",
+                {
+                    "product": product,
+                    "form": form
+                }
+            )
+            
