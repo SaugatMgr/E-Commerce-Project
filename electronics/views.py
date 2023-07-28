@@ -6,7 +6,7 @@ from django.views.generic import (
     DetailView,
 )
 from multi_form_view import MultiModelFormView
-
+from django.contrib import messages
 
 from .models import (
     Product,
@@ -19,6 +19,7 @@ from .models import (
 from .forms import (
     AddProductForm,
     AddImagesForm,
+    ContactForm,
     ReviewForm,
 )
 
@@ -93,3 +94,24 @@ class ReviewView(View):
                 }
             )
             
+class ContactUsPageView(View):
+    template_name = "contact_us.html"
+
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name)
+
+    def post(self, request, *args, **kwargs):
+        form = ContactForm(request.POST)
+
+        if form.is_valid():
+            form.save()
+            messages.success(
+                request, "Your message has been successfully sent—thank you for reaching out to us!"
+            )
+            return redirect("contact")
+        else:
+            messages.error(
+                request, "Please ensure all required fields are filled out correctly \
+                to submit the contact form."
+            )
+            return render(request, self.template_name, {"form": form})
