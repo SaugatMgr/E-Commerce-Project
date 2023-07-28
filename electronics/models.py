@@ -97,7 +97,7 @@ class Contact(NameMsgEmail, TimeStamp):
     subject = models.CharField(max_length=100)
 
     def __str__(self):
-        return f"{self.user}: {self.msg[:30]}"
+        return f"{self.name}: {self.msg[:30]}"
 
 
 class Image(models.Model):
