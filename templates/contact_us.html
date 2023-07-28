@@ -25,27 +25,43 @@
                 <div class="col-lg-6 col-md-12">
                     <div class="contact_message form">
                         <h3>Tell us your Message</h3>   
-                        <form id="contact-form" method="POST"  action="https://htmldemo.net/pallas/pallas/assets/mail.php">
+                        <div class="message">
+                          
+                          {% if messages %}
+                              
+                              {% for msg in messages %}
+                                  <p class="form-messege">{{ msg }}</p>
+                              {% endfor %}
+                                  
+                          {% endif %}
+                              
+                          {% if form.errors and form.non_field_errors %}
+                            <p class="form-messege">{{ form.non_field_errors }}</p>
+                          {% endif %}
+                        </div>
+                        <form method="post" id="contact-form">{% csrf_token %}
                             <p>  
                                 <label> Your Name (required)</label>
-                                <input name="name" placeholder="Name *" type="text"> 
+                                <input name="name" placeholder="Name *" type="text">
+                                {{ form.name.errors }}
                             </p>
                             <p>       
                                 <label>  Your Email (required)</label>
                                 <input name="email" placeholder="Email *" type="email">
+                                {{ form.email.errors }}
                             </p>
                             <p>          
                                 <label>  Subject</label>
                                 <input name="subject" placeholder="Subject *" type="text">
+                                {{ form.subject.errors }}
                             </p>    
                             <div class="contact_textarea">
                                 <label>  Your Message</label>
-                                <textarea placeholder="Message *" name="message"  class="form-control2" ></textarea>     
+                                <textarea placeholder="Message *" name="msg"  class="form-control2" ></textarea>
+                                {{ form.msg.errors }}     
                             </div>   
                             <button type="submit"> Send</button>  
-                            <p class="form-messege"></p>
                         </form> 
-
                     </div> 
                 </div>
             </div>
