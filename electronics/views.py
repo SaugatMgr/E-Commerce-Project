@@ -33,13 +33,14 @@ class HomePageView(ListView):
         context = super().get_context_data(**kwargs)
 
         all_categories = Category.objects.all()
-        
+
         all_products = Product.objects.all()
         filter_product_by_views = Product.objects.filter(views_count__gte=0)
-        
-        filter_product_by_higher_views = filter_product_by_views.order_by("-views_count")
+
+        filter_product_by_higher_views = filter_product_by_views.order_by(
+            "-views_count")
         products_by_date = filter_product_by_views.order_by("-added_date")
-            
+
         context["categories"] = all_categories
         context["product_category"] = all_categories[:9]
         context["product_category_rem"] = all_categories[9:12]
@@ -51,7 +52,7 @@ class HomePageView(ListView):
 
         context["best_sellers"] = filter_product_by_higher_views
         context["all_products"] = all_products
-        
+
         return context
 
 
@@ -62,17 +63,19 @@ class AboutUsPageView(TemplateView):
 class ContactUsPageView(TemplateView):
     template_name = "contact_us.html"
 
+
 class ProductDetailView(DetailView):
     model = Product
     template_name = "main/home/product/product detail/product_details.html"
     context_object_name = "product"
-    
+
+
 class ReviewView(View):
     def post(self, request, *args, **kwargs):
         form = ReviewForm(request.POST)
         product_id = request.POST["product"]
         current_product = Product.objects.get(pk=product_id)
-        
+
         if form.is_valid():
             form = Review(
                 name=request.POST["name"],
@@ -84,7 +87,7 @@ class ReviewView(View):
             form.save()
             return redirect("product_detail", current_product.slug)
         else:
-            product=current_product
+            product = current_product
             return render(
                 request,
                 "main/home/product/product detail/product_details.html",
@@ -93,7 +96,8 @@ class ReviewView(View):
                     "form": form
                 }
             )
-            
+
+
 class ContactUsPageView(View):
     template_name = "contact_us.html"
 
@@ -102,6 +106,7 @@ class ContactUsPageView(View):
 
     def post(self, request, *args, **kwargs):
         form = ContactForm(request.POST)
+        print(form)
 
         if form.is_valid():
             form.save()
