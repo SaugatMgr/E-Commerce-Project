@@ -7,8 +7,9 @@ from .models import (
     Contact,
 )
 
+
 class AddProductForm(forms.ModelForm):
-    
+
     class Meta:
         model = Product
         fields = "__all__"
@@ -16,11 +17,12 @@ class AddProductForm(forms.ModelForm):
 
 class AddImagesForm(forms.ModelForm):
     images = forms.ImageField(required=False,
-        widget=forms.ClearableFileInput(attrs={"allow_multiple_selected": True}))
+                              widget=forms.ClearableFileInput(attrs={"allow_multiple_selected": True}))
 
     class Meta:
         model = Image
         fields = ("images", )
+
 
 class ReviewForm(forms.ModelForm):
     class Meta:
@@ -30,6 +32,7 @@ class ReviewForm(forms.ModelForm):
             "name",
             "email",
         ]
+
 
 class ContactForm(forms.ModelForm):
     class Meta:
