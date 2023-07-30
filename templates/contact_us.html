@@ -6,61 +6,72 @@
 {% endblock page_name %}
 
 {% block content %}
-    
     <!--contact area start-->
     <div class="contact_area" style="margin-top:50px;">
         <div class="container">   
             <div class="row">
                 <div class="col-lg-6 col-md-12">
                     <div class="contact_message content">
-                        <h3>contact us</h3>    
-                        <p>Claritas est etiam processus dynamicus, qui sequitur mutationem consuetudium lectorum. Mirum est notare quam littera gothica, quam nunc putamus parum claram anteposuerit litterarum formas human. qui sequitur mutationem consuetudium lectorum. Mirum est notare</p>
+                        <h3>contact us</h3>
+                        <p>
+                            Welcome to Pallas! Our dedicated team is here to assist you. Reach out via phone or email for support [+977 9845623614, chelp@gmail.com]. For personalized assistance, visit our store at [Tokha-9, Kathmandu]. We look forward to serving you!                        </p>
                         <ul>
-                            <li><i class="fa fa-fax"></i>  Address : No 40 Baria Sreet 133/2 NewYork City</li>
-                            <li><i class="fa fa-phone"></i> <a href="#">Infor@roadthemes.com</a></li>
-                            <li><i class="fa fa-envelope-o"></i> 0(1234) 567 890</li>
+                            <li><i class="fa fa-fax"></i>  Address : Tokha-9, Kathmandu</li>
+                            <li><i class="fa fa-phone"></i> <a href="#">info_fiit@gmail.com</a></li>
+                            <li><i class="fa fa-envelope-o"></i> +977 9845263158</li>
                         </ul>             
                     </div> 
                 </div>
                 <div class="col-lg-6 col-md-12">
                     <div class="contact_message form">
                         <h3>Tell us your Message</h3>   
-                        <div class="message">
-                          
-                          {% if messages %}
-                              
-                              {% for msg in messages %}
-                                  <p class="form-messege">{{ msg }}</p>
-                              {% endfor %}
-                                  
-                          {% endif %}
-                              
-                          {% if form.errors and form.non_field_errors %}
-                            <p class="form-messege">{{ form.non_field_errors }}</p>
-                          {% endif %}
+                        <div>
+                            {% if messages %}
+                                {% for msg in messages %}
+                                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    <strong>Warning!</strong> 
+                                    {{ msg }}
+                                    {% if form.errors and form.non_field_errors %}
+                                        {{ form.non_field_errors }}
+                                    {% endif %}
+                                </div>
+                            
+                                {% endfor %}
+
+                            {% endif %}                              
                         </div>
-                        <form method="post" id="contact-form">{% csrf_token %}
-                            <p>  
-                                <label> Your Name (required)</label>
-                                <input name="name" placeholder="Name *" type="text">
-                                {{ form.name.errors }}
+                        <form method="post" class="form-contact contact_form">{% csrf_token %}
+                            <p>
+                                <label for="name"> Your Name (required)</label>
+                                <input name="name" placeholder="Name *" type="text" required>
+                                <h5><b>
+                                    {{ form.name.errors }}
+                                </b></h5>
                             </p>
                             <p>       
-                                <label>  Your Email (required)</label>
-                                <input name="email" placeholder="Email *" type="email">
-                                {{ form.email.errors }}
+                                <label for="email">  Your Email (required)</label>
+                                <input name="email" placeholder="Email *" type="email" required>
+                                <h5><b>
+                                    {{ form.email.errors }}
+                                </b></h5>
                             </p>
                             <p>          
-                                <label>  Subject</label>
-                                <input name="subject" placeholder="Subject *" type="text">
-                                {{ form.subject.errors }}
+                                <label for="subject">  Subject</label>
+                                <input name="subject" placeholder="Subject *" type="text" required>
+                                <h5><b>
+                                    {{ form.subject.errors }}
+                                </b></h5>
                             </p>    
                             <div class="contact_textarea">
-                                <label>  Your Message</label>
-                                <textarea placeholder="Message *" name="msg"  class="form-control2" ></textarea>
-                                {{ form.msg.errors }}     
+                                <label for="msg">  Your Message</label>
+                                <textarea placeholder="Message *" name="msg"  class="form-control2" required>
+                                </textarea>
+                                <h5><b>
+                                    {{ form.msg.errors }}
+                                </b></h5>
                             </div>   
-                            <button type="submit"> Send</button>  
+                            <button type="submit"> Send</button>
                         </form> 
                     </div> 
                 </div>
