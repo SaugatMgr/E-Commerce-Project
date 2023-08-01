@@ -6,6 +6,7 @@ from .views import(
     ContactUsPageView,
     ProductDetailView,
     ReviewView,
+    NewsLetterView,
 )
 
 urlpatterns = [
@@ -14,4 +15,5 @@ urlpatterns = [
     path("contact/", ContactUsPageView.as_view(), name="contact"),
     path("product-detail/<slug:slug>/", ProductDetailView.as_view(), name="product_detail"),
     path("review/", ReviewView.as_view(), name="review"),
+    path("newsletter/", NewsLetterView.as_view(), name="newsletter"),
 ]

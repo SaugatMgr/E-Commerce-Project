@@ -5,6 +5,7 @@ from .models import (
     Image,
     Review,
     Contact,
+    NewsLetter,
 )
 
 
@@ -43,3 +44,8 @@ class ContactForm(forms.ModelForm):
             "subject",
             "msg",
         ]
+
+class NewsLetterForm(forms.ModelForm):
+    class Meta:
+        model = NewsLetter
+        fields = "__all__"

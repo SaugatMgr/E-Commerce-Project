@@ -110,3 +110,10 @@ class Image(models.Model):
 
     def __str__(self):
         return self.product.name
+
+
+class NewsLetter(models.Model):
+    email = models.EmailField()
+
+    def __str__(self):
+        return self.email

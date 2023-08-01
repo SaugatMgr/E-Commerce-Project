@@ -84,6 +84,47 @@
         <!-- Main JS -->
         <script src="{% static 'pallas/js/main.js' %}"></script>
 
+        <!-- Custom JS -->
+        <script>
+            $("#NewsletterForm").submit(function(e){
+                e.preventDefault()
+                var serializedData = $(this).serialize();
+
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'newsletter' %}",
+                    data: serializedData,
+
+                    success: function(response){
+                        $("#newsletter_msg").append(
+                            `
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                ${response.message}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                            `
+                        )
+                        setTimeout(function(){
+                            $('.alert').alert('close')
+                        }, 2000)
+                    },
+    
+                    error: function(response){
+                        $("#newsletter_msg").append(
+                            `
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                ${response.responseJSON.message}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                            `
+                        )
+                        setTimeout(function(){
+                            $('.alert').alert('close')
+                        }, 2000)
+                    }
+                });
+            });
+        </script>
     </body>
 <!-- Mirrored from htmldemo.net/pallas/pallas/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 21 Jul 2023 08:16:14 GMT -->
 </html>

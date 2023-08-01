@@ -7,6 +7,7 @@ from django.views.generic import (
 )
 from multi_form_view import MultiModelFormView
 from django.contrib import messages
+from django.http import JsonResponse
 
 from .models import (
     Product,
@@ -21,6 +22,7 @@ from .forms import (
     AddImagesForm,
     ContactForm,
     ReviewForm,
+    NewsLetterForm,
 )
 
 
@@ -120,3 +122,40 @@ class ContactUsPageView(View):
                 to submit the contact form."
             )
             return render(request, self.template_name, {"form": form})
+
+
+class NewsLetterView(View):
+    def post(self, request, *args, **kwargs):
+        ajax_format = request.headers.get("x-requested-with")
+
+        if ajax_format == "XMLHttpRequest":
+            form = NewsLetterForm(request.POST)
+
+            if form.is_valid():
+                form.save()
+
+                return JsonResponse(
+                    {
+                        "success": True,
+                        "message": "Thank you for subscribing to our electrifying newsletter! Get ready \
+                                    for the latest tech trends, exclusive offers, expert tips, and \
+                                    exciting giveaways as part of our electronic store community."
+                    },
+                    status=201
+                )
+            else:
+                return JsonResponse(
+                    {
+                        "success": False,
+                        "message": "Oops! It seems there was an issue with your newsletter \
+                                    subscription—please double-check your email and try again."
+                    },
+                    status=400,
+                )
+        return JsonResponse(
+            {
+                'success': False,
+                'message': 'Cannot process.Must be and AJAX XMLHttpRequest.',
+            },
+            status=400,
+        )
