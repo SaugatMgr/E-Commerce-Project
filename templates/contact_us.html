@@ -29,13 +29,15 @@
                             {% if messages %}
                                 {% for msg in messages %}
                                 <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                     <strong>Warning!</strong> 
                                     {{ msg }}
                                     {% if form.errors and form.non_field_errors %}
                                         {{ form.non_field_errors }}
                                     {% endif %}
-                                </div>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                  </div>
                             
                                 {% endfor %}
 
@@ -62,15 +64,15 @@
                                 <h5><b>
                                     {{ form.subject.errors }}
                                 </b></h5>
-                            </p>    
-                            <div class="contact_textarea">
+                            </p>
+                            <p>
                                 <label for="msg">  Your Message</label>
-                                <textarea placeholder="Message *" name="msg"  class="form-control2" required>
+                                <textarea name="msg" placeholder="Message *" required>
                                 </textarea>
                                 <h5><b>
                                     {{ form.msg.errors }}
                                 </b></h5>
-                            </div>   
+                            </p>
                             <button type="submit"> Send</button>
                         </form> 
                     </div> 
