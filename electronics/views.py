@@ -71,6 +71,19 @@ class ProductDetailView(DetailView):
     template_name = "main/home/product/product detail/product_details.html"
     context_object_name = "product"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        current_product = Product.objects.get(slug=self.kwargs["slug"])
+
+        current_product_category = current_product.category.name
+
+        context["related_products"] = Product.objects.all().filter(
+            category__name__icontains=current_product_category
+        )
+
+        return context
+
 
 class ReviewView(View):
     def post(self, request, *args, **kwargs):
