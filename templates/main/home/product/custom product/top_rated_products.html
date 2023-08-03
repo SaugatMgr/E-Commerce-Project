@@ -1,0 +1,44 @@
+{% load humanize %}
+<div class="col-lg-4">
+    <div class="small_product_area">
+        <div class="section_title">
+            <h2>top rated <span>Products</span></h2>
+        </div>
+        <div class="small_product_wrapper">
+            {% for best_seller in best_sellers %}
+                <div class="small_product_items"
+                     style="height: 154.99px;width: 373.4px;">
+                    <div class="product_thumb">
+                        <a href="{% url 'product_detail' best_seller.slug %}">
+                            <img src="{{ best_seller.product_img_thumbnail.url }}"
+                                 alt="{{ best_seller.name }}"
+                                 style="height: 120.19px;width: 120.19px;">
+                        </a>
+                    </div>
+                    <div class="product_content">
+                        <div class="product_name">
+                            <h3>
+                                <a href="{% url 'product_detail' best_seller.slug %}">
+                                {{ best_seller.name }}
+                                </a>
+                            </h3>
+                        </div>
+                        <div class="product_rating">
+                            <ul>
+                                <li><a href="#"><i class="zmdi zmdi-star-outline"></i></a></li>
+                                <li><a href="#"><i class="zmdi zmdi-star-outline"></i></a></li>
+                                <li><a href="#"><i class="zmdi zmdi-star-outline"></i></a></li>
+                                <li><a href="#"><i class="zmdi zmdi-star-outline"></i></a></li>
+                                <li><a href="#"><i class="zmdi zmdi-star-outline"></i></a></li>
+                            </ul>
+                        </div>
+                        <div class="price_box">
+                            <span class="current_price">Rs.{{ best_seller.price|intcomma }}</span>
+                            <span class="old_price">$70.00</span>   
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
