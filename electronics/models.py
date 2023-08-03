@@ -56,7 +56,8 @@ class Product(TimeStamp):
     description = models.TextField()
     product_img_thumbnail = models.ImageField(upload_to="product/", blank=True)
     views_count = models.PositiveBigIntegerField()
-
+    is_featured = models.BooleanField(default=False)
+    
     category = models.ForeignKey(
         Category,
         default="",
