@@ -1,3 +1,4 @@
+{% load humanize %}
 <div class="new_product_area mb-50">
     <div class="container">
         <div class="row">
@@ -10,14 +11,16 @@
         <div class="new_product_wrapper">
             <div class="row">
                 <div class="col-lg-3 col-md-12">
-                   <div class="single_product_left_sidebar">
+                   <div class="single_product_left_sidebar"
+                        style="width: 274.8px;height: 414.4px;">
                     
                     {% for product in new_products_left_sidebar %}
                         <div class="single_product">
                             <div class="product_thumb">
                                 <a href="{% url 'product_detail' product.slug %}">
                                     <img src="{{ product.product_img_thumbnail.url }}"
-                                         alt="{{ product.name }}">
+                                         alt="{{ product.name }}"
+                                         style="width: 238px;height: 238px;">
                                 </a>
                                 <div class="label_product">
                                     <span class="label_sale">sale</span>
@@ -44,7 +47,7 @@
                                     </ul>
                                 </div>
                                 <div class="price_box">
-                                    <span class="current_price">Rs.{{ product.price }}</span>
+                                    <span class="current_price">Rs.{{ product.price|intcomma }}</span>
                                     <span class="old_price">$70.00</span>   
                                 </div>
                                 <div class="action_links">
@@ -60,12 +63,15 @@
                         
                     </div>
                 </div>
-                <div class="col-lg-6 col-md-12">
-                    <div class="single_product product_center">
+                <div class="col-lg-6 col-md-12"
+                     style="width: 599..2px;height: 829.6px;">
+                    <div class="single_product product_center"
+                         style="width: 575.2px;height: 771.8px;">
                         <div class="product_thumb">
                             <a href="{% url 'product_detail' new_products_center.slug %}">
                                 <img src="{{ new_products_center.product_img_thumbnail.url }}"
-                                     alt="{{ new_products_center.name }}">
+                                     alt="{{ new_products_center.name }}"
+                                     style="width: 555.2px;height: 555.2px;">
                             </a>
                             <div class="quick_button">
                                 <a href="#" data-bs-toggle="modal" data-bs-target="#modal_box"  title="quick view"> <i class="zmdi zmdi-eye"></i></a>
@@ -89,7 +95,7 @@
                                 </ul>
                             </div>
                              <div class="price_box">
-                                <span class="current_price">Rs.{{ new_products_center.price }}</span>
+                                <span class="current_price">Rs.{{ new_products_center.price|intcomma }}</span>
                                 <span class="old_price">$70.00</span>   
                             </div>
                             <div class="action_links">
@@ -103,13 +109,17 @@
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-12">
-                   <div class="single_product_right_sidebar">
+                   <div class="single_product_right_sidebar"
+                        style="width: 274.8px;height: 414.4px;">
                     
                     {% for product in new_products_right_sidebar %}
                         <div class="single_product">
                             <div class="product_thumb">
                                 <a href="{% url 'product_detail' product.slug %}">
-                                    <img src="{{ product.product_img_thumbnail.url }}" alt="{{ product.name }}"></a>
+                                    <img src="{{ product.product_img_thumbnail.url }}"
+                                         alt="{{ product.name }}"
+                                         style="width: 238px;height: 238px;">
+                                </a>
                                 <div class="label_product">
                                     <span class="label_sale">sale</span>
                                 </div>
@@ -135,7 +145,7 @@
                                     </ul>
                                 </div>
                                 <div class="price_box">
-                                    <span class="current_price">Rs.{{ product.price }}</span>
+                                    <span class="current_price">Rs.{{ product.price|intcomma }}</span>
                                     <span class="old_price">$70.00</span>   
                                 </div>
                                 <div class="action_links">
