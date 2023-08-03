@@ -1,3 +1,4 @@
+from typing import Any, Dict
 from django.shortcuts import redirect, render
 from django.views.generic import (
     View,
@@ -54,10 +55,14 @@ class HomePageView(ListView):
 
         context["best_sellers"] = filter_product_by_higher_views
         context["all_products"] = all_products
-        
+
         context["new_products_left_sidebar"] = products_by_date[:2]
         context["new_products_center"] = products_by_date[2]
         context["new_products_right_sidebar"] = products_by_date[3:5]
+
+        context["featured_products"] = all_products.filter(is_featured=True)
+        # context["default_active_tab_category"] = Category.objects.first()
+        # context["remaining_categories"] = all_categories[1:8]
 
         return context
 
@@ -83,13 +88,13 @@ class ProductDetailView(DetailView):
 
         current_product_category = current_product.category.name
 
-        
         context["related_products"] = Product.objects.all().filter(
             category__name__icontains=current_product_category
         ).exclude(slug=current_product.slug)
-        
-        context["upsale_products"] = all_products.exclude(slug=current_product.slug)
-        
+
+        context["upsale_products"] = all_products.exclude(
+            slug=current_product.slug)
+
         return context
 
 
