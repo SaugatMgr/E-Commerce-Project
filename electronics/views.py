@@ -82,9 +82,9 @@ class ProductDetailView(DetailView):
         
         context["related_products"] = Product.objects.all().filter(
             category__name__icontains=current_product_category
-        ).exclude(added_date=current_product.added_date)
+        ).exclude(slug=current_product.slug)
         
-        context["upsale_products"] = all_products.exclude(added_date=current_product.added_date)
+        context["upsale_products"] = all_products.exclude(slug=current_product.slug)
         
         return context
 
