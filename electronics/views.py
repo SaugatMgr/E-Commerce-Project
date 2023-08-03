@@ -54,6 +54,10 @@ class HomePageView(ListView):
 
         context["best_sellers"] = filter_product_by_higher_views
         context["all_products"] = all_products
+        
+        context["new_products_left_sidebar"] = products_by_date[:2]
+        context["new_products_center"] = products_by_date[2]
+        context["new_products_right_sidebar"] = products_by_date[3:5]
 
         return context
 
