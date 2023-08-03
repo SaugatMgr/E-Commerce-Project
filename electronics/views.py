@@ -74,14 +74,18 @@ class ProductDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
+        all_products = Product.objects.all()
         current_product = Product.objects.get(slug=self.kwargs["slug"])
 
         current_product_category = current_product.category.name
 
+        
         context["related_products"] = Product.objects.all().filter(
             category__name__icontains=current_product_category
-        )
-
+        ).exclude(added_date=current_product.added_date)
+        
+        context["upsale_products"] = all_products.exclude(added_date=current_product.added_date)
+        
         return context
 
 
