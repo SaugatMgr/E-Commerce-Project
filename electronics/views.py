@@ -67,6 +67,12 @@ class HomePageView(ListView):
         return context
 
 
+class ShopItemsView(HomePageView):
+    model = Product
+    template_name = "main/shop/shop.html"
+    paginate_by = 3
+    
+
 class AboutUsPageView(TemplateView):
     template_name = "about_us.html"
 
