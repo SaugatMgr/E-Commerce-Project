@@ -1,21 +1,12 @@
 <div class="widget_list widget_categories">
-    <h2>categories</h2>
+    <h2>all categories</h2>
     <ul>
-        <li>
-            <a href="#">Categories1 <span>(6)</span></a> 
-        </li>
-        <li>
-            <a href="#">Categories2 <span>(10)</span></a> 
-        </li>
-        <li>
-            <a href="#">Categories3 <span>(4)</span></a> 
-        </li>
-        <li>
-            <a href="#">Categories4 <span>(10)</span></a> 
-        </li>
-        <li>
-            <a href="#">Categories5 <span>(8)</span></a> 
-        </li>
-
+        
+        {% for category in categories %}
+            <li>
+                <a href="#">{{ category }} <span>({{ category.products.count }})</span></a> 
+            </li>
+        {% endfor %}
+            
     </ul>
 </div>
