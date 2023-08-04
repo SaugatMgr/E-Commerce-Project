@@ -61,6 +61,7 @@ class Product(TimeStamp):
     category = models.ForeignKey(
         Category,
         default="",
+        related_name="products",
         on_delete=models.CASCADE
     )
 
