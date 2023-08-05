@@ -1,6 +1,6 @@
-
+{% load static %}
 <div class="shop_banner">
-    <img src="assets/img/bg/banner29.jpg" alt="">
+    <img src="{% static 'pallas/img/bg/banner29.jpg' %}" alt="">
 </div>
 <div class="shop_title">
     <h1>shop</h1>
@@ -31,6 +31,6 @@
 
     </div>
     <div class="page_amount">
-        <p>Showing 1–9 of 21 results</p>
+        <p>Showing {{ page_obj.start_index }}–{{ page_obj.end_index }} of {{ page_obj.paginator.count }} results</p>
     </div>
 </div>
