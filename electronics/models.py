@@ -2,6 +2,10 @@ from django.db import models
 from django.urls import reverse
 from django.utils.text import slugify
 from django.contrib.auth import get_user_model
+from django.core.validators import (
+    MinValueValidator,
+    MaxValueValidator,
+)
 
 CustomUser = get_user_model()
 
@@ -49,6 +53,14 @@ class Tag(models.Model):
         return self.name
 
 
+class Discount(models.Model):
+    discount_percent = models.PositiveIntegerField(
+        default=0, validators=[MinValueValidator(1), MaxValueValidator(99)])
+
+    def __str__(self):
+        return f"{self.discount_percent}"
+
+
 class Product(TimeStamp):
     name = models.CharField(max_length=150)
     slug = models.SlugField(max_length=200, unique=True, blank=True, null=True)
@@ -57,7 +69,14 @@ class Product(TimeStamp):
     product_img_thumbnail = models.ImageField(upload_to="product/", blank=True)
     views_count = models.PositiveBigIntegerField()
     is_featured = models.BooleanField(default=False)
-    
+
+    discount = models.OneToOneField(
+        Discount,
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+    )
+
     category = models.ForeignKey(
         Category,
         default="",
