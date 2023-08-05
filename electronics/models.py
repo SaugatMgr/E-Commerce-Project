@@ -86,6 +86,11 @@ class Product(TimeStamp):
 
     tag = models.ManyToManyField(Tag)
 
+    @property
+    def new_price(self):
+        if Product.discount:
+            return self.price - (self.price * (self.discount.discount_percent/100))
+
     def __str__(self):
         return self.name
 
