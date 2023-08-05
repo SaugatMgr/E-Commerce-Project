@@ -1,5 +1,5 @@
 {% extends "_base.html" %}
-
+{% load static %}
 {% block page_name %}
     Shop
 {% endblock page_name %}
@@ -13,7 +13,7 @@
                 <!--sidebar widget start-->
                     <aside class="sidebar_widget">
                         <div class="shop_sidebar_banner mb-50">
-                            <a href="#"><img src="assets/img/bg/banner16.jpg" alt=""></a>
+                            <img src="{% static 'pallas/img/bg/banner16.jpg' %}" alt="">
                         </div>
                         {% include "main/shop/left side/categories.html" %}
                         {% include "main/shop/left side/filter.html" %}
