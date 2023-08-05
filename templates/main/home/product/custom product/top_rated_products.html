@@ -33,8 +33,17 @@
                             </ul>
                         </div>
                         <div class="price_box">
-                            <span class="current_price">Rs.{{ best_seller.price|intcomma }}</span>
-                            <span class="old_price">$70.00</span>   
+                            {% if best_seller.discount %}
+
+                                <span class="current_price">Rs.{{ best_seller.new_price|intcomma }}</span>
+                                <span class="old_price">Rs.{{ best_seller.price|intcomma }}</span>
+                                <span class="discount">(-{{ best_seller.discount }}%)</span>
+
+                            {% else %}
+
+                                <span class="current_price">Rs.{{ best_seller.price|intcomma }}</span>
+
+                            {% endif %}   
                         </div>
                     </div>
                 </div>

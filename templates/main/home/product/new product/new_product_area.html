@@ -47,8 +47,17 @@
                                     </ul>
                                 </div>
                                 <div class="price_box">
-                                    <span class="current_price">Rs.{{ product.price|intcomma }}</span>
-                                    <span class="old_price">$70.00</span>   
+                                    {% if product.discount %}
+
+                                        <span class="current_price">Rs.{{ product.new_price|intcomma }}</span>
+                                        <span class="old_price">Rs.{{ product.price|intcomma }}</span>
+                                        <span class="discount">(-{{ product.discount }}%)</span>
+
+                                    {% else %}
+
+                                        <span class="current_price">Rs.{{ product.price|intcomma }}</span>
+                                        
+                                    {% endif %}     
                                 </div>
                                 <div class="action_links">
                                     <ul>
@@ -95,8 +104,17 @@
                                 </ul>
                             </div>
                              <div class="price_box">
-                                <span class="current_price">Rs.{{ new_products_center.price|intcomma }}</span>
-                                <span class="old_price">$70.00</span>   
+                                {% if new_products_center.discount %}
+
+                                    <span class="current_price">Rs.{{ new_products_center.new_price|intcomma }}</span>
+                                    <span class="old_price">Rs.{{ new_products_center.price|intcomma }}</span>
+                                    <span class="discount">(-{{ new_products_center.discount }}%)</span>
+
+                                {% else %}
+
+                                    <span class="current_price">Rs.{{ new_products_center.price|intcomma }}</span>
+                                    
+                                {% endif %}     
                             </div>
                             <div class="action_links">
                                 <ul>
@@ -145,8 +163,17 @@
                                     </ul>
                                 </div>
                                 <div class="price_box">
-                                    <span class="current_price">Rs.{{ product.price|intcomma }}</span>
-                                    <span class="old_price">$70.00</span>   
+                                    {% if product.discount %}
+
+                                        <span class="current_price">Rs.{{ product.new_price|intcomma }}</span>
+                                        <span class="old_price">Rs.{{ product.price|intcomma }}</span>
+                                        <span class="discount">(-{{ product.discount }}%)</span>
+
+                                    {% else %}
+
+                                        <span class="current_price">Rs.{{ product.price|intcomma }}</span>
+                                        
+                                    {% endif %}     
                                 </div>
                                 <div class="action_links">
                                     <ul>
