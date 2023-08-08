@@ -192,7 +192,7 @@ class NewsLetterView(View):
         )
 
 
-class AddImagesView(CreateView):
+class AddProductView(CreateView):
     template_name = "create.html"
     form_class = AddProductForm
     
