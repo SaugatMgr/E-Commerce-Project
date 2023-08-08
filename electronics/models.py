@@ -66,8 +66,8 @@ class Product(TimeStamp):
     slug = models.SlugField(max_length=200, unique=True, blank=True, null=True)
     price = models.IntegerField()
     description = models.TextField()
-    product_img_thumbnail = models.ImageField(upload_to="product/", blank=True)
-    views_count = models.PositiveBigIntegerField()
+    product_img_thumbnail = models.ImageField(upload_to="product/")
+    views_count = models.PositiveBigIntegerField(default=0)
     is_featured = models.BooleanField(default=False)
 
     discount = models.OneToOneField(
