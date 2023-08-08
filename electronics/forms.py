@@ -2,7 +2,6 @@ from django import forms
 
 from .models import (
     Product,
-    Image,
     Review,
     Contact,
     NewsLetter,
@@ -10,19 +9,71 @@ from .models import (
 
 
 class AddProductForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields["images"].widget.attrs.update({
+            "multiple": True,
+        })
+
+    images = forms.ImageField(
+        widget=forms.FileInput(
+            attrs={
+                "class": "form-control",
+            }
+        )
+    )
 
     class Meta:
         model = Product
-        fields = "__all__"
+        exclude = ("slug", "views_count",)
 
-
-class AddImagesForm(forms.ModelForm):
-    images = forms.ImageField(required=False,
-                              widget=forms.ClearableFileInput(attrs={"allow_multiple_selected": True}))
-
-    class Meta:
-        model = Image
-        fields = ("images", )
+        widgets = {
+            "name": forms.TextInput(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "Enter the name of the product..."
+                }
+            ),
+            "price": forms.NumberInput(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "Enter the price of the product..."
+                }
+            ),
+            "description": forms.Textarea(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "Enter the description of the product..."
+                }
+            ),
+            "product_img_thumbnail": forms.ClearableFileInput(
+                attrs={
+                    "class": "form-control",
+                }
+            ),
+            "is_featured": forms.CheckboxInput(
+                attrs={
+                    "class": "form-control",
+                    "class": "form-check-input mt-2",
+                }
+            ),
+            "discount": forms.Select(
+                attrs={
+                    "class": "form-select",
+                }
+            ),
+            "category": forms.Select(
+                attrs={
+                    "class": "form-select",
+                }
+            ),
+            "tag": forms.SelectMultiple(
+                attrs={
+                    "class": "form-select",
+                }
+            ),
+        }
 
 
 class ReviewForm(forms.ModelForm):
@@ -44,6 +95,7 @@ class ContactForm(forms.ModelForm):
             "subject",
             "msg",
         ]
+
 
 class NewsLetterForm(forms.ModelForm):
     class Meta:
