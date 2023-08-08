@@ -193,7 +193,7 @@ class NewsLetterView(View):
 
 
 class AddProductView(CreateView):
-    template_name = "create.html"
+    template_name = "product/add_product.html"
     form_class = AddProductForm
     
     def form_valid(self, form):
