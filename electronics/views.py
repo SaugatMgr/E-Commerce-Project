@@ -1,5 +1,5 @@
-from typing import Any, Dict
 from django.shortcuts import redirect, render
+from django.urls import reverse_lazy
 from django.views.generic import (
     View,
     TemplateView,
@@ -221,3 +221,10 @@ class ProductUpdateView(UpdateView):
             Image.objects.create(product=product_object, images=img)
 
         return super().form_valid(form)
+
+
+class ProductDeleteView(DeleteView):
+    model = Product
+    template_name = "product/delete_product.html"
+    context_object_name = "product"
+    success_url = reverse_lazy("home")
