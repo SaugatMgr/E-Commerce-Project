@@ -9,6 +9,7 @@ from .views import(
     NewsLetterView,
     ShopItemsView,
     AddProductView,
+    ProductUpdateView,
 )
 
 urlpatterns = [
@@ -25,4 +26,5 @@ urlpatterns = [
     path("newsletter/", NewsLetterView.as_view(), name="newsletter"),
     # url for CRUD operations on Product
     path("create/", AddProductView.as_view(), name="add_product"),
+    path("update/<slug:slug>/", ProductUpdateView.as_view(), name="update_product"),
 ]
