@@ -9,7 +9,6 @@ from .models import (
     Review,
     Contact,
     NewsLetter,
-    Discount,
 )
 
-admin.site.register([Product, Image, Category, SubCategory, Tag, Review, Contact, NewsLetter, Discount, ])
+admin.site.register([Product, Image, Category, SubCategory, Tag, Review, Contact, NewsLetter, ])
