@@ -53,14 +53,6 @@ class Tag(models.Model):
         return self.name
 
 
-class Discount(models.Model):
-    discount_percent = models.PositiveIntegerField(
-        default=0, validators=[MinValueValidator(1), MaxValueValidator(99)])
-
-    def __str__(self):
-        return f"{self.discount_percent}"
-
-
 class Product(TimeStamp):
     name = models.CharField(max_length=150)
     slug = models.SlugField(max_length=200, unique=True, blank=True, null=True)
@@ -69,13 +61,8 @@ class Product(TimeStamp):
     product_img_thumbnail = models.ImageField(upload_to="product/")
     views_count = models.PositiveBigIntegerField(default=0)
     is_featured = models.BooleanField(default=False)
-
-    discount = models.OneToOneField(
-        Discount,
-        null=True,
-        blank=True,
-        on_delete=models.CASCADE,
-    )
+    discount = models.PositiveIntegerField(
+        default=None, validators=[MinValueValidator(1), MaxValueValidator(99)], blank=True, null=True)
 
     category = models.ForeignKey(
         Category,
@@ -89,7 +76,7 @@ class Product(TimeStamp):
     @property
     def new_price(self):
         if Product.discount:
-            return self.price - (self.price * (self.discount.discount_percent/100))
+            return self.price - (self.price * (self.discount/100))
 
     def __str__(self):
         return self.name
