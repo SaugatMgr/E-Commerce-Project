@@ -1,0 +1,97 @@
+{% extends "_base.html" %}
+
+{% block page_name %}
+    Update Product
+{% endblock page_name %}
+
+{% block content %}
+    <div class="container">
+        <h2 class="mt-3 text-center">
+            Update Product
+        </h2>
+
+        <form class="form-control mb-5" method="post" enctype="multipart/form-data">{% csrf_token %}
+            <div class="row">
+                {{ form.non_field_errors }}
+
+                <div class="col-12">
+                    <label for="{{ form.name.id_for_label }}">
+                        Name*
+                    </label>
+                    {{ form.name }}
+                    {{ form.name.errors }}
+                </div>
+
+                <div class="col-12 mt-3">
+                    <label for="{{ form.price.id_for_label }}">
+                        Price*
+                    </label>
+                    {{ form.price }}
+                    {{ form.price.errors }}
+                </div>
+
+                <div class="col-12 mt-3">
+                    <label for="{{ form.description.id_for_label }}">
+                        Description*
+                    </label>
+                    {{ form.description }}
+                    {{ form.description.errors }}
+                </div>
+
+                <div class="col-12 mt-3">
+                    <label for="{{ form.product_img_thumbnail.id_for_label }}">
+                        Product Img thumbnail*
+                    </label><br>
+                    {{ form.product_img_thumbnail }}
+                    {{ form.product_img_thumbnail.errors }}
+                </div>
+
+                <div class="col-6 mt-3">
+                    <label class="form-check-label"
+                           for="{{ form.is_featured.id_for_label }}"
+                           style="font-size: medium;
+                                  vertical-align: middle;">
+                        Do you want this product to be featured?
+                    </label>
+                    {{ form.is_featured }}
+                    {{ form.is_featured.errors }}
+                </div>
+
+                <div class="col-10 mt-3">
+                    <label for="{{ form.discount.id_for_label }}">
+                        Discount*
+                    </label>
+                    {{ form.discount }}
+                    {{ form.discount.errors }}
+                </div>
+
+                <div class="col-10 mt-3">
+                    <label for="{{ form.category.id_for_label }}">
+                        Category*
+                    </label>
+                    {{ form.category }}
+                    {{ form.category.errors }}
+                </div>
+
+                <div class="col-10 mt-3">
+                    <label for="{{ form.tag.id_for_label }}">
+                        Tag*
+                    </label>
+                    {{ form.tag }}
+                    {{ form.tag.errors }}
+                </div>
+
+                <div class="col-12 mt-3">
+                    <label for="{{ form.images.id_for_label }}">
+                        More Product Images*
+                    </label>
+                    {{ form.images }}
+                    {{ form.images.errors }}
+                </div>
+            </div>
+            <div class="contact_message form mt-3 mb-3 text-center">
+                <button type="submit">Update Product</button>
+            </div>
+        </form>
+    </div>
+{% endblock content %}
