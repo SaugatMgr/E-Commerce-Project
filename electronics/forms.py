@@ -58,9 +58,9 @@ class AddProductForm(forms.ModelForm):
                     "class": "form-check-input mt-2",
                 }
             ),
-            "discount": forms.Select(
+            "discount": forms.NumberInput(
                 attrs={
-                    "class": "form-select",
+                    "class": "form-control",
                 }
             ),
             "category": forms.Select(
