@@ -10,6 +10,7 @@ from .views import(
     ShopItemsView,
     AddProductView,
     ProductUpdateView,
+    ProductDeleteView,
 )
 
 urlpatterns = [
@@ -27,4 +28,5 @@ urlpatterns = [
     # url for CRUD operations on Product
     path("create/", AddProductView.as_view(), name="add_product"),
     path("update/<slug:slug>/", ProductUpdateView.as_view(), name="update_product"),
+    path("delete/<slug:slug>/", ProductDeleteView.as_view(), name="delete_product"),
 ]
