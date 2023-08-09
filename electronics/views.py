@@ -6,6 +6,8 @@ from django.views.generic import (
     ListView,
     CreateView,
     DetailView,
+    UpdateView,
+    DeleteView,
 )
 from django.contrib import messages
 from django.http import JsonResponse
@@ -70,7 +72,7 @@ class ShopItemsView(HomePageView):
     model = Product
     template_name = "main/shop/shop.html"
     paginate_by = 3
-    
+
 
 class AboutUsPageView(TemplateView):
     template_name = "about_us.html"
@@ -195,12 +197,27 @@ class NewsLetterView(View):
 class AddProductView(CreateView):
     template_name = "product/add_product.html"
     form_class = AddProductForm
-    
+
     def form_valid(self, form):
-        product_object = form.save() # AddProductForm lai save garne
+        product_object = form.save()  # AddProductForm lai save garne
         more_product_images = self.request.FILES.getlist("images")
-        
+
         for img in more_product_images:
             Image.objects.create(product=product_object, images=img)
-            
+
+        return super().form_valid(form)
+
+
+class ProductUpdateView(UpdateView):
+    model = Product
+    form_class = AddProductForm
+    template_name = "product/update_product.html"
+
+    def form_valid(self, form):
+        product_object = form.save()  # AddProductForm lai save garne
+        more_product_images = self.request.FILES.getlist("images")
+
+        for img in more_product_images:
+            Image.objects.create(product=product_object, images=img)
+
         return super().form_valid(form)
