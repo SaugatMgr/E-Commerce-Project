@@ -1,13 +1,13 @@
 from django.db import models
 from django.urls import reverse
 from django.utils.text import slugify
-from django.contrib.auth import get_user_model
+from django.conf import settings
 from django.core.validators import (
     MinValueValidator,
     MaxValueValidator,
 )
 
-CustomUser = get_user_model()
+CustomUser = settings.AUTH_USER_MODEL
 
 
 class TimeStamp(models.Model):
