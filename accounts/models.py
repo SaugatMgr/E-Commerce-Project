@@ -56,6 +56,8 @@ class CartItems(models.Model):
                 name="unique_product_in_cart"
             )
         ]
+        verbose_name = "Cart Item"
+        verbose_name_plural = "Cart Items"
 
     cart = models.ForeignKey(
         Cart,

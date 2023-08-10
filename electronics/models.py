@@ -28,6 +28,10 @@ class NameMsgEmail(models.Model):
 
 
 class Category(models.Model):
+    class Meta:
+        verbose_name = "Category"
+        verbose_name_plural = "Categories"
+        
     name = models.CharField(max_length=64)
 
     def __str__(self):
@@ -35,6 +39,10 @@ class Category(models.Model):
 
 
 class SubCategory(models.Model):
+    class Meta:
+        verbose_name = "Sub Category"
+        verbose_name_plural = "Sub Categories"
+        
     name = models.CharField(max_length=64)
     category = models.ForeignKey(
         Category,
