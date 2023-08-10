@@ -6,7 +6,12 @@ from .forms import (
     CustomUserChangeForm,
     CustomerForm,
 )
-from .models import CustomUser, Customer
+from .models import (
+    CustomUser,
+    Customer,
+    Cart,
+    CartItems,
+)
 
 
 class CustomUserAdmin(UserAdmin):
@@ -45,3 +50,4 @@ class CustomerAdmin(admin.ModelAdmin):
 
 admin.site.register(CustomUser, CustomUserAdmin)
 admin.site.register(Customer, CustomerAdmin)
+admin.site.register([Cart, CartItems, ])
