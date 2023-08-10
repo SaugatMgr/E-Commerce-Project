@@ -11,6 +11,15 @@ from .managers import CustomUserManager
 from electronics.models import Product
 
 
+class TimeStamp(models.Model):
+    created_date = models.DateTimeField(
+        auto_now_add=True, null=True, blank=True)
+    updated_date = models.DateTimeField(auto_now=True, null=True, blank=True)
+
+    class Meta:
+        abstract = True
+
+
 class CustomUser(AbstractUser):
     username = None
     email = models.EmailField(_("email address"), unique=True)
@@ -36,7 +45,8 @@ class Customer(models.Model):
     def __str__(self):
         return f"{self.user.first_name} {self.user.last_name}"
 
-class Cart(models.Model):
+
+class Cart(TimeStamp):
     id = models.UUIDField(default=uuid.uuid4, primary_key=True)
     customer = models.OneToOneField(
         Customer,
@@ -48,7 +58,8 @@ class Cart(models.Model):
     def __str__(self):
         return f"{self.id}"
 
-class CartItems(models.Model):
+
+class CartItems(TimeStamp):
     class Meta:
         constraints = [
             models.UniqueConstraint(
@@ -73,9 +84,11 @@ class CartItems(models.Model):
         validators=[MinValueValidator(1)]
     )
 
+    VAT = 13
+    
     @property
     def total_price(self):
-        return self.quantity * self.product.price
+        return self.quantity * (self.product.price * (1 + self.VAT/100))
 
     def __str__(self):
         return self.product.name
