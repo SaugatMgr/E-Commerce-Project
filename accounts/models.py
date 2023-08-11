@@ -50,10 +50,11 @@ class Cart(TimeStamp):
     id = models.UUIDField(default=uuid.uuid4, primary_key=True)
     customer = models.OneToOneField(
         Customer,
-        on_delete=models.CASCADE,
-        related_name="customer"
+        on_delete=models.SET_NULL,
+        related_name="customer",
+        null=True,
+        blank=True
     )
-    completed = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.id}"
@@ -85,10 +86,35 @@ class CartItems(TimeStamp):
     )
 
     VAT = 13
-    
+
     @property
     def total_price(self):
         return self.quantity * (self.product.price * (1 + self.VAT/100))
 
     def __str__(self):
         return self.product.name
+
+
+class Order(TimeStamp):
+    ORDER_STATUS_CHOICES = [
+        ("Pending", "Pending"),
+        ("Processing", "Processing"),
+        ("On the Way", "On the Way"),
+        ("Completed", "Completed"),
+        ("Cancelled", "Cancelled"),
+    ]
+    cart = models.OneToOneField(
+        Cart,
+        on_delete=models.CASCADE,
+    )
+    street_no = models.CharField(max_length=150)
+    city = models.CharField(max_length=150)
+    state = models.CharField(max_length=50)
+    email = models.EmailField(max_length=255)
+    order_notes = models.TextField()
+    status = models.CharField(
+        max_length=20, choices=ORDER_STATUS_CHOICES, default="Pending")
+
+    def __st__(self):
+        return f"By {self.cart.customer.user.first_name}"
+    
