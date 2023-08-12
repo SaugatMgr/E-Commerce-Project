@@ -1,0 +1,57 @@
+{% extends "_base.html" %}
+
+{% block page_name %}
+    Login
+{% endblock page_name %}
+
+{% block content %}
+<!-- customer login start -->
+<div class="customer_login mt-60">
+    <div class="container">
+        <div class="row">
+           <!--login area start-->
+            <div class="col-lg-6 col-md-6">
+                <div class="account_form">
+                    <h2>login</h2>
+                    <form class="was-validated" method="post" novalidate>{% csrf_token %}
+                        <div class="mb-3">
+                            <label for="{{ form.login.id_for_label }}">E-mail*</label>
+                            {{ form.login }}
+                            <div class="invalid-feedback">
+                                {{ form.login.errors }}
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="{{ form.password.id_for_label }}">Password*</label>
+                            {{ form.password }}
+                            <div class="invalid-feedback">
+                                {{ form.password.errors }}
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <span>
+                                Don't have an account? 
+                                <a href="{% url 'account_signup' %}">
+                                    Sign Up here
+                                </a>
+                            </span>                                
+                        </div>
+                        <div class="login_submit">
+                            <a href="">Forgot Password?</a>
+                            <label for="{{ form.remember.id_for_label }}">
+                                {{ form.remember }}
+                                Remember me
+                                {{ form.remember.errors}}
+                            </label>
+                             <button type="submit">login</button>
+                         </div>
+                    </form>
+                 </div>
+            </div>
+            <!--login area start-->
+        </div>
+    </div>    
+</div>
+<!-- customer login end -->
+{% endblock content %}

@@ -1,0 +1,72 @@
+{% extends "_base.html" %}
+
+{% block page_name %}
+    SignUp
+{% endblock page_name %}
+
+{% block content %}
+    <div class="customer_login mt-60">
+        <div class="container">
+            <div class="row">
+                <!--register area start-->
+                <div class="col-lg-6 col-md-6">
+                    <div class="account_form register">
+                        <h2>Register</h2>
+                        {{ form.non_field_errors }}
+                        <form class="was-validated" action="" method="post" novalidate>{% csrf_token %}
+                             
+                            <div class="input-group has-validation mb-3">
+                                <label for="{{ form.email.id_for_label }}">Email address <span>*</span></label>
+                                {{ form.email }}
+                                <div class="invalid-feedback">
+                                    {{ form.email.errors }}
+                                </div>
+                            </div>
+                            
+                             
+                            <div class="mb-3">
+                                <label for="{{ form.first_name.id_for_label }}">First Name <span>*</span></label>
+                                {{ form.first_name }}
+                                <div class="invalid-feedback">
+                                    {{ form.first_name.errors }}
+                                </div>
+                            </div>
+                            
+                             
+                            <div class="mb-3">
+                                <label for="{{ form.last_name.id_for_label }}">Last Name <span>*</span></label>
+                                {{ form.last_name }}
+                                <div class="invalid-feedback">
+                                    {{ form.last_name.errors }}
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="{{ form.password1.id_for_label }}">Password <span>*</span></label>
+                                {{ form.password1 }}
+                                {{ form.password1.help_text }}
+                                <div class="invalid-feedback">
+                                    {{ form.password1.errors }}
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="{{ form.password2.id_for_label }}">Password Confirmation <span>*</span></label>
+                                {{ form.password2 }}
+                                {{ form.password2.help_text }}
+                                <div class="invalid-feedback">
+                                    {{ form.password2.errors }}
+                                </div>
+                            </div>
+
+                            <div class="login_submit" style="margin-right: 230px;">
+                                <button type="submit">Register</button>
+                            </div>
+                        </form>
+                    </div>    
+                </div>
+                <!--register area end-->
+            </div>
+        </div>
+    </div>
+{% endblock content %}
