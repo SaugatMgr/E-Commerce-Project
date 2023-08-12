@@ -39,11 +39,17 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+    'django.contrib.sites',
     # Third Party Apps
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
     'phonenumber_field',
+    # Social Providers
+    'allauth.socialaccount.providers.google',
     # Local Apps
-    'accounts.apps.AccountsConfig',
     'electronics.apps.ElectronicsConfig',
+    'accounts.apps.AccountsConfig',
 ]
 
 
@@ -133,3 +139,30 @@ MEDIA_ROOT = BASE_DIR / "media"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# LOGIN_URL = "account_login"
+# LOGOUT_URL = "account_logout"
+SITE_ID = 1
+
+LOGIN_REDIRECT_URL = "home"
+ACCOUNT_LOGOUT_REDIRECT = "home"
+
+ACCOUNT_USER_MODEL_USERNAME_FIELD = "email"
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_AUTHENTICATION_METHOD = "email"
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = False
+ACCOUNT_SESSION_REMEMBER = None
+
+ACCOUNT_FORMS = ({
+    "signup": "accounts.forms.CustomUserCreationForm",
+})
+
+AUTHENTICATION_BACKENDS = (
+    "django.contrib.auth.backends.ModelBackend",
+    
+    # allauth specific authentication
+    "allauth.account.auth_backends.AuthenticationBackend",
+)
+
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
