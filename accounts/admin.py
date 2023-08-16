@@ -11,6 +11,7 @@ from .models import (
     Customer,
     Cart,
     CartItems,
+    Order,
 )
 
 
@@ -50,4 +51,4 @@ class CustomerAdmin(admin.ModelAdmin):
 
 admin.site.register(CustomUser, CustomUserAdmin)
 admin.site.register(Customer, CustomerAdmin)
-admin.site.register([Cart, CartItems, ])
+admin.site.register([Cart, CartItems,Order, ])
