@@ -18,12 +18,10 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from accounts.views import MyPasswordChangeView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     # allauth user management
-    path("accounts/password/change/", MyPasswordChangeView.as_view(), name="account_change_password"),
     path("accounts/", include("allauth.urls")),
     # Local App Urls
     path("", include("electronics.urls")),
