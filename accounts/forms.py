@@ -5,7 +5,10 @@ from django.contrib.auth.forms import (
 from django import forms
 from phonenumber_field.widgets import PhoneNumberPrefixWidget
 
-from .models import CustomUser
+from .models import (
+    CustomUser,
+    Order,
+)
 
 
 class CustomUserCreationForm(UserCreationForm):
@@ -20,6 +23,11 @@ class CustomUserChangeForm(UserChangeForm):
         model = CustomUser
         fields = ("email", "first_name", "last_name", )
 
+
+class CheckOutForm(forms.ModelForm):
+    class Meta:
+        model = Order
+        fields = "__all__"
 
 class CustomerForm(forms.ModelForm):
     class Meta:

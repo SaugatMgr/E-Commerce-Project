@@ -1,9 +1,7 @@
-from django.urls import reverse_lazy
-from allauth.account.views import PasswordChangeView
+from django.views.generic import CreateView
 
+from .forms import CheckOutForm
 
-class MyPasswordChangeView(PasswordChangeView):
-    def get_success_url(self):
-        success_url = reverse_lazy("account_login")
-        
-        return success_url
+class CheckOutView(CreateView):
+    template_name = "users/checkout.html"
+    form_class = CheckOutForm
