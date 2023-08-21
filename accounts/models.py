@@ -82,14 +82,23 @@ class CartItems(TimeStamp):
         related_name="products",
     )
     quantity = models.PositiveIntegerField(
-        validators=[MinValueValidator(1)]
+        validators=[MinValueValidator(1)], default=1
     )
 
     VAT = 13
 
     @property
     def total_price(self):
-        return self.quantity * (self.product.price * (1 + self.VAT/100))
+        vat_added_price = self.quantity * (self.product.price * (1 + self.VAT/100))
+        discount = self.product.discount
+        
+        if discount:
+            discount_added_price = self.product.price * (1-(discount/100))
+            final_price = "{:.3f}".format(vat_added_price - discount_added_price)
+        else:
+            final_price = "{:.3f}".format(vat_added_price)
+            
+        return final_price
 
     def __str__(self):
         return self.product.name
@@ -115,6 +124,5 @@ class Order(TimeStamp):
     status = models.CharField(
         max_length=20, choices=ORDER_STATUS_CHOICES, default="Pending")
 
-    def __st__(self):
-        return f"By {self.cart.customer.user.first_name}"
-    
+    def __str__(self):
+        return f"By {self.cart.customer.user.first_name} {self.cart.customer.user.last_name}"
