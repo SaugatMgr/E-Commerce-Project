@@ -25,6 +25,7 @@ urlpatterns = [
     path("accounts/", include("allauth.urls")),
     # Local App Urls
     path("", include("electronics.urls")),
+    path("users/", include("accounts.urls")),
 ] + static(
     settings.MEDIA_URL, document_root=settings.MEDIA_ROOT,
 )
