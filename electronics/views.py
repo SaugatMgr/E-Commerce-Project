@@ -20,6 +20,11 @@ from .models import (
     Review,
     Contact,
 )
+from accounts.models import (
+    Customer,
+    Cart,
+    CartItems,
+)
 from .forms import (
     AddProductForm,
     ContactForm,
@@ -228,3 +233,20 @@ class ProductDeleteView(DeleteView):
     template_name = "product/delete_product.html"
     context_object_name = "product"
     success_url = reverse_lazy("home")
+
+
+class ShowCartItemsView(ListView):
+    model = CartItems
+    template_name = "users/shopping_cart.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+        customer = Customer.objects.get(user=user)
+        cart = Cart.objects.get(customer=customer)
+
+        print(user, customer, cart)
+        context["user_cart_items"] = CartItems.objects.filter(cart=cart)
+
+        print(context)
+        return context
