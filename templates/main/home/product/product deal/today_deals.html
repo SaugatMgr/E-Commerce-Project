@@ -86,11 +86,16 @@
                                                 </a>
                                             </li>
                                                 <li class="add_to_cart">
-                                                    <a href="cart.html" title="add to cart">
-                                                        <i class="zmdi zmdi-shopping-cart-plus"></i>
-                                                        add to cart
-                                                        </a>
-                                                    </li>
+                                                    <form method="post" class="cart_form">{% csrf_token %}
+                                                        <input type="hidden"
+                                                               name="prod_slug"
+                                                               value="{{ product.slug }}">
+                                                        <button type="submit">
+                                                            <i class="zmdi zmdi-shopping-cart-plus"></i>
+                                                            add to cart
+                                                        </button>
+                                                    </form>
+                                                </li>
                                                 <li class="compare">
                                                     <a href="#" title="compare">
                                                         <i class="zmdi zmdi-swap"></i>
@@ -164,10 +169,15 @@
                                                         </a>
                                                     </li>
                                                     <li class="add_to_cart">
-                                                        <a href="cart.html" title="add to cart">
-                                                            <i class="zmdi zmdi-shopping-cart-plus"></i>
-                                                            add to cart
-                                                        </a>
+                                                        <form method="post" class="cart_form">{% csrf_token %}
+                                                            <input type="hidden"
+                                                                   name="prod_slug"
+                                                                   value="{{ product.slug }}">
+                                                            <button type="submit">
+                                                                <i class="zmdi zmdi-shopping-cart-plus"></i>
+                                                                add to cart
+                                                            </button>
+                                                        </form>
                                                     </li>
                                                     <li class="compare">
                                                         <a href="#" title="compare">
