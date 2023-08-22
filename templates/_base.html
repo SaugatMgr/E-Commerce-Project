@@ -25,6 +25,15 @@
         <!-- Main Style CSS -->
         <link rel="stylesheet" href="{% static 'pallas/css/style.css' %}">
 
+        <!-- ALERTIFY CSS -->
+
+        <!-- CSS -->
+        <link rel="stylesheet" href="{% static 'pallas/css/alertify.min.css' %}">
+
+        <!-- Bootstrap theme -->
+        <link rel="stylesheet" href="{% static 'pallas/css/alertify.bootstrap.min.css' %}">
+
+        <!-- ALERTIFY CSS end -->
     </head>
 
     <body>
@@ -87,7 +96,7 @@
         <!-- Custom JS -->
         <script>
             $("#NewsletterForm").submit(function(e){
-                e.preventDefault()
+                e.preventDefault();
                 var serializedData = $(this).serialize();
 
                 $.ajax({
@@ -124,7 +133,32 @@
                     }
                 });
             });
+
+            // Add To Cart Ajax
+            $(".cart_form").submit(function (e) { 
+                e.preventDefault();
+                var serialized_data = $(this).serialize();
+
+                $.ajax({
+                    type: "post",
+                    url: "{% url 'add_to_cart' %}",
+                    data: serialized_data,
+
+                    success: function (response) {
+                        alertify.set('notifier','position', 'top-right');
+                        alertify.success(response.responseJSON.message);
+                    },
+
+                    error: function (response) {
+                        alertify.set('notifier','position', 'top-right');
+                        alertify.error(response.responseJSON.message);
+                    },
+                });
+            });
         </script>
+
+        <!-- ALERTIFY JS -->
+        <script src="{% static 'pallas/js/alertify.min.js' %}"></script>
     </body>
 <!-- Mirrored from htmldemo.net/pallas/pallas/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 21 Jul 2023 08:16:14 GMT -->
 </html>
