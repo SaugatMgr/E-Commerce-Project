@@ -5028,11 +5028,32 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
   border-radius: 30px;
   word-spacing: 1px;
 }
+.action_links ul li button {
+  text-transform: capitalize;
+  border: 1px solid #e5e5e5;
+  line-height: 39px;
+  display: block;
+  font-size: 14px;
+  background: #fff;
+}
+.action_links ul li button:hover {
+  background: #ea000d;
+  border-color: #ea000d;
+  color: #ffffff;
+}
+.action_links ul li.add_to_cart button {
+  padding: 0 20px;
+  border-radius: 30px;
+  word-spacing: 1px;
+}
 .action_links ul li.add_to_cart a i {
   margin-right: 5px;
 }
 @media only screen and (min-width: 992px) and (max-width: 1199px) {
   .action_links ul li.add_to_cart a {
+    padding: 0 15px;
+  }
+  .action_links ul li.add_to_cart button {
     padding: 0 15px;
   }
 }
