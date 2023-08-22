@@ -235,6 +235,74 @@ class ProductDeleteView(DeleteView):
     success_url = reverse_lazy("home")
 
 
+class AddProductToCartView(View):
+
+    def post(self, request, *args, **kwargs):
+        ajax_format = request.headers.get("x-requested-with")
+
+        if ajax_format == "XMLHttpRequest":
+            if self.request.user.is_authenticated:
+                product_slug = request.POST["prod_slug"]
+                user = self.request.user
+
+                product = Product.objects.get(slug=product_slug)
+                customer = Customer.objects.get(user=user)
+                cart = Cart.objects.get(customer=customer)
+
+                # Check if the product exists
+                if product:
+                    # Check if product is already in the cart
+                    product_already_in_cart = CartItems.objects.filter(
+                        cart=cart, product=product)
+
+                    if product_already_in_cart:
+                        get_current_object = CartItems.objects.get(
+                            cart=cart, product=product)
+                        get_current_object.quantity += 1
+                        get_current_object.save()
+
+                        return JsonResponse(
+                            {
+                                "success": True,
+                                "message": f"You added {product.name} {get_current_object.quantity} times."
+                            },
+                            status=201
+                        )
+                    else:
+                        CartItems.objects.create(cart=cart, product=product)
+                        return JsonResponse(
+                            {
+                                "success": True,
+                                "message": f"{product.name} added to cart successfully."
+                            },
+                            status=201
+                        )
+                else:
+                    return JsonResponse(
+                        {
+                            "success": False,
+                            "message": "The product does not exist."
+                        },
+                        status=400
+                    )
+            else:
+                return JsonResponse(
+                    {
+                        "success": False,
+                        "message": "Please Login to continue..."
+                    },
+                    status=400
+                )
+        else:
+            return JsonResponse(
+                {
+                    'success': False,
+                    'message': 'Cannot process.Must be and AJAX XMLHttpRequest.',
+                },
+                status=400,
+            )
+
+
 class ShowCartItemsView(ListView):
     model = CartItems
     template_name = "users/shopping_cart.html"
@@ -245,8 +313,6 @@ class ShowCartItemsView(ListView):
         customer = Customer.objects.get(user=user)
         cart = Cart.objects.get(customer=customer)
 
-        print(user, customer, cart)
         context["user_cart_items"] = CartItems.objects.filter(cart=cart)
 
-        print(context)
         return context
