@@ -155,6 +155,24 @@
                     },
                 });
             });
+
+            // Shipping JS
+            document.addEventListener('DOMContentLoaded', () => {
+                if (document.getElementById("inside_valley").checked == true){
+                    shipping_price_update(80);
+                }
+            })
+            function shipping_price_update(shipping_price){
+                document.getElementById("shipping_price").innerHTML = `${shipping_price}`;
+
+                var sub_total = document.getElementById("sub_total").innerHTML;
+                var sub_total_without_comma = sub_total.replaceAll(",", "");
+
+                var total_price = shipping_price + Number(sub_total_without_comma);
+                var formatted_total_price = total_price.toLocaleString("en-US");
+
+                document.getElementById("total_order_price").innerHTML = formatted_total_price;
+            }
         </script>
 
         <!-- ALERTIFY JS -->
