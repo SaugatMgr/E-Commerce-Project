@@ -5004,7 +5004,7 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
 .action_links ul li:last-child {
   margin-right: 0;
 }
-.action_links ul li.wishlist a, .action_links ul li.compare a {
+.action_links ul li.wishlist a, .action_links ul li.compare a, .action_links ul li.wishlist form button{
   width: 41px;
   height: 41px;
   border-radius: 50%;
@@ -10153,7 +10153,9 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
   border-bottom: 0;
 }
 
-.table_desc.wishlist table tbody tr td.product_total a, .action_links ul li.table_desc.compare table tbody tr td.product_total a {
+.table_desc.wishlist table tbody tr td.product_total a,
+.table_desc.wishlist table tbody tr td.product_total button,
+.action_links ul li.table_desc.compare table tbody tr td.product_total a {
   background: #ea000d;
   font-size: 12px;
   font-weight: 700;
@@ -10164,7 +10166,9 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
   text-transform: uppercase;
   border-radius: 3px;
 }
-.table_desc.wishlist table tbody tr td.product_total a:hover, .action_links ul li.table_desc.compare table tbody tr td.product_total a:hover {
+.table_desc.wishlist table tbody tr td.product_total a:hover,
+.table_desc.wishlist table tbody tr td.product_total button:hover,
+.action_links ul li.table_desc.compare table tbody tr td.product_total a:hover {
   background: #262626;
 }
 
