@@ -1,0 +1,35 @@
+{% load crispy_forms_tags %}
+
+<div class="tab-pane" id="address">
+    <p>The following addresses will be used on the checkout page by default.</p>
+        <h4 class="billing-address">Billing address</h4>
+        <div class="account_form">
+            <div id="address_form_msg">
+
+            </div>
+            <form id="address_form" method="post">{% csrf_token %}
+                {{ forms.customer_form.field_errors }}
+                {{ forms.customer_form.phone_number.errors }}
+
+                {{ forms.customer_form|crispy }}
+                
+                {{ forms.checkout_form.field_errors }}
+                {{ forms.checkout_form.non_field_errors }}
+
+                {{ forms.checkout_form|crispy }}
+    
+                <button type="submit">Save</button>
+            </form>
+        </div>
+        <a href="#" class="view">Edit</a>
+        <p><strong>Bobby Jackson</strong></p>
+        <address>
+            House #15<br>
+            Road #1<br>
+            Block #C <br>
+            Banasree <br>
+            Dhaka <br>
+            1212
+        </address>
+        <p>Bangladesh</p>   
+    </div>

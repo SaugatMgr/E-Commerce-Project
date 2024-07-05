@@ -1,0 +1,86 @@
+{% extends "_base.html" %}
+{% load humanize %}
+
+{% block page_name %}
+    Wishlist
+{% endblock page_name %}
+
+{% block content %}
+    <!--wishlist area start -->
+    <div class="wishlist_area mt-60">
+        <div class="container">   
+            <div class="row">
+                <div class="col-12">
+                    <div class="table_desc wishlist">
+                        <div class="cart_page table-responsive">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th class="product_remove">Delete</th>
+                                        <th class="product_thumb">Image</th>
+                                        <th class="product_name">Product</th>
+                                        <th class="product-price">Price</th>
+                                        <th class="product_quantity">Stock Status</th>
+                                        <th class="product_total">Add To Cart</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for product in wish_list.product.all %}
+                                        <tr>
+                                            <td class="product_remove">
+                                                <form method="post" class="prod_rem_form">{% csrf_token %}
+                                                    <input type="hidden" name="prod_slug" value="{{ product.slug }}">
+                                                    <button type="submit" class="btn btn-danger">X</button>
+                                                </form>
+                                            </td>
+                                            <td class="product_thumb">
+                                                <a href="#">
+                                                    <img src="{{ product.product_img_thumbnail.url }}" alt="{{ product.name }}">
+                                                </a>
+                                            </td>
+                                            <td class="product_name">
+                                                <a href="{% url "product_detail" product.slug %}">
+                                                    {{ product.name }}
+                                                </a>
+                                            </td>
+                                            <td class="product-price">Rs.{{ product.price|intcomma }}</td>
+                                            <td class="product_quantity">In Stock</td>
+                                            <td class="product_total">
+                                                <form method="post" class="cart_form">{% csrf_token %}
+                                                    <input type="hidden"
+                                                           name="prod_slug"
+                                                           value="{{ product.slug }}">
+                                                    <button type="submit" style="border: None">
+                                                        <i class="zmdi zmdi-shopping-cart-plus"></i>
+                                                        Add To Cart
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>  
+
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="wishlist_share">
+                        <h4>Share on:</h4>
+                        <ul>
+                            <li><a href="#"><i class="fa fa-rss"></i></a></li>           
+                            <li><a href="#"><i class="fa fa-vimeo"></i></a></li>           
+                            <li><a href="#"><i class="fa fa-tumblr"></i></a></li>           
+                            <li><a href="#"><i class="fa fa-pinterest"></i></a></li>        
+                            <li><a href="#"><i class="fa fa-linkedin"></i></a></li>        
+                        </ul>      
+                    </div>
+                </div> 
+            </div>
+            
+        </div>
+    </div>
+    <!--wishlist area end -->
+{% endblock content %}

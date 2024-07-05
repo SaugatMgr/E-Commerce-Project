@@ -1,224 +1,346 @@
 {% load humanize %}
 <div class="new_product_area mb-50">
-    <div class="container">
-        <div class="row">
-            <div class="col-12">
-                <div class="section_title">
-                    <h2>New   <span>Products</span></h2>
-                </div>
-            </div>
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <div class="section_title">
+          <h2>New <span>Products</span></h2>
         </div>
-        <div class="new_product_wrapper">
-            <div class="row">
-                <div class="col-lg-3 col-md-12">
-                   <div class="single_product_left_sidebar"
-                        style="width: 274.8px;height: 414.4px;">
-                    
-                    {% for product in new_products_left_sidebar %}
-                        <div class="single_product">
-                            <div class="product_thumb">
-                                <a href="{% url 'product_detail' product.slug %}">
-                                    <img src="{{ product.product_img_thumbnail.url }}"
-                                         alt="{{ product.name }}"
-                                         style="width: 238px;height: 238px;">
-                                </a>
-                                <div class="label_product">
-                                    <span class="label_sale">sale</span>
-                                </div>
-                                <div class="quick_button">
-                                    <a href="#" data-bs-toggle="modal" data-bs-target="#modal_box"  title="quick view"> <i class="zmdi zmdi-eye"></i></a>
-                                </div>
-                            </div>
-                            <div class="product_content">
-                                <div class="product_name">
-                                    <h3>
-                                        <a href="{% url 'product_detail' product.slug %}">
-                                        {{ product.name }}
-                                        </a>
-                                    </h3>
-                                </div>
-                                <div class="product_rating">
-                                    <ul>
-                                        <li><a href="#"><i class="zmdi zmdi-star-outline"></i></a></li>
-                                        <li><a href="#"><i class="zmdi zmdi-star-outline"></i></a></li>
-                                        <li><a href="#"><i class="zmdi zmdi-star-outline"></i></a></li>
-                                        <li><a href="#"><i class="zmdi zmdi-star-outline"></i></a></li>
-                                        <li><a href="#"><i class="zmdi zmdi-star-outline"></i></a></li>
-                                    </ul>
-                                </div>
-                                <div class="price_box">
-                                    {% if product.discount %}
-
-                                        <span class="current_price">Rs.{{ product.new_price|intcomma }}</span>
-                                        <span class="old_price">Rs.{{ product.price|intcomma }}</span>
-                                        <span class="discount">(-{{ product.discount }}%)</span>
-
-                                    {% else %}
-
-                                        <span class="current_price">Rs.{{ product.price|intcomma }}</span>
-                                        
-                                    {% endif %}     
-                                </div>
-                                <div class="action_links">
-                                    <ul>
-                                    <li class="wishlist"><a href="wishlist.html" title="Add to Wishlist"><i class="fa fa-heart-o" aria-hidden="true"></i></a></li>
-                                        <li class="add_to_cart">
-                                            <form method="post" class="cart_form">{% csrf_token %}
-                                                <input type="hidden"
-                                                       name="prod_slug"
-                                                       value="{{ product.slug }}">
-                                                <button type="submit">
-                                                    <i class="zmdi zmdi-shopping-cart-plus"></i>
-                                                    add to cart
-                                                </button>
-                                            </form>
-                                        </li>
-                                    <li class="compare"><a href="#" title="compare"><i class="zmdi zmdi-swap"></i></a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    {% endfor %}
-                        
-                    </div>
-                </div>
-                <div class="col-lg-6 col-md-12"
-                     style="width: 599..2px;height: 829.6px;">
-                    <div class="single_product product_center"
-                         style="width: 575.2px;height: 771.8px;">
-                        <div class="product_thumb">
-                            <a href="{% url 'product_detail' new_products_center.slug %}">
-                                <img src="{{ new_products_center.product_img_thumbnail.url }}"
-                                     alt="{{ new_products_center.name }}"
-                                     style="width: 555.2px;height: 555.2px;">
-                            </a>
-                            <div class="quick_button">
-                                <a href="#" data-bs-toggle="modal" data-bs-target="#modal_box"  title="quick view"> <i class="zmdi zmdi-eye"></i></a>
-                            </div>
-                        </div>
-                        <div class="product_content">
-                            <div class="product_name">
-                                <h3>
-                                    <a href="{% url 'product_detail' new_products_center.slug %}">
-                                    {{ new_products_center.name }}
-                                </a>
-                                </h3>
-                            </div>
-                            <div class="product_rating">
-                                <ul>
-                                    <li><a href="#"><i class="zmdi zmdi-star-outline"></i></a></li>
-                                    <li><a href="#"><i class="zmdi zmdi-star-outline"></i></a></li>
-                                    <li><a href="#"><i class="zmdi zmdi-star-outline"></i></a></li>
-                                    <li><a href="#"><i class="zmdi zmdi-star-outline"></i></a></li>
-                                    <li><a href="#"><i class="zmdi zmdi-star-outline"></i></a></li>
-                                </ul>
-                            </div>
-                             <div class="price_box">
-                                {% if new_products_center.discount %}
-
-                                    <span class="current_price">Rs.{{ new_products_center.new_price|intcomma }}</span>
-                                    <span class="old_price">Rs.{{ new_products_center.price|intcomma }}</span>
-                                    <span class="discount">(-{{ new_products_center.discount }}%)</span>
-
-                                {% else %}
-
-                                    <span class="current_price">Rs.{{ new_products_center.price|intcomma }}</span>
-                                    
-                                {% endif %}     
-                            </div>
-                            <div class="action_links">
-                                <ul>
-                                   <li class="wishlist"><a href="wishlist.html" title="Add to Wishlist"><i class="fa fa-heart-o" aria-hidden="true"></i></a></li>
-                                    <li class="add_to_cart">
-                                        <form method="post" class="cart_form">{% csrf_token %}
-                                            <input type="hidden"
-                                                   name="prod_slug"
-                                                   value="{{ new_products_center.slug }}">
-                                            <button type="submit">
-                                                <i class="zmdi zmdi-shopping-cart-plus"></i>
-                                                add to cart
-                                            </button>
-                                        </form>
-                                    </li>
-                                    <li class="compare"><a href="#" title="compare"><i class="zmdi zmdi-swap"></i></a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-12">
-                   <div class="single_product_right_sidebar"
-                        style="width: 274.8px;height: 414.4px;">
-                    
-                    {% for product in new_products_right_sidebar %}
-                        <div class="single_product">
-                            <div class="product_thumb">
-                                <a href="{% url 'product_detail' product.slug %}">
-                                    <img src="{{ product.product_img_thumbnail.url }}"
-                                         alt="{{ product.name }}"
-                                         style="width: 238px;height: 238px;">
-                                </a>
-                                <div class="label_product">
-                                    <span class="label_sale">sale</span>
-                                </div>
-                                <div class="quick_button">
-                                    <a href="#" data-bs-toggle="modal" data-bs-target="#modal_box"  title="quick view"> <i class="zmdi zmdi-eye"></i></a>
-                                </div>
-                            </div>
-                            <div class="product_content">
-                                <div class="product_name">
-                                    <h3>
-                                        <a href="{% url 'product_detail' product.slug %}">
-                                        {{ product.name }}
-                                    </a>
-                                    </h3>
-                                </div>
-                                <div class="product_rating">
-                                    <ul>
-                                        <li><a href="#"><i class="zmdi zmdi-star-outline"></i></a></li>
-                                        <li><a href="#"><i class="zmdi zmdi-star-outline"></i></a></li>
-                                        <li><a href="#"><i class="zmdi zmdi-star-outline"></i></a></li>
-                                        <li><a href="#"><i class="zmdi zmdi-star-outline"></i></a></li>
-                                        <li><a href="#"><i class="zmdi zmdi-star-outline"></i></a></li>
-                                    </ul>
-                                </div>
-                                <div class="price_box">
-                                    {% if product.discount %}
-
-                                        <span class="current_price">Rs.{{ product.new_price|intcomma }}</span>
-                                        <span class="old_price">Rs.{{ product.price|intcomma }}</span>
-                                        <span class="discount">(-{{ product.discount }}%)</span>
-
-                                    {% else %}
-
-                                        <span class="current_price">Rs.{{ product.price|intcomma }}</span>
-                                        
-                                    {% endif %}     
-                                </div>
-                                <div class="action_links">
-                                    <ul>
-                                    <li class="wishlist"><a href="wishlist.html" title="Add to Wishlist"><i class="fa fa-heart-o" aria-hidden="true"></i></a></li>
-                                        <li class="add_to_cart">
-                                            <form method="post" class="cart_form">{% csrf_token %}
-                                                <input type="hidden"
-                                                       name="prod_slug"
-                                                       value="{{ product.slug }}">
-                                                <button type="submit">
-                                                    <i class="zmdi zmdi-shopping-cart-plus"></i>
-                                                    add to cart
-                                                </button>
-                                            </form>
-                                        </li>
-                                        <li class="compare"><a href="#" title="compare"><i class="zmdi zmdi-swap"></i></a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    {% endfor %}
-                        
-                    </div>
-                </div>
-            </div>
-        </div>
+      </div>
     </div>
+    <div class="new_product_wrapper">
+      <div class="row">
+        <div class="col-lg-3 col-md-12">
+          <div
+            class="single_product_left_sidebar"
+            style="width: 274.8px; height: 414.4px"
+          >
+            {% for product in new_products_left_sidebar %}
+            <div class="single_product">
+              <div class="product_thumb">
+                <a href="{% url 'product_detail' product.slug %}">
+                  <img
+                    src="{{ product.product_img_thumbnail.url }}"
+                    alt="{{ product.name }}"
+                    style="width: 238px; height: 238px"
+                  />
+                </a>
+                <div class="label_product">
+                  <span class="label_sale">sale</span>
+                </div>
+                <div class="quick_button">
+                  <a
+                    href="#"
+                    data-bs-toggle="modal"
+                    data-bs-target="#modal_box"
+                    title="quick view"
+                  >
+                    <i class="zmdi zmdi-eye"></i
+                  ></a>
+                </div>
+              </div>
+              <div class="product_content">
+                <div class="product_name">
+                  <h3>
+                    <a href="{% url 'product_detail' product.slug %}">
+                      {{ product.name }}
+                    </a>
+                  </h3>
+                </div>
+                <div class="product_rating">
+                  <ul>
+                    <li>
+                      <a href="#"><i class="zmdi zmdi-star-outline"></i></a>
+                    </li>
+                    <li>
+                      <a href="#"><i class="zmdi zmdi-star-outline"></i></a>
+                    </li>
+                    <li>
+                      <a href="#"><i class="zmdi zmdi-star-outline"></i></a>
+                    </li>
+                    <li>
+                      <a href="#"><i class="zmdi zmdi-star-outline"></i></a>
+                    </li>
+                    <li>
+                      <a href="#"><i class="zmdi zmdi-star-outline"></i></a>
+                    </li>
+                  </ul>
+                </div>
+                <div class="price_box">
+                  {% if product.discount %}
+
+                  <span class="current_price"
+                    >Rs.{{ product.new_price|intcomma }}</span
+                  >
+                  <span class="old_price">Rs.{{ product.price|intcomma }}</span>
+                  <span class="discount">(-{{ product.discount }}%)</span>
+
+                  {% else %}
+
+                  <span class="current_price"
+                    >Rs.{{ product.price|intcomma }}</span
+                  >
+
+                  {% endif %}
+                </div>
+                <div class="action_links">
+                  <ul>
+                    <li class="wishlist">
+                      <form method="post" class="wishlist_form">{% csrf_token %}
+                        <input type="hidden"
+                               name="prod_slug"
+                               value="{{ product.slug }}">
+                        <button type="submit">
+                            <i class="fa fa-heart-o" aria-hidden="true"></i>
+                        </button>
+                      </form>
+                    </li>
+                    <li class="add_to_cart">
+                      <form method="post" class="cart_form">
+                        {% csrf_token %}
+                        <input
+                          type="hidden"
+                          name="prod_slug"
+                          value="{{ product.slug }}"
+                        />
+                        <button type="submit">
+                          <i class="zmdi zmdi-shopping-cart-plus"></i>
+                          add to cart
+                        </button>
+                      </form>
+                    </li>
+                    <li class="compare">
+                      <a href="#" title="compare"
+                        ><i class="zmdi zmdi-swap"></i
+                      ></a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="col-lg-6 col-md-12" style="width: 599.2px; height: 829.6px">
+          <div
+            class="single_product product_center"
+            style="width: 575.2px; height: 771.8px"
+          >
+            <div class="product_thumb">
+              <a href="{% url 'product_detail' new_products_center.slug %}">
+                <img
+                  src="{{ new_products_center.product_img_thumbnail.url }}"
+                  alt="{{ new_products_center.name }}"
+                  style="width: 555.2px; height: 555.2px"
+                />
+              </a>
+              <div class="quick_button">
+                <a
+                  href="#"
+                  data-bs-toggle="modal"
+                  data-bs-target="#modal_box"
+                  title="quick view"
+                >
+                  <i class="zmdi zmdi-eye"></i
+                ></a>
+              </div>
+            </div>
+            <div class="product_content">
+              <div class="product_name">
+                <h3>
+                  <a href="{% url 'product_detail' new_products_center.slug %}">
+                    {{ new_products_center.name }}
+                  </a>
+                </h3>
+              </div>
+              <div class="product_rating">
+                <ul>
+                  <li>
+                    <a href="#"><i class="zmdi zmdi-star-outline"></i></a>
+                  </li>
+                  <li>
+                    <a href="#"><i class="zmdi zmdi-star-outline"></i></a>
+                  </li>
+                  <li>
+                    <a href="#"><i class="zmdi zmdi-star-outline"></i></a>
+                  </li>
+                  <li>
+                    <a href="#"><i class="zmdi zmdi-star-outline"></i></a>
+                  </li>
+                  <li>
+                    <a href="#"><i class="zmdi zmdi-star-outline"></i></a>
+                  </li>
+                </ul>
+              </div>
+              <div class="price_box">
+                {% if new_products_center.discount %}
+
+                <span class="current_price"
+                  >Rs.{{ new_products_center.new_price|intcomma }}</span
+                >
+                <span class="old_price"
+                  >Rs.{{ new_products_center.price|intcomma }}</span
+                >
+                <span class="discount"
+                  >(-{{ new_products_center.discount }}%)</span
+                >
+
+                {% else %}
+
+                <span class="current_price"
+                  >Rs.{{ new_products_center.price|intcomma }}</span
+                >
+
+                {% endif %}
+              </div>
+              <div class="action_links">
+                <ul>
+                  <li class="wishlist">
+                    <form method="post" class="wishlist_form">{% csrf_token %}
+                      <input type="hidden"
+                             name="prod_slug"
+                             value="{{ product.slug }}">
+                      <button type="submit">
+                          <i class="fa fa-heart-o" aria-hidden="true"></i>
+                      </button>
+                    </form>
+                  </li>
+                  <li class="add_to_cart">
+                    <form method="post" class="cart_form">
+                      {% csrf_token %}
+                      <input
+                        type="hidden"
+                        name="prod_slug"
+                        value="{{ new_products_center.slug }}"
+                      />
+                      <button type="submit">
+                        <i class="zmdi zmdi-shopping-cart-plus"></i>
+                        add to cart
+                      </button>
+                    </form>
+                  </li>
+                  <li class="compare">
+                    <a href="#" title="compare"
+                      ><i class="zmdi zmdi-swap"></i
+                    ></a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-12">
+          <div
+            class="single_product_right_sidebar"
+            style="width: 274.8px; height: 414.4px"
+          >
+            {% for product in new_products_right_sidebar %}
+            <div class="single_product">
+              <div class="product_thumb">
+                <a href="{% url 'product_detail' product.slug %}">
+                  <img
+                    src="{{ product.product_img_thumbnail.url }}"
+                    alt="{{ product.name }}"
+                    style="width: 238px; height: 238px"
+                  />
+                </a>
+                <div class="label_product">
+                  <span class="label_sale">sale</span>
+                </div>
+                <div class="quick_button">
+                  <a
+                    href="#"
+                    data-bs-toggle="modal"
+                    data-bs-target="#modal_box"
+                    title="quick view"
+                  >
+                    <i class="zmdi zmdi-eye"></i
+                  ></a>
+                </div>
+              </div>
+              <div class="product_content">
+                <div class="product_name">
+                  <h3>
+                    <a href="{% url 'product_detail' product.slug %}">
+                      {{ product.name }}
+                    </a>
+                  </h3>
+                </div>
+                <div class="product_rating">
+                  <ul>
+                    <li>
+                      <a href="#"><i class="zmdi zmdi-star-outline"></i></a>
+                    </li>
+                    <li>
+                      <a href="#"><i class="zmdi zmdi-star-outline"></i></a>
+                    </li>
+                    <li>
+                      <a href="#"><i class="zmdi zmdi-star-outline"></i></a>
+                    </li>
+                    <li>
+                      <a href="#"><i class="zmdi zmdi-star-outline"></i></a>
+                    </li>
+                    <li>
+                      <a href="#"><i class="zmdi zmdi-star-outline"></i></a>
+                    </li>
+                  </ul>
+                </div>
+                <div class="price_box">
+                  {% if product.discount %}
+
+                  <span class="current_price"
+                    >Rs.{{ product.new_price|intcomma }}</span
+                  >
+                  <span class="old_price">Rs.{{ product.price|intcomma }}</span>
+                  <span class="discount">(-{{ product.discount }}%)</span>
+
+                  {% else %}
+
+                  <span class="current_price"
+                    >Rs.{{ product.price|intcomma }}</span
+                  >
+
+                  {% endif %}
+                </div>
+                <div class="action_links">
+                  <ul>
+                    <li class="wishlist">
+                      <form method="post" class="wishlist_form">{% csrf_token %}
+                        <input type="hidden"
+                               name="prod_slug"
+                               value="{{ product.slug }}">
+                        <button type="submit">
+                            <i class="fa fa-heart-o" aria-hidden="true"></i>
+                        </button>
+                      </form>
+                    </li>
+                    <li class="add_to_cart">
+                      <form method="post" class="cart_form">
+                        {% csrf_token %}
+                        <input
+                          type="hidden"
+                          name="prod_slug"
+                          value="{{ product.slug }}"
+                        />
+                        <button type="submit">
+                          <i class="zmdi zmdi-shopping-cart-plus"></i>
+                          add to cart
+                        </button>
+                      </form>
+                    </li>
+                    <li class="compare">
+                      <a href="#" title="compare"
+                        ><i class="zmdi zmdi-swap"></i
+                      ></a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

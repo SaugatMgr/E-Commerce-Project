@@ -81,9 +81,14 @@
                                         <div class="action_links">
                                             <ul>
                                             <li class="wishlist">
-                                                <a href="wishlist.html" title="Add to Wishlist">
-                                                    <i class="fa fa-heart-o" aria-hidden="true"></i>
-                                                </a>
+                                                <form method="post" class="wishlist_form">{% csrf_token %}
+                                                    <input type="hidden"
+                                                           name="prod_slug"
+                                                           value="{{ product.slug }}">
+                                                    <button type="submit">
+                                                        <i class="fa fa-heart-o" aria-hidden="true"></i>
+                                                    </button>
+                                                </form>
                                             </li>
                                                 <li class="add_to_cart">
                                                     <form method="post" class="cart_form">{% csrf_token %}
@@ -164,7 +169,7 @@
                                             <div class="action_links">
                                                 <ul>
                                                     <li class="wishlist">
-                                                        <a href="wishlist.html" title="Add to Wishlist">
+                                                        <a href="#" title="Add to Wishlist">
                                                             <i class="fa fa-heart-o" aria-hidden="true"></i>
                                                         </a>
                                                     </li>

@@ -1,4 +1,7 @@
 {% load static %}
+
+{% load humanize %}
+
 <div class="header_middle">
     <div class="container">
         <div class="row align-items-center">
@@ -28,37 +31,29 @@
                         </form>
                     </div>
                     <div class="mini_cart_wrapper">
-                        <a href="javascript:void(0)"><i class="zmdi zmdi-shopping-basket"></i> <span>2items - $213.00</span> </a>
+                        <a href="javascript:void(0)"><i class="zmdi zmdi-shopping-basket"></i> <span>2items - $13.00</span> </a>
                         <!--mini cart-->
                          <div class="mini_cart">
-                            <div class="cart_item">
-                               <div class="cart_img">
-                                   <a href="#"><img src="{% static 'pallas/img/s-product/product.jpg' %}" alt=""></a>
-                               </div>
-                                <div class="cart_info">
-                                    <a href="#">Condimentum Watches</a>
-
-                                    <span class="quantity">Qty: 1</span>
-                                    <span class="price_cart">$60.00</span>
-
+                            {% for item in cart_items %}
+                                <div class="cart_item">
+                                    <div class="cart_img">
+                                        {% comment %} <a href="{% url 'item.product_detail' 'item.product.slug' %}">
+                                        </a> {% endcomment %}
+                                        <img src="{{ item.product.product_img_thumbnail.url }}" alt="{{ item.product.name }}">
+                                    </div>
+                                    <div class="cart_info">
+                                        <a href="{% url 'product_detail' item.product.slug %}">
+                                            {{ item.product.name }}
+                                        </a>
+                                        <span class="quantity">Qty: {{ item.quantity }}</span>
+                                        <span class="price_cart">Rs. {{ item.product.price | intcomma }}</span>
+    
+                                    </div>
+                                    <div class="cart_remove">
+                                        <a href="#"><i class="ion-android-close"></i></a>
+                                    </div>
                                 </div>
-                                <div class="cart_remove">
-                                    <a href="#"><i class="ion-android-close"></i></a>
-                                </div>
-                            </div>
-                            <div class="cart_item">
-                               <div class="cart_img">
-                                   <a href="#"><img src="{% static 'pallas/img/s-product/product2.jpg' %}" alt=""></a>
-                               </div>
-                                <div class="cart_info">
-                                    <a href="#">Officiis debitis</a>
-                                    <span class="quantity">Qty: 1</span>
-                                    <span class="price_cart">$69.00</span>
-                                </div>
-                                <div class="cart_remove">
-                                    <a href="#"><i class="ion-android-close"></i></a>
-                                </div>
-                            </div>
+                            {% endfor %}
                             <div class="mini_cart_table">
                                 <div class="cart_total">
                                     <span>Subtotal:</span>
@@ -69,7 +64,7 @@
                             <div class="mini_cart_footer">
                                <div class="cart_button">
                                     <a href="{% url 'cart' %}">View cart</a>
-                                    <a href="checkout.html">Checkout</a>
+                                    <a href="{% url 'checkout' %}">Checkout</a>
                                 </div>
                             </div>
 
