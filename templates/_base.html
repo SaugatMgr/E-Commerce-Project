@@ -156,6 +156,52 @@
                 });
             });
 
+            // WishList Ajax
+            $(document).ready(function () {
+                $(".wishlist_form").submit(function (event) {
+                    event.preventDefault();
+                    var serialized_data = $(this).serialize();
+    
+                    $.ajax({
+                        type: "post",
+                        url: "{% url 'add_to_wishlist' %}",
+                        data: serialized_data,
+    
+                        success: function(response){
+                            alertify.set('notifier','position', 'top-right');
+                            alertify.success(response.message);
+                        },
+    
+                        error: function(response){
+                            alertify.set('notifier','position', 'top-right');
+                            alertify.error(response.responseJSON.message);
+                        }
+                    });
+                });
+
+                // Remove From Wishlist Ajax
+                $(".prod_rem_form").submit(function (event) {
+                    event.preventDefault();
+                    var serialized_data = $(this).serialize();
+    
+                    $.ajax({
+                        type: "post",
+                        url: "{% url 'remove_from_wishlist' %}",
+                        data: serialized_data,
+    
+                        success: function(response){
+                            alertify.set('notifier','position', 'top-right');
+                            alertify.success(response.message);
+                        },
+    
+                        error: function(response){
+                            alertify.set('notifier','position', 'top-right');
+                            alertify.error(response.responseJSON.message);
+                        }
+                    });
+                });
+            });
+
             // Shipping JS
             document.addEventListener('DOMContentLoaded', () => {
                 if (document.getElementById("inside_valley").checked == true){
@@ -173,6 +219,48 @@
 
                 document.getElementById("total_order_price").innerHTML = formatted_total_price;
             }
+
+            // Address Form Ajax
+            $("#address_form").submit(function(e){
+                e.preventDefault();
+
+                var serialized_data = $(this).serialize();
+                console.log(serialized_data);
+                $.ajax({
+                    type: "post",
+                    url: "{% url 'user_account' %}",
+                    data: serialized_data,
+                
+
+                    success: function(response){
+                        $("#address_form_msg").append(
+                            `
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                ${response.message}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                            `
+                        )
+                        setTimeout(function(){
+                            $('.alert').alert('close')
+                        }, 2000)
+                    },
+
+                    error: function(response){
+                        $("#address_form_msg").append(
+                            `
+                            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                ${response.responseJSON.message}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                            `
+                        )
+                        setTimeout(function(){
+                            $('.alert').alert('close')
+                        }, 2000)
+                    }
+                })
+            })
         </script>
 
         <!-- ALERTIFY JS -->
