@@ -28,27 +28,23 @@ class NameMsgEmail(models.Model):
 
 
 class Category(models.Model):
+    name = models.CharField(max_length=64)
+
     class Meta:
         verbose_name = "Category"
         verbose_name_plural = "Categories"
-        
-    name = models.CharField(max_length=64)
 
     def __str__(self):
         return self.name
 
 
 class SubCategory(models.Model):
+    name = models.CharField(max_length=64)
+    category = models.ForeignKey(Category, default="", on_delete=models.CASCADE)
+
     class Meta:
         verbose_name = "Sub Category"
         verbose_name_plural = "Sub Categories"
-        
-    name = models.CharField(max_length=64)
-    category = models.ForeignKey(
-        Category,
-        default="",
-        on_delete=models.CASCADE
-    )
 
     def __str__(self):
         return self.name
@@ -70,13 +66,14 @@ class Product(TimeStamp):
     views_count = models.PositiveBigIntegerField(default=0)
     is_featured = models.BooleanField(default=False)
     discount = models.PositiveIntegerField(
-        default=None, validators=[MinValueValidator(1), MaxValueValidator(99)], blank=True, null=True)
+        default=None,
+        validators=[MinValueValidator(1), MaxValueValidator(99)],
+        blank=True,
+        null=True,
+    )
 
     category = models.ForeignKey(
-        Category,
-        default="",
-        related_name="products",
-        on_delete=models.CASCADE
+        Category, default="", related_name="products", on_delete=models.CASCADE
     )
 
     tag = models.ManyToManyField(Tag)
@@ -84,7 +81,7 @@ class Product(TimeStamp):
     @property
     def new_price(self):
         if Product.discount:
-            return self.price - (self.price * (self.discount/100))
+            return self.price - (self.price * (self.discount / 100))
 
     def __str__(self):
         return self.name
@@ -101,14 +98,9 @@ class Product(TimeStamp):
 
 class Review(NameMsgEmail, TimeStamp):
     product = models.ForeignKey(
-        Product,
-        on_delete=models.CASCADE,
-        related_name="reviews"
+        Product, on_delete=models.CASCADE, related_name="reviews"
     )
-    user = models.ForeignKey(
-        CustomUser,
-        on_delete=models.CASCADE
-    )
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 
     def __str__(self):
         return f"{self.user}: {self.msg[:30]}"
@@ -123,9 +115,7 @@ class Contact(NameMsgEmail, TimeStamp):
 
 class Image(models.Model):
     product = models.ForeignKey(
-        Product,
-        on_delete=models.CASCADE,
-        related_name="images"
+        Product, on_delete=models.CASCADE, related_name="images"
     )
     images = models.ImageField(upload_to="product/product_images/")
 
