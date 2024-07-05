@@ -12,8 +12,8 @@ from electronics.models import Product
 
 
 class TimeStamp(models.Model):
-    created_date = models.DateTimeField(
-        auto_now_add=True, null=True, blank=True)
+    id = models.UUIDField(default=uuid.uuid4, primary_key=True)
+    created_date = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     updated_date = models.DateTimeField(auto_now=True, null=True, blank=True)
 
     class Meta:
@@ -35,12 +35,10 @@ class CustomUser(AbstractUser):
 
 class Customer(models.Model):
     user = models.OneToOneField(
-        CustomUser,
-        on_delete=models.CASCADE,
-        related_name="user"
+        CustomUser, on_delete=models.CASCADE, related_name="user"
     )
-    phone_number = PhoneNumberField()
-    address = models.CharField(max_length=250)
+    phone_number = PhoneNumberField(null=True, blank=True)
+    address = models.CharField(max_length=250, null=True, blank=True)
 
     def __str__(self):
         return f"{self.user.first_name} {self.user.last_name}"
@@ -53,7 +51,7 @@ class Cart(TimeStamp):
         on_delete=models.SET_NULL,
         related_name="customer",
         null=True,
-        blank=True
+        blank=True,
     )
 
     def __str__(self):
@@ -61,43 +59,32 @@ class Cart(TimeStamp):
 
 
 class CartItems(TimeStamp):
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(
-                fields=["cart", "product"],
-                name="unique_product_in_cart"
-            )
-        ]
-        verbose_name = "Cart Item"
-        verbose_name_plural = "Cart Items"
-
-    cart = models.ForeignKey(
-        Cart,
-        on_delete=models.CASCADE,
-        related_name="cart"
-    )
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name="cart")
     product = models.ForeignKey(
         Product,
         on_delete=models.CASCADE,
         related_name="products",
     )
-    quantity = models.PositiveIntegerField(
-        validators=[MinValueValidator(1)], default=1
-    )
+    quantity = models.PositiveIntegerField(validators=[MinValueValidator(1)], default=1)
+
+    class Meta:
+        unique_together = ("cart", "product")
+        verbose_name = "Cart Item"
+        verbose_name_plural = "Cart Items"
 
     VAT = 13
 
     @property
     def total_price(self):
-        vat_added_price = self.quantity * (self.product.price * (1 + self.VAT/100))
+        vat_added_price = self.quantity * (self.product.price * (1 + self.VAT / 100))
         discount = self.product.discount
-        
+
         if discount:
-            discount_added_price = self.product.price * (1-(discount/100))
+            discount_added_price = self.product.price * (1 - (discount / 100))
             final_price = "{:.3f}".format(vat_added_price - discount_added_price)
         else:
             final_price = "{:.3f}".format(vat_added_price)
-            
+
         return final_price
 
     def __str__(self):
@@ -105,6 +92,13 @@ class CartItems(TimeStamp):
 
 
 class Order(TimeStamp):
+    customer = models.OneToOneField(
+        Customer,
+        on_delete=models.SET_NULL,
+        related_name="customer_order",
+        null=True,
+        blank=True,
+    )
     ORDER_STATUS_CHOICES = [
         ("Pending", "Pending"),
         ("Processing", "Processing"),
@@ -112,17 +106,28 @@ class Order(TimeStamp):
         ("Completed", "Completed"),
         ("Cancelled", "Cancelled"),
     ]
-    cart = models.OneToOneField(
-        Cart,
-        on_delete=models.CASCADE,
-    )
-    street_no = models.CharField(max_length=150)
-    city = models.CharField(max_length=150)
-    state = models.CharField(max_length=50)
+    state_or_country = models.CharField(max_length=50)
     email = models.EmailField(max_length=255)
-    order_notes = models.TextField()
+    order_notes = models.TextField(null=True, blank=True)
     status = models.CharField(
-        max_length=20, choices=ORDER_STATUS_CHOICES, default="Pending")
+        max_length=20, choices=ORDER_STATUS_CHOICES, default="Pending"
+    )
 
     def __str__(self):
-        return f"By {self.cart.customer.user.first_name} {self.cart.customer.user.last_name}"
+        return f"By {self.customer.user.first_name} {self.customer.user.last_name}"
+
+
+class WishList(TimeStamp):
+    customer = models.OneToOneField(
+        Customer, on_delete=models.CASCADE, related_name="customer_wishlist"
+    )
+    product = models.ManyToManyField(Product, related_name="wishlisted")
+
+    class Meta:
+        verbose_name = "WishList"
+        verbose_name_plural = "WishList"
+
+    def __str__(self):
+        return (
+            f"{self.customer.user.first_name} {self.customer.user.last_name} WishList"
+        )
