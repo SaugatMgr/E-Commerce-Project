@@ -11,6 +11,7 @@ from django.views.generic import (
 )
 from django.contrib import messages
 from django.http import JsonResponse
+from django.db import transaction
 
 from .models import (
     Product,
@@ -18,7 +19,6 @@ from .models import (
     Category,
     SubCategory,
     Review,
-    Contact,
 )
 from accounts.models import (
     Customer,
@@ -47,7 +47,8 @@ class HomePageView(ListView):
         filter_product_by_views = Product.objects.filter(views_count__gte=0)
 
         filter_product_by_higher_views = filter_product_by_views.order_by(
-            "-views_count")
+            "-views_count"
+        )
         products_by_date = filter_product_by_views.order_by("-added_date")
 
         context["categories"] = all_categories
@@ -70,6 +71,12 @@ class HomePageView(ListView):
         # context["default_active_tab_category"] = Category.objects.first()
         # context["remaining_categories"] = all_categories[1:8]
 
+        current_customer = Customer.objects.filter(user=self.request.user).first()
+        if current_customer:
+            cart = Cart.objects.filter(customer=current_customer).first()
+            if cart:
+                context["cart_items"] = CartItems.objects.filter(cart=cart)
+
         return context
 
 
@@ -81,10 +88,6 @@ class ShopItemsView(HomePageView):
 
 class AboutUsPageView(TemplateView):
     template_name = "about_us.html"
-
-
-class ContactUsPageView(TemplateView):
-    template_name = "contact_us.html"
 
 
 class ProductDetailView(DetailView):
@@ -100,12 +103,13 @@ class ProductDetailView(DetailView):
 
         current_product_category = current_product.category.name
 
-        context["related_products"] = Product.objects.all().filter(
-            category__name__icontains=current_product_category
-        ).exclude(slug=current_product.slug)
+        context["related_products"] = (
+            Product.objects.all()
+            .filter(category__name__icontains=current_product_category)
+            .exclude(slug=current_product.slug)
+        )
 
-        context["upsale_products"] = all_products.exclude(
-            slug=current_product.slug)
+        context["upsale_products"] = all_products.exclude(slug=current_product.slug)
 
         return context
 
@@ -122,7 +126,7 @@ class ReviewView(View):
                 email=request.POST["email"],
                 msg=request.POST["msg"],
                 user=self.request.user,
-                product=current_product
+                product=current_product,
             )
             form.save()
             return redirect("product_detail", current_product.slug)
@@ -131,10 +135,7 @@ class ReviewView(View):
             return render(
                 request,
                 "main/home/product/product detail/product_details.html",
-                {
-                    "product": product,
-                    "form": form
-                }
+                {"product": product, "form": form},
             )
 
 
@@ -151,13 +152,15 @@ class ContactUsPageView(View):
         if form.is_valid():
             form.save()
             messages.success(
-                request, "Your message has been successfully sent—thank you for reaching out to us!"
+                request,
+                "Your message has been successfully sent—thank you for reaching out to us!",
             )
             return redirect("contact")
         else:
             messages.error(
-                request, "Please ensure all required fields are filled out correctly \
-                to submit the contact form."
+                request,
+                "Please ensure all required fields are filled out correctly \
+                to submit the contact form.",
             )
             return render(request, self.template_name, {"form": form})
 
@@ -177,23 +180,23 @@ class NewsLetterView(View):
                         "success": True,
                         "message": "Thank you for subscribing to our electrifying newsletter! Get ready \
                                     for the latest tech trends, exclusive offers, expert tips, and \
-                                    exciting giveaways as part of our electronic store community."
+                                    exciting giveaways as part of our electronic store community.",
                     },
-                    status=201
+                    status=201,
                 )
             else:
                 return JsonResponse(
                     {
                         "success": False,
                         "message": "Oops! It seems there was an issue with your newsletter \
-                                    subscription—please double-check your email and try again."
+                                    subscription—please double-check your email and try again.",
                     },
                     status=400,
                 )
         return JsonResponse(
             {
-                'success': False,
-                'message': 'Cannot process.Must be and AJAX XMLHttpRequest.',
+                "success": False,
+                "message": "Cannot process.Must be and AJAX XMLHttpRequest.",
             },
             status=400,
         )
@@ -236,71 +239,70 @@ class ProductDeleteView(DeleteView):
 
 
 class AddProductToCartView(View):
-
     def post(self, request, *args, **kwargs):
         ajax_format = request.headers.get("x-requested-with")
 
-        if ajax_format == "XMLHttpRequest":
-            if self.request.user.is_authenticated:
-                product_slug = request.POST["prod_slug"]
-                user = self.request.user
+        with transaction.atomic():
+            if ajax_format == "XMLHttpRequest":
+                if self.request.user.is_authenticated:
+                    product_slug = request.POST["prod_slug"]
+                    user = self.request.user
 
-                product = Product.objects.get(slug=product_slug)
-                customer = Customer.objects.get(user=user)
-                cart = Cart.objects.get(customer=customer)
+                    product = Product.objects.get(slug=product_slug)
+                    customer, created = Customer.objects.get_or_create(user=user)
+                    cart, created = Cart.objects.get_or_create(customer=customer)
 
-                # Check if the product exists
-                if product:
-                    # Check if product is already in the cart
-                    product_already_in_cart = CartItems.objects.filter(
-                        cart=cart, product=product)
-
-                    if product_already_in_cart:
-                        get_current_object = CartItems.objects.get(
-                            cart=cart, product=product)
-                        get_current_object.quantity += 1
-                        get_current_object.save()
-
-                        return JsonResponse(
-                            {
-                                "success": True,
-                                "message": f"You added {product.name} {get_current_object.quantity} times."
-                            },
-                            status=201
+                    # Check if the product exists
+                    if product:
+                        # Check if product is already in the cart
+                        product_already_in_cart = CartItems.objects.filter(
+                            cart=cart, product=product
                         )
+
+                        if product_already_in_cart:
+                            get_matching_cart_product = CartItems.objects.get(
+                                cart=cart, product=product
+                            )
+                            get_matching_cart_product.quantity += 1
+                            get_matching_cart_product.save()
+
+                            return JsonResponse(
+                                {
+                                    "success": True,
+                                    "message": f"You added {product.name} {get_matching_cart_product.quantity} times.",
+                                },
+                                status=201,
+                            )
+                        else:
+                            CartItems.objects.create(cart=cart, product=product)
+                            return JsonResponse(
+                                {
+                                    "success": True,
+                                    "message": f"{product.name} added to cart successfully.",
+                                },
+                                status=201,
+                            )
                     else:
-                        CartItems.objects.create(cart=cart, product=product)
                         return JsonResponse(
                             {
-                                "success": True,
-                                "message": f"{product.name} added to cart successfully."
+                                "success": False,
+                                "message": "The product does not exist.",
                             },
-                            status=201
+                            status=400,
                         )
                 else:
                     return JsonResponse(
-                        {
-                            "success": False,
-                            "message": "The product does not exist."
-                        },
-                        status=400
+                        {"success": False, "message": "Please Login to continue..."},
+                        status=400,
                     )
             else:
                 return JsonResponse(
                     {
                         "success": False,
-                        "message": "Please Login to continue..."
+                        "message": "Cannot process.Must be and AJAX XMLHttpRequest.",
                     },
-                    status=400
+                    status=400,
                 )
-        else:
-            return JsonResponse(
-                {
-                    'success': False,
-                    'message': 'Cannot process.Must be and AJAX XMLHttpRequest.',
-                },
-                status=400,
-            )
 
 
 class ShowCartItemsView(ListView):
