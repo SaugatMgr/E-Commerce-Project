@@ -8,6 +8,7 @@ from phonenumber_field.widgets import PhoneNumberPrefixWidget
 from .models import (
     CustomUser,
     Order,
+    Customer,
 )
 
 
@@ -27,10 +28,16 @@ class CustomUserChangeForm(UserChangeForm):
 class CheckOutForm(forms.ModelForm):
     class Meta:
         model = Order
-        fields = "__all__"
+        exclude = ("cart", "order_notes", "status", "customer", )
 
 class CustomerForm(forms.ModelForm):
     class Meta:
+        model = Customer
+        exclude = ("user",)
         widgets = {
-            "phone_number": PhoneNumberPrefixWidget(),
+            "phone_number": PhoneNumberPrefixWidget(
+                attrs={
+                    "class": "form-select",
+                    }
+                ),
         }
