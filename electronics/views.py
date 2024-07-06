@@ -24,7 +24,6 @@ from accounts.models import (
     Customer,
     Cart,
     CartItems,
-    WishList,
 )
 from .forms import (
     AddProductForm,
@@ -72,15 +71,18 @@ class HomePageView(ListView):
         # context["default_active_tab_category"] = Category.objects.first()
         # context["remaining_categories"] = all_categories[1:8]
 
-        current_customer = Customer.objects.filter(user=user).first()
-        if current_customer:
-            cart = Cart.objects.filter(customer=current_customer).first()
-            if cart:
-                cart_items = CartItems.objects.filter(cart=cart)
-                if cart_items:
-                    context["cart_items"] = cart_items
-                    context["cart_items_count"] = cart_items.count()
-                    context["sub_total"] = sum([item.quantity * item.product.price for item in cart_items])
+        if user.is_authenticated:
+            current_customer = Customer.objects.filter(user=user).first()
+            if current_customer:
+                cart = Cart.objects.filter(customer=current_customer).first()
+                if cart:
+                    cart_items = CartItems.objects.filter(cart=cart)
+                    if cart_items:
+                        context["cart_items"] = cart_items
+                        context["cart_items_count"] = cart_items.count()
+                        context["sub_total"] = sum(
+                            [item.quantity * item.product.price for item in cart_items]
+                        )
 
         return context
 
@@ -298,7 +300,7 @@ class AddProductToCartView(View):
                 else:
                     return JsonResponse(
                         {"success": False, "message": "Please Login to continue..."},
-                        status=400,
+                        status=401,
                     )
             else:
                 return JsonResponse(

@@ -82,15 +82,22 @@ class AddToWishListView(View):
 
     def post(self, request):
         ajax_format = request.headers.get("x-requested-with")
+        user = self.request.user
 
         with transaction.atomic():
             if ajax_format == "XMLHttpRequest":
+                if not user.is_authenticated:
+                    return JsonResponse(
+                        {
+                            "success": False,
+                            "message": "Please login to continue...",
+                        },
+                        status=401,
+                    )
                 product_slug = request.POST.get("prod_slug")
                 product = Product.objects.get(slug=product_slug)
 
-                customer, created = Customer.objects.get_or_create(
-                    user=self.request.user
-                )
+                customer, created = Customer.objects.get_or_create(user=user)
                 wish_list, created = WishList.objects.get_or_create(customer=customer)
 
                 if WishList.objects.filter(customer=customer, product=product).exists():
