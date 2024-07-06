@@ -24,6 +24,7 @@ from accounts.models import (
     Customer,
     Cart,
     CartItems,
+    WishList,
 )
 from .forms import (
     AddProductForm,
@@ -41,11 +42,11 @@ class HomePageView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
+        user = self.request.user
         all_categories = Category.objects.all()
-
         all_products = Product.objects.all()
-        filter_product_by_views = Product.objects.filter(views_count__gte=0)
 
+        filter_product_by_views = Product.objects.filter(views_count__gte=0)
         filter_product_by_higher_views = filter_product_by_views.order_by(
             "-views_count"
         )
@@ -71,12 +72,15 @@ class HomePageView(ListView):
         # context["default_active_tab_category"] = Category.objects.first()
         # context["remaining_categories"] = all_categories[1:8]
 
-        current_customer = Customer.objects.filter(user=self.request.user).first()
+        current_customer = Customer.objects.filter(user=user).first()
         if current_customer:
             cart = Cart.objects.filter(customer=current_customer).first()
             if cart:
                 context["cart_items"] = CartItems.objects.filter(cart=cart)
 
+        filter_by_customer = WishList.objects.filter(customer=current_customer).first()
+        context["wish_list_count"] = filter_by_customer.product.count() if filter_by_customer else 0
+        
         return context
 
 
