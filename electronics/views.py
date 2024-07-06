@@ -77,12 +77,10 @@ class HomePageView(ListView):
             cart = Cart.objects.filter(customer=current_customer).first()
             if cart:
                 cart_items = CartItems.objects.filter(cart=cart)
-                context["cart_items"] = cart_items
                 if cart_items:
+                    context["cart_items"] = cart_items
+                    context["cart_items_count"] = cart_items.count()
                     context["sub_total"] = sum([item.quantity * item.product.price for item in cart_items])
-
-        filter_by_customer = WishList.objects.filter(customer=current_customer).first()
-        context["wish_list_count"] = filter_by_customer.product.count() if filter_by_customer else 0
 
         return context
 
