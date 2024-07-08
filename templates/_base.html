@@ -261,6 +261,24 @@
                     }
                 })
             })
+
+            $(document).ready(function() {
+                function toggleCollapse() {
+                    if ($('#account').is(':checked')) {
+                        $('#collapseOne').slideDown(300);
+                    } else {
+                        $('#collapseOne').slideUp(300);
+                    }
+                }
+        
+                $('#account').change(toggleCollapse);
+        
+                $('label[for="account"]').click(function(event) {
+                    // Prevent default label click behavior if needed
+                    event.preventDefault();
+                    $('#account').prop('checked', !$('#account').prop('checked')).change();
+                });
+            });
         </script>
 
         <!-- ALERTIFY JS -->
