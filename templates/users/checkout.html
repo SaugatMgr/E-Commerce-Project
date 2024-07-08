@@ -12,7 +12,6 @@
         <div class="container">
             <div class="row">
                 <div class="col-12">
-                    {{ form.as_p }}
                     <div class="user-actions">
                         <h3> 
                             <i class="fa fa-file-o" aria-hidden="true"></i>
@@ -62,184 +61,163 @@
                     </div>    
                 </div>
             </div>
-            <div class="checkout_form">
-                <div class="row">
-                    <div class="col-lg-6 col-md-6">
-                        <form action="#">
+            <form method="post" action="{% url 'checkout' %}">
+                {% csrf_token %}
+                <div class="checkout_form">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6">
                             <h3>Billing Details</h3>
+                            {{ user_form.non_field_errors }}
+                            {{ address_form.non_field_errors }}
+                            {{ customer_form.non_field_errors }}
+                            {{ checkout_form.non_field_errors }}
                             <div class="row">
-
+                                <!-- Billing Details Fields -->
                                 <div class="col-lg-6 mb-20">
-                                    <label>First Name <span>*</span></label>
-                                    <input type="text">    
+                                    <label for="id_first_name">First Name <span>*</span></label>
+                                    {{ user_form.first_name }}
+                                    <div class="invalid-feedback">
+                                        {{ user_form.first_name.errors }}
+                                    </div>
                                 </div>
                                 <div class="col-lg-6 mb-20">
-                                    <label>Last Name  <span>*</span></label>
-                                    <input type="text"> 
+                                    <label for="id_last_name">Last Name <span>*</span></label>
+                                    {{ user_form.last_name }}
+                                    <div class="invalid-feedback">
+                                        {{ user_form.last_name.errors }}
+                                    </div>
                                 </div>
                                 <div class="col-12 mb-20">
-                                    <label>Company Name</label>
-                                    <input type="text">     
+                                    <label for="id_address_line_1">Address Line 1 <span>*</span></label>
+                                    {{ address_form.address_line_1 }}
+                                    <div class="invalid-feedback">
+                                        {{ address_form.address_line_1.errors }}
+                                    </div>
                                 </div>
                                 <div class="col-12 mb-20">
-                                    <label for="country">country <span>*</span></label>
-                                    <select class="niceselect_option" name="cuntry" id="country"> 
-                                        <option value="2">bangladesh</option>      
-                                        <option value="3">Algeria</option> 
-                                        <option value="4">Afghanistan</option>    
-                                        <option value="5">Ghana</option>    
-                                        <option value="6">Albania</option>    
-                                        <option value="7">Bahrain</option>    
-                                        <option value="8">Colombia</option>    
-                                        <option value="9">Dominican Republic</option>   
-
-                                    </select>
-                                </div>
-
-                                <div class="col-12 mb-20">
-                                    <label>Street address  <span>*</span></label>
-                                    <input placeholder="House number and street name" type="text">     
+                                    <label for="id_address_line_2">Address Line 2 <span>*</span></label>
+                                    {{ address_form.address_line_2 }}
+                                    <div class="invalid-feedback">
+                                        {{ address_form.address_line_2.errors }}
+                                    </div>
                                 </div>
                                 <div class="col-12 mb-20">
-                                    <input placeholder="Apartment, suite, unit etc. (optional)" type="text">     
+                                    <label for="id_city">Town / City <span>*</span></label>
+                                    {{ address_form.city }}
+                                    <div class="invalid-feedback">
+                                        {{ address_form.city.errors }}
+                                    </div>
                                 </div>
                                 <div class="col-12 mb-20">
-                                    <label>Town / City <span>*</span></label>
-                                    <input  type="text">    
-                                </div> 
-                                <div class="col-12 mb-20">
-                                    <label>State / County <span>*</span></label>
-                                    <input type="text">    
-                                </div> 
+                                    <label for="id_state_or_province">State / Province <span>*</span></label>
+                                    {{ address_form.state_or_province }}
+                                    <div class="invalid-feedback">
+                                        {{ address_form.state_or_province.errors }}
+                                    </div>
+                                </div>
                                 <div class="col-lg-6 mb-20">
-                                    <label>Phone<span>*</span></label>
-                                    <input type="text"> 
-
-                                </div> 
+                                    <label for="id_phone_number">Phone <span>*</span></label>
+                                    {{ customer_form.phone_number }}
+                                    <div class="invalid-feedback">
+                                        {{ customer_form.phone_number.errors }}
+                                    </div>
+                                </div>
                                 <div class="col-lg-6 mb-20">
-                                    <label> Email Address   <span>*</span></label>
-                                    <input type="text"> 
+                                    <label for="id_email">Email Address <span>*</span></label>
+                                    {{ user_form.email }}
+                                    <div class="invalid-feedback">
+                                        {{ user_form.email.errors }}
+                                    </div>
                                 </div>
                                 <div class="payment_method">
                                     <label>Delivery <span>*</span></label>
                                     <div class="panel-default" style="position: relative;">
-                                        <input id="inside_valley"
-                                               name="check_method"
-                                               type="radio"
-                                               onclick="shipping_price_update(80)"
-                                               checked>
-                                        <label for="inside_valley">
-                                               Inside Valley
-                                        </label>
+                                        <input id="inside_valley" name="check_method" type="radio" onclick="shipping_price_update(80)" checked>
+                                        <label for="inside_valley">Inside Valley</label>
                                         <span style="position:absolute;right:0;">Rs.80</span>
-                                    </div>  
+                                    </div>
                                     <div class="panel-default" style="position: relative;">
-                                        <input id="outside_valley"
-                                               name="check_method"
-                                               type="radio"
-                                               onclick="shipping_price_update(250)">
-                                        <label for="outside_valley">
-                                            Outside Valley
-                                        </label>
+                                        <input id="outside_valley" name="check_method" type="radio" onclick="shipping_price_update(250)">
+                                        <label for="outside_valley">Outside Valley</label>
                                         <span style="position:absolute;right:0;">Rs.250</span>
-                                    </div>  
+                                    </div>
                                     <div class="panel-default" style="position: relative;">
-                                        <input id="store_pickup"
-                                               name="check_method"
-                                               type="radio"
-                                               onclick="shipping_price_update(0)">
-                                        <label for="store_pickup">
-                                               Store Pickup
-                                        </label>
+                                        <input id="store_pickup" name="check_method" type="radio" onclick="shipping_price_update(0)">
+                                        <label for="store_pickup">Store Pickup</label>
                                         <span style="position:absolute;right:0;">Rs.0</span>
-                                    </div>  
-                                </div> 
+                                    </div>
+                                </div>
                                 <div class="col-12 mb-20 mt-2">
-                                    <input id="account" type="checkbox" data-bs-target="createp_account" />
-                                    <label for="account" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-controls="collapseOne">Create an account?</label>
-
-                                    <div id="collapseOne" class="collapse one" data-parent="#accordion">
+                                    <input id="account" type="checkbox" />
+                                    <label for="account" aria-controls="collapseOne">Create an account?</label>
+                                    <div id="collapseOne" class="collapse one" style="display: none;">
                                         <div class="card-body1">
-                                            <label> Account password   <span>*</span></label>
-                                            <input placeholder="password" type="password">  
+                                            <label for="{{ user_form.password.id_for_label }}">Account password <span>*</span></label>
+                                            {{ user_form.password }}
+                                            <div class="invalid-feedback">
+                                                {{ user_form.password.errors }}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-12 mb-20">
                                     <input id="address" type="checkbox" data-bs-target="createp_account" />
                                     <label class="righ_0" for="address" data-bs-toggle="collapse" data-bs-target="#collapsetwo" aria-controls="collapseOne">Ship to a different address?</label>
-
                                     <div id="collapsetwo" class="collapse one" data-parent="#accordion">
                                         <div class="row">
                                             <div class="col-lg-6 mb-20">
-                                                <label>First Name <span>*</span></label>
-                                                <input type="text">    
+                                                <label for="id_alt_first_name">First Name <span>*</span></label>
+                                                <input type="text" name="alt_first_name" id="id_alt_first_name">
+                                                <span class="error-message">{{ form.alt_first_name.errors }}</span>
                                             </div>
                                             <div class="col-lg-6 mb-20">
-                                                <label>Last Name  <span>*</span></label>
-                                                <input type="text"> 
+                                                <label for="id_alt_last_name">Last Name <span>*</span></label>
+                                                <input type="text" name="alt_last_name" id="id_alt_last_name">
+                                                <span class="error-message">{{ form.alt_last_name.errors }}</span>
                                             </div>
                                             <div class="col-12 mb-20">
-                                                <label>Company Name</label>
-                                                <input type="text">     
+                                                <label for="id_alt_address_line_1">Street address <span>*</span></label>
+                                                <input placeholder="House number and street name" type="text" name="alt_address_line_1" id="id_alt_address_line_1">
+                                                <span class="error-message">{{ form.alt_address_line_1.errors }}</span>
                                             </div>
                                             <div class="col-12 mb-20">
-                                                <div class="select_form_select">
-                                                    <label for="countru_name">country <span>*</span></label>
-                                                    <select class="niceselect_option" name="cuntry" id="countru_name"> 
-                                                        <option value="2">bangladesh</option>      
-                                                        <option value="3">Algeria</option> 
-                                                        <option value="4">Afghanistan</option>    
-                                                        <option value="5">Ghana</option>    
-                                                        <option value="6">Albania</option>    
-                                                        <option value="7">Bahrain</option>    
-                                                        <option value="8">Colombia</option>    
-                                                        <option value="9">Dominican Republic</option>   
-
-                                                    </select>
-                                                </div> 
-                                            </div>
-
-                                            <div class="col-12 mb-20">
-                                                <label>Street address  <span>*</span></label>
-                                                <input placeholder="House number and street name" type="text">     
+                                                <input placeholder="Apartment, suite, unit etc. (optional)" type="text" name="alt_address_line_2" id="id_alt_address_line_2">
+                                                <span class="error-message">{{ form.alt_address_line_2.errors }}</span>
                                             </div>
                                             <div class="col-12 mb-20">
-                                                <input placeholder="Apartment, suite, unit etc. (optional)" type="text">     
+                                                <label for="id_alt_city">Town / City <span>*</span></label>
+                                                <input type="text" name="alt_city" id="id_alt_city">
+                                                <span class="error-message">{{ form.alt_city.errors }}</span>
                                             </div>
                                             <div class="col-12 mb-20">
-                                                <label>Town / City <span>*</span></label>
-                                                <input  type="text">    
-                                            </div> 
-                                            <div class="col-12 mb-20">
-                                                <label>State / County <span>*</span></label>
-                                                <input type="text">    
-                                            </div> 
+                                                <label for="id_alt_state_province">State / County <span>*</span></label>
+                                                <input type="text" name="alt_state_province" id="id_alt_state_province">
+                                                <span class="error-message">{{ form.alt_state_province.errors }}</span>
+                                            </div>
                                             <div class="col-lg-6 mb-20">
-                                                <label>Phone<span>*</span></label>
-                                                <input type="text"> 
-
-                                            </div> 
+                                                <label for="id_alt_phone">Phone <span>*</span></label>
+                                                <input type="text" name="alt_phone" id="id_alt_phone">
+                                                <span class="error-message">{{ form.alt_phone.errors }}</span>
+                                            </div>
                                             <div class="col-lg-6">
-                                                <label> Email Address   <span>*</span></label>
-                                                <input type="text"> 
-
-                                            </div> 
+                                                <label for="id_alt_email">Email Address <span>*</span></label>
+                                                <input type="text" name="alt_email" id="id_alt_email">
+                                                <span class="error-message">{{ form.alt_email.errors }}</span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-12">
                                     <div class="order-notes">
-                                        <label for="order_note">Order Notes</label>
-                                        <textarea id="order_note" placeholder="Notes about your order, e.g. special notes for delivery."></textarea>
-                                    </div>    
-                                </div>     	    	    	    	    	    	    
+                                        <label for="{{ checkout_form.order_notes.id_for_label }}">Order Notes</label>
+                                        {{ checkout_form.order_notes }}
+                                        <span class="error-message">{{ checkout_form.order_notes.errors }}</span>
+                                    </div>
+                                </div>
                             </div>
-                        </form>    
-                    </div>
-                    <div class="col-lg-6 col-md-6">
-                        <form action="#">    
-                            <h3>Your order</h3> 
+                        </div>
+                        <div class="col-lg-6 col-md-6">
+                            <h3>Your order</h3>
                             <div class="order_table table-responsive">
                                 <table>
                                     <thead>
@@ -249,61 +227,50 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        
                                         {% for item in ordered_items %}
                                             <tr>
-                                                <td> {{ item.product.name }} 
-                                                    <strong> × {{ item.quantity }}</strong>
-                                                </td>
+                                                <td>{{ item.product.name }} <strong> × {{ item.quantity }}</strong></td>
                                                 <td> Rs.{{ item.total_price|intcomma }}</td>
                                             </tr>
                                         {% endfor %}
-                                            
                                     </tbody>
                                     <tfoot>
                                         <tr>
                                             <th>Cart Subtotal</th>
-                                            <td>Rs.
-                                                <span id="sub_total">{{ sub_total|intcomma }}</span>
-                                            </td>
+                                            <td>Rs.<span id="sub_total">{{ sub_total|intcomma }}</span></td>
                                         </tr>
                                         <tr>
                                             <th>Shipping</th>
-                                            <td>
-                                                <strong>Rs.</strong>
-                                                <strong id="shipping_price">80</strong></td>
+                                            <td>Rs.<span id="shipping_price">80</span></td>
                                         </tr>
                                         <tr class="order_total">
                                             <th>Order Total</th>
-                                            <td>
-                                                <strong>Rs.</strong>
-                                                <strong id="total_order_price"></strong>
-                                            </td>
+                                            <td>Rs.<span id="total_order_price"></span></td>
                                         </tr>
                                     </tfoot>
-                                </table>     
+                                </table>
                             </div>
                             <h3>Payment</h3>
                             <div class="payment_method">
-                                <div class="panel-default">
-                                    <input id="payment_defult" name="check_method" type="radio" data-bs-target="createp_account" />
-                                    <label for="payment_defult" data-bs-toggle="collapse" data-bs-target="#collapsedefult" aria-controls="collapsedefult">PayPal <img src="assets/img/icon/papyel.png" alt=""></label>
-
-                                    <div id="collapsedefult" class="collapse one" data-parent="#accordion">
-                                        <div class="card-body1">
-                                            <p>Pay via PayPal; you can pay with your credit card if you don’t have a PayPal account.</p> 
-                                        </div>
-                                    </div>
+                                <select name="payment_method" required id="{{ checkout_form.payment_method.id_for_label }}" class="form-select">
+                                    {% for value, display in checkout_form.payment_method.field.choices %}
+                                        <option value="{{ value }}" {% if checkout_form.payment_method.value == value %}selected{% endif %}>
+                                            {{ display }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                                <div class="invalid-feedback">
+                                    {{ checkout_form.payment_method.errors }}
                                 </div>
-                                <div class="order_button">
-                                    <button  type="submit">Proceed to PayPal</button> 
-                                </div>    
-                            </div> 
-                        </form>         
+                                <div class="order_button" style="margin-top: 5px;">
+                                    <button type="submit">Proceed to Payment</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div> 
-            </div> 
-        </div>       
+                </div>
+            </form>
+        </div>
     </div>
-    <!--Checkout page section end-->
+    <!--Checkout page section end-->   
 {% endblock content %}
