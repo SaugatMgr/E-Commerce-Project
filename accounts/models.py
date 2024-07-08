@@ -2,7 +2,6 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from phonenumber_field.modelfields import PhoneNumberField
 from django.core.validators import MinValueValidator
 import uuid
 
@@ -12,7 +11,7 @@ from electronics.models import Product
 
 
 class TimeStamp(models.Model):
-    id = models.UUIDField(default=uuid.uuid4, primary_key=True)
+    id = models.UUIDField(default=uuid.uuid4, primary_key=True, editable=False)
     created_date = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     updated_date = models.DateTimeField(auto_now=True, null=True, blank=True)
 
@@ -37,11 +36,24 @@ class Customer(models.Model):
     user = models.OneToOneField(
         CustomUser, on_delete=models.CASCADE, related_name="user"
     )
-    phone_number = PhoneNumberField(null=True, blank=True)
-    address = models.CharField(max_length=250, null=True, blank=True)
+    phone_number = models.CharField(max_length=10, null=True, blank=True)
 
     def __str__(self):
         return f"{self.user.first_name} {self.user.last_name}"
+
+
+class Address(models.Model):
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    address_line_1 = models.CharField(max_length=255)
+    address_line_2 = models.CharField(max_length=255, blank=True, null=True)
+    city = models.CharField(max_length=100)
+    state_or_province = models.CharField(max_length=50)
+    postal_code = models.CharField(max_length=20, blank=True, null=True)
+
+    def __str__(self):
+        return (
+            f"{self.customer.user.first_name} {self.customer.user.last_name}'s Address"
+        )
 
 
 class Cart(TimeStamp):
@@ -92,12 +104,10 @@ class CartItems(TimeStamp):
 
 
 class Order(TimeStamp):
-    customer = models.OneToOneField(
+    customer = models.ForeignKey(
         Customer,
-        on_delete=models.SET_NULL,
+        on_delete=models.CASCADE,
         related_name="customer_order",
-        null=True,
-        blank=True,
     )
     ORDER_STATUS_CHOICES = [
         ("Pending", "Pending"),
@@ -106,15 +116,39 @@ class Order(TimeStamp):
         ("Completed", "Completed"),
         ("Cancelled", "Cancelled"),
     ]
-    state_or_country = models.CharField(max_length=50)
-    email = models.EmailField(max_length=255)
+    PAYMENT_STATUS_CHOICES = [
+        ("UNPAID", "Unpaid"),
+        ("PAID", "Paid"),
+        ("REFUNDED", "Refunded"),
+    ]
+
+    PAYMENT_METHOD_CHOICES = [
+        ("Khalti", "Khalti"),
+        # ('PAYPAL', 'PayPal'),
+        # ('BANK_TRANSFER', 'Bank Transfer'),
+    ]
     order_notes = models.TextField(null=True, blank=True)
     status = models.CharField(
         max_length=20, choices=ORDER_STATUS_CHOICES, default="Pending"
     )
+    shipping_address = models.ForeignKey(
+        Address, related_name="shipping_orders", on_delete=models.SET_NULL, null=True
+    )
+    billing_address = models.ForeignKey(
+        Address, related_name="billing_orders", on_delete=models.SET_NULL, null=True
+    )
+    order_date = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    payment_status = models.CharField(
+        max_length=20, choices=PAYMENT_STATUS_CHOICES, default="UNPAID"
+    )
+    payment_method = models.CharField(max_length=20, choices=PAYMENT_METHOD_CHOICES)
+    subtotal = models.DecimalField(max_digits=10, decimal_places=2)
+    shipping_cost = models.DecimalField(max_digits=10, decimal_places=2)
+    total = models.DecimalField(max_digits=10, decimal_places=2)
+    tracking_number = models.CharField(max_length=50, blank=True, null=True)
 
     def __str__(self):
-        return f"By {self.customer.user.first_name} {self.customer.user.last_name}"
+        return f"Order #{self.id} by {self.customer.user.first_name} {self.customer.user.last_name}"
 
 
 class WishList(TimeStamp):
