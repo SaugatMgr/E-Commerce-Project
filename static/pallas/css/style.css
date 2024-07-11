@@ -12366,6 +12366,14 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
   }
 }
 
+/* error message display */
+.error-message {
+  width: 100%;
+  margin-top: 0.25rem;
+  font-size: 0.875em;
+  color: #dc3545;
+}
+
 /*404 page css end*/
 /* 25. portfolio css here */
 .portfolio_section_area {
