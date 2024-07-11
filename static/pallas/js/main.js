@@ -492,15 +492,15 @@
      $('.select_option').niceSelect();
     
     /*---  Accordion---*/
-    $(".faequently-accordion").collapse({
-        accordion:true,
-        open: function() {
-        this.slideDown(300);
-      },
-      close: function() {
-        this.slideUp(300);
-      }		
-    });	  
+    // $(".faequently-accordion").collapse({
+    //     accordion:true,
+    //     open: function() {
+    //     this.slideDown(300);
+    //   },
+    //   close: function() {
+    //     this.slideUp(300);
+    //   }		
+    // });	  
 
     /*--- counterup activation ---*/
     $('.counter_number').counterUp({
