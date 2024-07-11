@@ -1,9 +1,13 @@
+import uuid
+import decimal
+
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from django.core.validators import MinValueValidator
-import uuid
+
+from accounts.constants import ORDER_STATUS_CHOICES, PAYMENT_METHOD_CHOICES, PAYMENT_STATUS_CHOICES
 
 from .managers import CustomUserManager
 
@@ -50,10 +54,26 @@ class Address(models.Model):
     state_or_province = models.CharField(max_length=50)
     postal_code = models.CharField(max_length=20, blank=True, null=True)
 
+    class Meta:
+        abstract = True
+
+
+class BillingAddress(Address):
+    class Meta:
+        verbose_name = "Billing Address"
+        verbose_name_plural = "Billing Addresses"
+
     def __str__(self):
-        return (
-            f"{self.customer.user.first_name} {self.customer.user.last_name}'s Address"
-        )
+        return f"{self.customer.user.first_name} {self.customer.user.last_name}'s Billing Address"
+
+
+class ShippingAddress(Address):
+    class Meta:
+        verbose_name = "Shipping Address"
+        verbose_name_plural = "Shipping Addresses"
+
+    def __str__(self):
+        return f"{self.customer.user.first_name} {self.customer.user.last_name}'s Shipping Address"
 
 
 class Cart(TimeStamp):
@@ -88,11 +108,15 @@ class CartItems(TimeStamp):
 
     @property
     def total_price(self):
-        vat_added_price = self.quantity * (self.product.price * (1 + self.VAT / 100))
+        vat_added_price = self.quantity * (
+            self.product.price * decimal.Decimal((1 + self.VAT / 100))
+        )
         discount = self.product.discount
 
         if discount:
-            discount_added_price = self.product.price * (1 - (discount / 100))
+            discount_added_price = self.product.price * decimal.Decimal(
+                (1 - (discount / 100))
+            )
             final_price = "{:.3f}".format(vat_added_price - discount_added_price)
         else:
             final_price = "{:.3f}".format(vat_added_price)
@@ -109,33 +133,22 @@ class Order(TimeStamp):
         on_delete=models.CASCADE,
         related_name="customer_order",
     )
-    ORDER_STATUS_CHOICES = [
-        ("Pending", "Pending"),
-        ("Processing", "Processing"),
-        ("On the Way", "On the Way"),
-        ("Completed", "Completed"),
-        ("Cancelled", "Cancelled"),
-    ]
-    PAYMENT_STATUS_CHOICES = [
-        ("UNPAID", "Unpaid"),
-        ("PAID", "Paid"),
-        ("REFUNDED", "Refunded"),
-    ]
-
-    PAYMENT_METHOD_CHOICES = [
-        ("Khalti", "Khalti"),
-        # ('PAYPAL', 'PayPal'),
-        # ('BANK_TRANSFER', 'Bank Transfer'),
-    ]
+    
     order_notes = models.TextField(null=True, blank=True)
     status = models.CharField(
         max_length=20, choices=ORDER_STATUS_CHOICES, default="Pending"
     )
     shipping_address = models.ForeignKey(
-        Address, related_name="shipping_orders", on_delete=models.SET_NULL, null=True
+        ShippingAddress,
+        related_name="shipping_orders",
+        on_delete=models.SET_NULL,
+        null=True,
     )
     billing_address = models.ForeignKey(
-        Address, related_name="billing_orders", on_delete=models.SET_NULL, null=True
+        BillingAddress,
+        related_name="billing_orders",
+        on_delete=models.SET_NULL,
+        null=True,
     )
     order_date = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     payment_status = models.CharField(
@@ -143,7 +156,7 @@ class Order(TimeStamp):
     )
     payment_method = models.CharField(max_length=20, choices=PAYMENT_METHOD_CHOICES)
     subtotal = models.DecimalField(max_digits=10, decimal_places=2)
-    shipping_cost = models.DecimalField(max_digits=10, decimal_places=2)
+    shipping_cost = models.DecimalField(max_digits=5, decimal_places=2)
     total = models.DecimalField(max_digits=10, decimal_places=2)
     tracking_number = models.CharField(max_length=50, blank=True, null=True)
 
