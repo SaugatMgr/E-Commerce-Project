@@ -74,137 +74,180 @@
                             <div class="row">
                                 <!-- Billing Details Fields -->
                                 <div class="col-lg-6 mb-20">
-                                    <label for="id_first_name">First Name <span>*</span></label>
+                                    <label for="{{ user_form.first_name.id_for_label }}">First Name <span>*</span></label>
                                     {{ user_form.first_name }}
-                                    <div class="invalid-feedback">
-                                        {{ user_form.first_name.errors }}
-                                    </div>
+                                    <span class="error-message">
+                                        {% for error in user_form.first_name.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </span>
                                 </div>
                                 <div class="col-lg-6 mb-20">
-                                    <label for="id_last_name">Last Name <span>*</span></label>
+                                    <label for="{{ user_form.last_name.id_for_label }}">Last Name <span>*</span></label>
                                     {{ user_form.last_name }}
-                                    <div class="invalid-feedback">
-                                        {{ user_form.last_name.errors }}
-                                    </div>
+                                    <span class="error-message">
+                                        {% for error in user_form.last_name.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </span>
                                 </div>
                                 <div class="col-12 mb-20">
-                                    <label for="id_address_line_1">Address Line 1 <span>*</span></label>
+                                    <label for="{{ address_form.address_line_1.id_for_label }}">Address Line 1 <span>*</span></label>
                                     {{ address_form.address_line_1 }}
-                                    <div class="invalid-feedback">
-                                        {{ address_form.address_line_1.errors }}
-                                    </div>
+                                    <span class="error-message">
+                                        {% for error in address_form.address_line_1.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </span>
                                 </div>
                                 <div class="col-12 mb-20">
-                                    <label for="id_address_line_2">Address Line 2 <span>*</span></label>
+                                    <label for="{{ address_form.address_line_2.id_for_label }}">Address Line 2 <span>*</span></label>
                                     {{ address_form.address_line_2 }}
-                                    <div class="invalid-feedback">
-                                        {{ address_form.address_line_2.errors }}
-                                    </div>
+                                    <span class="error-message">
+                                        {% for error in address_form.address_line_2.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </span>
                                 </div>
                                 <div class="col-12 mb-20">
-                                    <label for="id_city">Town / City <span>*</span></label>
+                                    <label for="{{ address_form.city.id_for_label }}">Town / City <span>*</span></label>
                                     {{ address_form.city }}
-                                    <div class="invalid-feedback">
-                                        {{ address_form.city.errors }}
-                                    </div>
+                                    <span class="error-message">
+                                        {% for error in address_form.city.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </span>
                                 </div>
-                                <div class="col-12 mb-20">
-                                    <label for="id_state_or_province">State / Province <span>*</span></label>
+                                <div class="col-lg-6 mb-20">
+                                    <label for="{{ address_form.state_or_province.id_for_label }}">State / Province <span>*</span></label>
                                     {{ address_form.state_or_province }}
-                                    <div class="invalid-feedback">
-                                        {{ address_form.state_or_province.errors }}
-                                    </div>
+                                    <span class="error-message">
+                                        {% for error in address_form.state_or_province.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </span>
                                 </div>
                                 <div class="col-lg-6 mb-20">
-                                    <label for="id_phone_number">Phone <span>*</span></label>
+                                    <label for="{{ address_form.postal_code.id_for_label }}">Postal Code <span>*</span></label>
+                                    {{ address_form.postal_code }}
+                                    <span class="error-message">
+                                        {% for error in address_form.postal_code.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </span>
+                                </div>
+                                <div class="col-lg-6 mb-20">
+                                    <label for="{{ customer_form.phone_number.id_for_label }}">Phone <span>*</span></label>
                                     {{ customer_form.phone_number }}
-                                    <div class="invalid-feedback">
-                                        {{ customer_form.phone_number.errors }}
-                                    </div>
+                                    <span class="error-message">
+                                        {% for error in customer_form.phone_number.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </span>
                                 </div>
                                 <div class="col-lg-6 mb-20">
-                                    <label for="id_email">Email Address <span>*</span></label>
+                                    <label for="{{ user_form.email.id_for_label }}">Email Address <span>*</span></label>
                                     {{ user_form.email }}
-                                    <div class="invalid-feedback">
-                                        {{ user_form.email.errors }}
-                                    </div>
+                                    <span class="error-message">
+                                        {% for error in user_form.email.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </span>
                                 </div>
                                 <div class="payment_method">
                                     <label>Delivery <span>*</span></label>
                                     <div class="panel-default" style="position: relative;">
                                         <input id="inside_valley" name="check_method" type="radio" onclick="shipping_price_update(80)" checked>
                                         <label for="inside_valley">Inside Valley</label>
-                                        <span style="position:absolute;right:0;">Rs.80</span>
+                                        <span style="position:absolute;right:0;font-weight: bold;">Rs.80</span>
                                     </div>
                                     <div class="panel-default" style="position: relative;">
                                         <input id="outside_valley" name="check_method" type="radio" onclick="shipping_price_update(250)">
                                         <label for="outside_valley">Outside Valley</label>
-                                        <span style="position:absolute;right:0;">Rs.250</span>
+                                        <span style="position:absolute;right:0;font-weight: bold;">Rs.250</span>
                                     </div>
                                     <div class="panel-default" style="position: relative;">
                                         <input id="store_pickup" name="check_method" type="radio" onclick="shipping_price_update(0)">
                                         <label for="store_pickup">Store Pickup</label>
-                                        <span style="position:absolute;right:0;">Rs.0</span>
+                                        <span style="position:absolute;right:0;font-weight: bold;">Rs.0</span>
                                     </div>
                                 </div>
-                                <div class="col-12 mb-20 mt-2">
-                                    <input id="account" type="checkbox" />
-                                    <label for="account" aria-controls="collapseOne">Create an account?</label>
-                                    <div id="collapseOne" class="collapse one" style="display: none;">
-                                        <div class="card-body1">
-                                            <label for="{{ user_form.password.id_for_label }}">Account password <span>*</span></label>
-                                            {{ user_form.password }}
-                                            <div class="invalid-feedback">
-                                                {{ user_form.password.errors }}
+                                {% if not request.user.is_authenticated %}
+                                    <div class="col-12 mb-20 mt-2">
+                                        <input id="account" type="checkbox" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-controls="collapseOne">
+                                        <label for="account" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-controls="collapseOne">
+                                            Create an account?
+                                        </label>
+                                        <input type="hidden" name="create_account" id="create_account_hidden" value="false" />
+                                        <div id="collapseOne" class="collapse one" data-parent="#accordion">
+                                            <div class="card-body1">
+                                                <label for="{{ user_form.password.id_for_label }}">Account password <span>*</span></label>
+                                                {{ user_form.password }}
+                                                <div class="invalid-feedback">
+                                                    {{ user_form.password.errors }}
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                {% endif %}
                                 <div class="col-12 mb-20">
-                                    <input id="address" type="checkbox" data-bs-target="createp_account" />
+                                    <input id="address" type="checkbox" data-bs-toggle="collapse" data-bs-target="#collapsetwo" aria-controls="collapsetwo">
                                     <label class="righ_0" for="address" data-bs-toggle="collapse" data-bs-target="#collapsetwo" aria-controls="collapseOne">Ship to a different address?</label>
+                                    <input type="hidden" name="ship_to_different_address" id="ship_to_different_address_hidden" value="false" />
                                     <div id="collapsetwo" class="collapse one" data-parent="#accordion">
-                                        <div class="row">
+                                        {% comment %} <div class="row">
                                             <div class="col-lg-6 mb-20">
-                                                <label for="id_alt_first_name">First Name <span>*</span></label>
-                                                <input type="text" name="alt_first_name" id="id_alt_first_name">
-                                                <span class="error-message">{{ form.alt_first_name.errors }}</span>
-                                            </div>
-                                            <div class="col-lg-6 mb-20">
-                                                <label for="id_alt_last_name">Last Name <span>*</span></label>
-                                                <input type="text" name="alt_last_name" id="id_alt_last_name">
-                                                <span class="error-message">{{ form.alt_last_name.errors }}</span>
-                                            </div>
-                                            <div class="col-12 mb-20">
-                                                <label for="id_alt_address_line_1">Street address <span>*</span></label>
-                                                <input placeholder="House number and street name" type="text" name="alt_address_line_1" id="id_alt_address_line_1">
-                                                <span class="error-message">{{ form.alt_address_line_1.errors }}</span>
-                                            </div>
-                                            <div class="col-12 mb-20">
-                                                <input placeholder="Apartment, suite, unit etc. (optional)" type="text" name="alt_address_line_2" id="id_alt_address_line_2">
-                                                <span class="error-message">{{ form.alt_address_line_2.errors }}</span>
-                                            </div>
-                                            <div class="col-12 mb-20">
-                                                <label for="id_alt_city">Town / City <span>*</span></label>
-                                                <input type="text" name="alt_city" id="id_alt_city">
-                                                <span class="error-message">{{ form.alt_city.errors }}</span>
-                                            </div>
-                                            <div class="col-12 mb-20">
-                                                <label for="id_alt_state_province">State / County <span>*</span></label>
-                                                <input type="text" name="alt_state_province" id="id_alt_state_province">
-                                                <span class="error-message">{{ form.alt_state_province.errors }}</span>
+                                                <label for="sh_first_name">First Name <span>*</span></label>
+                                                <input type="text" name="sh_first_name" id="sh_first_name">
                                             </div>
                                             <div class="col-lg-6 mb-20">
-                                                <label for="id_alt_phone">Phone <span>*</span></label>
-                                                <input type="text" name="alt_phone" id="id_alt_phone">
-                                                <span class="error-message">{{ form.alt_phone.errors }}</span>
+                                                <label for="sh_last_name">Last Name <span>*</span></label>
+                                                <input type="text" name="sh_last_name" id="sh_last_name">
+                                            </div>
+                                            <div class="col-12 mb-20">
+                                                <label for="{{ shipping_address_form.address_line_1.id_for_label }}">Address Line 1 <span>*</span></label>
+                                                {{ shipping_address_form.address_line_1 }}
+                                                <div class="invalid-feedback">
+                                                    {{ shipping_address_form.address_line_1.errors }}
+                                                </div>
+                                            </div>
+                                            <div class="col-12 mb-20">
+                                                <label for="{{ shipping_address_form.address_line_2.id_for_label }}">Address Line 2 <span>*</span></label>
+                                                {{ shipping_address_form.address_line_2 }}
+                                                <div class="invalid-feedback">
+                                                    {{ shipping_address_form.address_line_2.errors }}
+                                                </div>
+                                            </div>
+                                            <div class="col-12 mb-20">
+                                                <label for="{{ shipping_address_form.city.id_for_label }}">Town / City <span>*</span></label>
+                                                {{ shipping_address_form.city }}
+                                                <div class="invalid-feedback">
+                                                    {{ shipping_address_form.city.errors }}
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 mb-20">
+                                                <label for="{{ shipping_address_form.state_or_province.id_for_label }}">State / Province <span>*</span></label>
+                                                {{ shipping_address_form.state_or_province }}
+                                                <div class="invalid-feedback">
+                                                    {{ shipping_address_form.state_or_province.errors }}
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 mb-20">
+                                                <label for="{{ shipping_address_form.postal_code.id_for_label }}">Postal Code <span>*</span></label>
+                                                {{ shipping_address_form.postal_code }}
+                                                <div class="invalid-feedback">
+                                                    {{ shipping_address_form.postal_code.errors }}
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 mb-20">
+                                                <label for="sh_phone">Phone <span>*</span></label>
+                                                <input type="text" name="sh_phone" id="sh_phone">
                                             </div>
                                             <div class="col-lg-6">
-                                                <label for="id_alt_email">Email Address <span>*</span></label>
-                                                <input type="text" name="alt_email" id="id_alt_email">
-                                                <span class="error-message">{{ form.alt_email.errors }}</span>
+                                                <label for="sh_email">Email Address <span>*</span></label>
+                                                <input type="text" name="sh_email" id="sh_email">
                                             </div>
-                                        </div>
+                                        </div> {% endcomment %}
                                     </div>
                                 </div>
                                 <div class="col-12">
@@ -241,12 +284,15 @@
                                         </tr>
                                         <tr>
                                             <th>Shipping</th>
-                                            <td>Rs.<span id="shipping_price">80</span></td>
+                                            <td style="font-weight: bold;">Rs.<span id="shipping_price">80</span></td>
                                         </tr>
                                         <tr class="order_total">
                                             <th>Order Total</th>
-                                            <td>Rs.<span id="total_order_price"></span></td>
+                                            <td style="font-weight: bold;">Rs.<span id="total_order_price"></span></td>
                                         </tr>
+                                        <input type="hidden" name="sub_total" id="sub_total_hidden">
+                                        <input type="hidden" name="shipping_cost" id="shipping_cost_hidden">
+                                        <input type="hidden" name="total" id="total_hidden">
                                     </tfoot>
                                 </table>
                             </div>
@@ -259,9 +305,9 @@
                                         </option>
                                     {% endfor %}
                                 </select>
-                                <div class="invalid-feedback">
+                                <span class="error-message">
                                     {{ checkout_form.payment_method.errors }}
-                                </div>
+                                </span>
                                 <div class="order_button" style="margin-top: 5px;">
                                     <button type="submit">Proceed to Payment</button>
                                 </div>
@@ -270,6 +316,7 @@
                     </div>
                 </div>
             </form>
+            
         </div>
     </div>
     <!--Checkout page section end-->   
