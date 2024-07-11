@@ -3,11 +3,14 @@ from django.contrib.auth.forms import (
     UserChangeForm,
 )
 from django import forms
+
+from accounts.constants import ORDER_STATUS_CHOICES, PAYMENT_STATUS_CHOICES
 from .models import (
-    Address,
+    BillingAddress,
     CustomUser,
     Order,
     Customer,
+    ShippingAddress,
 )
 
 
@@ -35,8 +38,6 @@ class CustomUserChangeForm(UserChangeForm):
 
 # This is the form that will be used to create a new user or display the user's information in checkout form.
 class CustomUserForm(forms.ModelForm):
-    password = forms.CharField(widget=forms.PasswordInput())
-
     class Meta:
         model = CustomUser
         fields = (
@@ -46,27 +47,60 @@ class CustomUserForm(forms.ModelForm):
             "password",
         )
 
+    def __init__(self, *args, **kwargs):
+        super(CustomUserForm, self).__init__(*args, **kwargs)
+        
+        if "password" not in self.data:
+            del self.fields["password"]
+
 
 class CheckOutForm(forms.ModelForm):
+    status = forms.TypedChoiceField(
+        coerce=str,
+        choices=ORDER_STATUS_CHOICES,
+        required=False,
+    )
+    payment_status = forms.TypedChoiceField(
+        coerce=str,
+        choices=PAYMENT_STATUS_CHOICES,
+        required=False,
+    )
+    shipping_address = forms.ModelChoiceField(
+        queryset=ShippingAddress.objects.all(), required=False
+    )
+    billing_address = forms.ModelChoiceField(
+        queryset=BillingAddress.objects.all(), required=False
+    )
+
     class Meta:
         model = Order
-        exclude = (
-            "cart",
-            "status",
-            "customer",
-        )
+        exclude = ("cart",)
 
 
 class CustomerForm(forms.ModelForm):
     class Meta:
         model = Customer
-        exclude = ("user",)
+        fields = ("phone_number",)
 
 
-class AddressForm(forms.ModelForm):
+class BillingAddressForm(forms.ModelForm):
     class Meta:
-        model = Address
+        model = BillingAddress
         fields = (
+            "customer",
+            "address_line_1",
+            "address_line_2",
+            "city",
+            "state_or_province",
+            "postal_code",
+        )
+
+
+class ShippingAddressForm(forms.ModelForm):
+    class Meta:
+        model = ShippingAddress
+        fields = (
+            "customer",
             "address_line_1",
             "address_line_2",
             "city",
