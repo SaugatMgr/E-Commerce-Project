@@ -207,7 +207,7 @@
                 if (document.getElementById("inside_valley").checked == true){
                     shipping_price_update(80);
                 }
-            })
+            });
             function shipping_price_update(shipping_price){
                 document.getElementById("shipping_price").innerHTML = `${shipping_price}`;
 
@@ -261,22 +261,48 @@
                     }
                 })
             })
+            
+            document.addEventListener('DOMContentLoaded', () => {
+
+                updateHiddenFields();
+
+                function updateHiddenFields() {
+                    var subTotal = document.getElementById('sub_total').innerText.replaceAll(',', '');
+                    var shippingPrice = document.getElementById('shipping_price').innerText;
+                    var totalOrderPrice = document.getElementById('total_order_price').innerText.replaceAll(',', '');
+
+                    document.getElementById('sub_total_hidden').value = subTotal;
+                    document.getElementById('shipping_cost_hidden').value = shippingPrice;
+                    document.getElementById('total_hidden').value = totalOrderPrice;
+                }
+            });
 
             $(document).ready(function() {
-                function toggleCollapse() {
-                    if ($('#account').is(':checked')) {
-                        $('#collapseOne').slideDown(300);
-                    } else {
-                        $('#collapseOne').slideUp(300);
-                    }
-                }
+                // Function to handle account checkbox and label click
+                $('#account').change(function() {
+                    var isChecked = $(this).is(':checked');
+                    $('#collapseOne').collapse(isChecked ? 'show' : 'hide');
+                    $('#create_account_hidden').val(isChecked ? 'true' : 'false');
+                });
         
-                $('#account').change(toggleCollapse);
+                // Function to handle address checkbox and label click
+                $('#address').change(function() {
+                    var isChecked = $(this).is(':checked');
+                    $('#collapsetwo').collapse(isChecked ? 'show' : 'hide');
+                    $('#ship_to_different_address_hidden').val(isChecked ? 'true' : 'false');
+                });
         
-                $('label[for="account"]').click(function(event) {
-                    // Prevent default label click behavior if needed
-                    event.preventDefault();
-                    $('#account').prop('checked', !$('#account').prop('checked')).change();
+                // Smooth slide animation for collapse elements
+                $('#collapseOne').on('shown.bs.collapse', function() {
+                    $(this).slideDown(300);
+                }).on('hidden.bs.collapse', function() {
+                    $(this).slideUp(300);
+                });
+        
+                $('#collapsetwo').on('shown.bs.collapse', function() {
+                    $(this).slideDown(300);
+                }).on('hidden.bs.collapse', function() {
+                    $(this).slideUp(300);
                 });
             });
         </script>
