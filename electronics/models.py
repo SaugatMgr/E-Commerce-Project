@@ -60,7 +60,7 @@ class Tag(models.Model):
 class Product(TimeStamp):
     name = models.CharField(max_length=150)
     slug = models.SlugField(max_length=200, unique=True, blank=True, null=True)
-    price = models.IntegerField()
+    price = models.DecimalField(max_digits=10, decimal_places=2)
     description = models.TextField()
     product_img_thumbnail = models.ImageField(upload_to="product/")
     views_count = models.PositiveBigIntegerField(default=0)
