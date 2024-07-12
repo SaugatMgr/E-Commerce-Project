@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import(
+from .views import (
     HomePageView,
     AboutUsPageView,
     ContactUsPageView,
@@ -13,6 +13,7 @@ from .views import(
     ProductDeleteView,
     AddProductToCartView,
     ShowCartItemsView,
+    remove_cart_item,
 )
 
 urlpatterns = [
@@ -22,7 +23,11 @@ urlpatterns = [
     path("about/", AboutUsPageView.as_view(), name="about"),
     path("contact/", ContactUsPageView.as_view(), name="contact"),
     # product detail url
-    path("product-detail/<slug:slug>/", ProductDetailView.as_view(), name="product_detail"),
+    path(
+        "product-detail/<slug:slug>/",
+        ProductDetailView.as_view(),
+        name="product_detail",
+    ),
     # product review url
     path("review/", ReviewView.as_view(), name="review"),
     # newsletter url
@@ -34,4 +39,5 @@ urlpatterns = [
     # Add to Cart
     path("add-to-cart/", AddProductToCartView.as_view(), name="add_to_cart"),
     path("cart/", ShowCartItemsView.as_view(), name="cart"),
+    path("remove-from-cart/", remove_cart_item, name="remove_from_cart"),
 ]
