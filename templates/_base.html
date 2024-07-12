@@ -147,6 +147,26 @@
                     success: function (response) {
                         alertify.set('notifier','position', 'top-right');
                         alertify.success(response.message);
+
+                        if (response.wish_list_prod_removed) {
+                            var productSlug = $(e.target).find('input[name="prod_slug"]').val();
+                            $('#product-' + productSlug).remove();
+            
+                            if ($('tbody').children('tr').length === 0) {
+                                $('tbody').html(`
+                                    <tr>
+                                        <td colspan="6" class="text-center">
+                                            <h4>No products in wishlist</h4>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="6" class="text-center">
+                                            <a href="{% url "shop" %}">Continue Shopping</a>    
+                                        </td>
+                                    </tr>
+                                `);
+                            }
+                        }
                     },
 
                     error: function (response) {
@@ -192,6 +212,24 @@
                         success: function(response){
                             alertify.set('notifier','position', 'top-right');
                             alertify.success(response.message);
+
+                            var productSlug = $(event.target).find('input[name="prod_slug"]').val();
+                            $('#product-' + productSlug).remove();
+            
+                            if ($('tbody').children('tr').length === 0) {
+                                $('tbody').html(`
+                                    <tr>
+                                        <td colspan="6" class="text-center">
+                                            <h4>No products in wishlist</h4>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="6" class="text-center">
+                                            <a href="{% url "shop" %}">Continue Shopping</a>    
+                                        </td>
+                                    </tr>
+                                `);
+                            }
                         },
     
                         error: function(response){
