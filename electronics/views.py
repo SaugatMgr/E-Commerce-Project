@@ -1,4 +1,5 @@
 from django.shortcuts import redirect, render
+from django.views.decorators.http import require_POST
 from django.urls import reverse_lazy
 from django.views.generic import (
     View,
@@ -302,7 +303,7 @@ class AddProductToCartView(View):
                             }
                             if req_from_wishlist == "true":
                                 data.update(extra_message)
-                                
+
                             return JsonResponse(
                                 data,
                                 status=201,
@@ -339,7 +340,41 @@ class ShowCartItemsView(ListView):
         user = self.request.user
         customer = Customer.objects.get(user=user)
         cart = Cart.objects.get(customer=customer)
+        cart_items = CartItems.objects.filter(cart=cart)
 
-        context["user_cart_items"] = CartItems.objects.filter(cart=cart)
+        context["user_cart_items"] = cart_items
+        context["cart_item_count"] = 0 if not cart_items else cart_items.count()
 
         return context
+
+
+@require_POST
+def remove_cart_item(request):
+    ajax_format = request.headers.get("x-requested-with")
+
+    with transaction.atomic():
+        if ajax_format == "XMLHttpRequest":
+            product_slug = request.POST.get("prod_slug")
+            if product_slug:
+                product = Product.objects.get(slug=product_slug)
+                customer = Customer.objects.get(user=request.user)
+
+                cart = Cart.objects.get(customer=customer)
+                cart_item = CartItems.objects.get(cart=cart, product=product)
+                cart_item.delete()
+
+                return JsonResponse(
+                    {
+                        "success": True,
+                        "message": f"{product.name} removed from your cart.",
+                    },
+                    status=200,
+                )
+        else:
+            return JsonResponse(
+                {
+                    "success": False,
+                    "message": "Cannot process.Must be and AJAX XMLHttpRequest.",
+                },
+                status=400,
+            )
