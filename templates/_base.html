@@ -176,6 +176,46 @@
                 });
             });
 
+            // Remove from cart Ajax
+            $(".cart-prod-rem-form").submit(function (e) { 
+                e.preventDefault();
+                var serialized_data = $(this).serialize();
+
+                $.ajax({
+                    type: "post",
+                    url: "{% url 'remove_from_cart' %}",
+                    data: serialized_data,
+
+                    success: function (response) {
+                        alertify.set('notifier','position', 'top-right');
+                        alertify.success(response.message);
+
+                        var productSlug = $(e.target).find('input[name="prod_slug"]').val();
+                        $('#rem-prod-from-cart-' + productSlug).remove();
+            
+                        if ($('tbody').children('tr').length === 0) {
+                            $('tbody').html(`
+                                <tr>
+                                    <td colspan="6" class="text-center">
+                                        <h4>Your cart is empty</h4>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="6" class="text-center">
+                                        <a href="{% url "shop" %}">Continue Shopping</a>    
+                                    </td>
+                                </tr>
+                            `);
+                        }
+                    },
+
+                    error: function (response) {
+                        alertify.set('notifier','position', 'top-right');
+                        alertify.error(response.responseJSON.message);
+                    },
+                });
+            });
+
             // WishList Ajax
             $(document).ready(function () {
                 $(".wishlist_form").submit(function (event) {
