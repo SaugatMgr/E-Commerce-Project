@@ -232,9 +232,11 @@ class WishListView(TemplateView):
 
     def get_context_data(self, **kwargs):
         customer, created = Customer.objects.get_or_create(user=self.request.user)
+        wish_list = WishList.objects.filter(customer=customer).first()
 
         context = super().get_context_data(**kwargs)
-        context["wish_list"] = WishList.objects.filter(customer=customer).first()
+        context["wish_list"] = wish_list
+        context["product_count"] = 0 if not wish_list else wish_list.product.count()
         return context
 
 
