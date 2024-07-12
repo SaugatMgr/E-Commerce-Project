@@ -24,6 +24,7 @@ from accounts.models import (
     Customer,
     Cart,
     CartItems,
+    WishList,
 )
 from .forms import (
     AddProductForm,
@@ -123,15 +124,16 @@ class ProductDetailView(DetailView):
 
 class ReviewView(View):
     def post(self, request, *args, **kwargs):
-        form = ReviewForm(request.POST)
-        product_id = request.POST["product"]
+        data = request.POST
+        form = ReviewForm(data)
+        product_id = data["product"]
         current_product = Product.objects.get(pk=product_id)
 
         if form.is_valid():
             form = Review(
-                name=request.POST["name"],
-                email=request.POST["email"],
-                msg=request.POST["msg"],
+                name=data["name"],
+                email=data["email"],
+                msg=data["msg"],
                 user=self.request.user,
                 product=current_product,
             )
@@ -252,12 +254,20 @@ class AddProductToCartView(View):
         with transaction.atomic():
             if ajax_format == "XMLHttpRequest":
                 if self.request.user.is_authenticated:
-                    product_slug = request.POST["prod_slug"]
+                    data = request.POST
+                    product_slug = data.get("prod_slug")
+                    req_from_wishlist = data.get("wish_list_add_to_cart")
                     user = self.request.user
-
                     product = Product.objects.get(slug=product_slug)
                     customer, created = Customer.objects.get_or_create(user=user)
                     cart, created = Cart.objects.get_or_create(customer=customer)
+                    extra_message = {
+                        "wish_list_prod_removed": True,
+                    }
+
+                    if req_from_wishlist == "true":
+                        wish_list = WishList.objects.get(customer=customer)
+                        wish_list.product.remove(product)
 
                     # Check if the product exists
                     if product:
@@ -273,20 +283,28 @@ class AddProductToCartView(View):
                             get_matching_cart_product.quantity += 1
                             get_matching_cart_product.save()
 
+                            data = {
+                                "success": True,
+                                "message": f"You added {product.name} {get_matching_cart_product.quantity} times.",
+                            }
+                            if req_from_wishlist == "true":
+                                data.update(extra_message)
+
                             return JsonResponse(
-                                {
-                                    "success": True,
-                                    "message": f"You added {product.name} {get_matching_cart_product.quantity} times.",
-                                },
+                                data,
                                 status=201,
                             )
                         else:
                             CartItems.objects.create(cart=cart, product=product)
+                            data = {
+                                "success": True,
+                                "message": f"{product.name} added to cart successfully.",
+                            }
+                            if req_from_wishlist == "true":
+                                data.update(extra_message)
+                                
                             return JsonResponse(
-                                {
-                                    "success": True,
-                                    "message": f"{product.name} added to cart successfully.",
-                                },
+                                data,
                                 status=201,
                             )
                     else:
