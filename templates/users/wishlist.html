@@ -25,39 +25,56 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {% for product in wish_list.product.all %}
+                                    {% if product_count == 0 %}
                                         <tr>
-                                            <td class="product_remove">
-                                                <form method="post" class="prod_rem_form">{% csrf_token %}
-                                                    <input type="hidden" name="prod_slug" value="{{ product.slug }}">
-                                                    <button type="submit" class="btn btn-danger">X</button>
-                                                </form>
-                                            </td>
-                                            <td class="product_thumb">
-                                                <a href="#">
-                                                    <img src="{{ product.product_img_thumbnail.url }}" alt="{{ product.name }}">
-                                                </a>
-                                            </td>
-                                            <td class="product_name">
-                                                <a href="{% url "product_detail" product.slug %}">
-                                                    {{ product.name }}
-                                                </a>
-                                            </td>
-                                            <td class="product-price">Rs.{{ product.price|intcomma }}</td>
-                                            <td class="product_quantity">In Stock</td>
-                                            <td class="product_total">
-                                                <form method="post" class="cart_form">{% csrf_token %}
-                                                    <input type="hidden"
-                                                           name="prod_slug"
-                                                           value="{{ product.slug }}">
-                                                    <button type="submit" style="border: None">
-                                                        <i class="zmdi zmdi-shopping-cart-plus"></i>
-                                                        Add To Cart
-                                                    </button>
-                                                </form>
+                                            <td colspan="6" class="text-center">
+                                                <h4>No products in wishlist</h4>
                                             </td>
                                         </tr>
-                                    {% endfor %}
+                                        <tr>
+                                            <td colspan="6" class="text-center">
+                                                <a href="{% url "shop" %}">Continue Shopping</a>    
+                                            </td>
+                                        </tr>
+
+                                    {% else %}
+                                        {% for product in wish_list.product.all %}
+                                            <tr id="product-{{ product.slug }}">
+                                                <td class="product_remove">
+                                                    <form method="post" class="prod_rem_form">{% csrf_token %}
+                                                        <input type="hidden" name="prod_slug" value="{{ product.slug }}">
+                                                        <button type="submit" class="btn btn-danger">X</button>
+                                                    </form>
+                                                </td>
+                                                <td class="product_thumb">
+                                                    <a href="#">
+                                                        <img src="{{ product.product_img_thumbnail.url }}" alt="{{ product.name }}">
+                                                    </a>
+                                                </td>
+                                                <td class="product_name">
+                                                    <a href="{% url "product_detail" product.slug %}">
+                                                        {{ product.name }}
+                                                    </a>
+                                                </td>
+                                                <td class="product-price">Rs.{{ product.price|intcomma }}</td>
+                                                <td class="product_quantity">In Stock</td>
+                                                <td class="product_total">
+                                                    <form method="post" class="cart_form">{% csrf_token %}
+                                                        <input type="hidden"
+                                                            name="prod_slug"
+                                                            value="{{ product.slug }}">
+                                                        <input type="hidden"
+                                                            name="wish_list_add_to_cart"
+                                                            value="true">
+                                                        <button type="submit" style="border: None">
+                                                            <i class="zmdi zmdi-shopping-cart-plus"></i>
+                                                            Add To Cart
+                                                        </button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    {% endif %}
                                 </tbody>
                             </table>
                         </div>  
