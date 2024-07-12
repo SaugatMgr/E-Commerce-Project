@@ -82,8 +82,17 @@ class CustomerAdmin(admin.ModelAdmin):
     form = CustomerForm
 
 
+class CartItemsInline(admin.TabularInline):
+    model = CartItems
+    extra = 1
+
+
+class CartAdmin(admin.ModelAdmin):
+    list_display = ["id", "customer", "created_date", "updated_date"]
+    inlines = [CartItemsInline]
+
+
 admin.site.register(CustomUser, CustomUserAdmin)
 admin.site.register(Customer)
-admin.site.register(
-    [Cart, CartItems, Order, WishList, BillingAddress, ShippingAddress]
-)
+admin.site.register(Cart, CartAdmin)
+admin.site.register([CartItems, Order, WishList, BillingAddress, ShippingAddress])
