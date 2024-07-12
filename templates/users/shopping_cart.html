@@ -10,7 +10,6 @@
 <!--shopping cart area start -->
 <div class="shopping_cart_area mt-60">
     <div class="container">            
-        <form action="#"> 
             <div class="row">
                 <div class="col-12">
                     <div class="table_desc">
@@ -27,38 +26,52 @@
                             </tr>
                         </thead>
                         <tbody>
-
-                            {% for item in user_cart_items %}
+                            {% if cart_item_count == 0 %}
                                 <tr>
-                                    <td class="product_remove">
-                                        <a href="#">
-                                            <i class="fa fa-trash-o"></i>
-                                        </a>
-                                    </td>
-                                    <td class="product_thumb">
-                                        <a href="#">
-                                            <img src="{{ item.product.product_img_thumbnail.url }}"
-                                                alt="{{ item.product.name }}"
-                                                style="height: 110px;width: 110px;">
-                                        </a>
-                                    </td>
-                                    <td class="product_name">
-                                        <a href="#">
-                                            {{ item.product.name }}
-                                        </a>
-                                    </td>
-                                    <td class="product-price">
-                                        Rs.{{ item.product.price|intcomma }}
-                                    </td>
-                                    <td class="product_quantity">
-                                        <label>Quantity</label> 
-                                        <input min="1" max="100" value="{{ item.quantity }}" type="number">
-                                    </td>
-                                    <td class="product_total">
-                                        Rs.{{ item.total_price|intcomma }}
+                                    <td colspan="6" class="text-center">
+                                        <h4>Your cart is empty</h4>
                                     </td>
                                 </tr>
-                            {% endfor %}
+                                <tr>
+                                    <td colspan="6" class="text-center">
+                                        <a href="{% url 'shop' %}">Continue Shopping</a>
+                                    </td>
+                            {% else %}
+                                {% for item in user_cart_items %}
+                                    <tr id="rem-prod-from-cart-{{ item.product.slug }}">
+                                        <td class="product_remove">
+                                            <form method="post" class="cart-prod-rem-form" action="{% url "remove_from_cart" %}">{% csrf_token %}
+                                                <input type="hidden" name="prod_slug" value="{{ item.product.slug }}">
+                                                <button type="submit" class="btn btn-danger fa fa-trash-o"></button>
+                                            </form>
+                                        </td>
+                                        <td class="product_thumb">
+                                            <a href="#">
+                                                <img src="{{ item.product.product_img_thumbnail.url }}"
+                                                    alt="{{ item.product.name }}"
+                                                    style="height: 110px;width: 110px;">
+                                            </a>
+                                        </td>
+                                        <td class="product_name">
+                                            <a href="#">
+                                                {{ item.product.name }}
+                                            </a>
+                                        </td>
+                                        <td class="product-price">
+                                            Rs.{{ item.product.price|intcomma }}
+                                        </td>
+                                        <td class="product_quantity">
+                                            <label>Quantity</label> 
+                                            <input min="1" max="100" value="{{ item.quantity }}" type="number">
+                                        </td>
+                                        <td class="product_total">
+                                            Rs.{{ item.total_price|intcomma }}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            
+                            {% endif %}
+
 
                         </tbody>
                     </table>   
@@ -109,7 +122,6 @@
                 </div>
             </div>
             <!--coupon code area end-->
-        </form> 
     </div>     
 </div>
 <!--shopping cart area end -->
