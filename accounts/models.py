@@ -7,7 +7,11 @@ from django.utils.translation import gettext_lazy as _
 
 from django.core.validators import MinValueValidator
 
-from accounts.constants import ORDER_STATUS_CHOICES, PAYMENT_METHOD_CHOICES, PAYMENT_STATUS_CHOICES
+from accounts.constants import (
+    ORDER_STATUS_CHOICES,
+    PAYMENT_METHOD_CHOICES,
+    PAYMENT_STATUS_CHOICES,
+)
 
 from .managers import CustomUserManager
 
@@ -77,7 +81,6 @@ class ShippingAddress(Address):
 
 
 class Cart(TimeStamp):
-    id = models.UUIDField(default=uuid.uuid4, primary_key=True)
     customer = models.OneToOneField(
         Customer,
         on_delete=models.SET_NULL,
@@ -87,7 +90,7 @@ class Cart(TimeStamp):
     )
 
     def __str__(self):
-        return f"{self.id}"
+        return f"Cart #{self.id} of {self.customer.user.first_name} {self.customer.user.last_name}"
 
 
 class CartItems(TimeStamp):
@@ -133,7 +136,7 @@ class Order(TimeStamp):
         on_delete=models.CASCADE,
         related_name="customer_order",
     )
-    
+
     order_notes = models.TextField(null=True, blank=True)
     status = models.CharField(
         max_length=20, choices=ORDER_STATUS_CHOICES, default="Pending"
