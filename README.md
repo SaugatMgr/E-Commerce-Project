@@ -39,6 +39,7 @@ To get started with the project, follow these steps:
     ```
 
 ## Usage
+Note: Create a superuser and then add at least two products to the database as this is needed for the home page to display correctly.
 
 A `.env` file needs to be created with the following contents:
 ```env
@@ -47,7 +48,24 @@ DEBUG=True
 ALLOWED_HOSTS=*
 DATABASE_URL=postgres://db_user:db_password@localhost:db_port_number/db_name
 ```
-Note: Create a superuser and then add at least two products to the database as this is needed for the home page to display correctly.
+
+Then follow the following steps:
+1. **Migrate changes**
+   - Run the following command to migrate changes to database:
+      ```bash
+      python manage.py migrate
+      ```
+2. **Create a superuser:**
+    - Run the following command and follow the prompts:
+        ```bash
+        python manage.py createsuperuser
+        ```
+    - Alternatively, you can sign up and log in from the home page.
+
+3. **Run the server:**
+    ```bash
+    python manage.py runserver
+    ```
 
 ## Technologies Used
 
