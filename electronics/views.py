@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.shortcuts import redirect, render
 from django.views.decorators.http import require_POST
 from django.urls import reverse_lazy
@@ -70,8 +71,8 @@ class HomePageView(ListView):
         context["new_products_right_sidebar"] = products_by_date[3:5]
 
         context["featured_products"] = all_products.filter(is_featured=True)
-        # context["default_active_tab_category"] = Category.objects.first()
-        # context["remaining_categories"] = all_categories[1:8]
+        context["default_active_tab_category"] = Category.objects.first()
+        context["remaining_categories"] = all_categories[1:8]
 
         if user.is_authenticated:
             current_customer = Customer.objects.filter(user=user).first()
@@ -432,3 +433,26 @@ def remove_cart_item(request):
                 },
                 status=400,
             )
+
+
+class ProductSearchView(View):
+    template = "main/search/search_results.html"
+
+    def get(self, request, *args, **kwargs):
+        query = request.GET.get("query", "")
+        category_id = request.GET.get("select", 0)
+        category_id = int(category_id)
+
+        search_results = None
+        if query:
+            search_results = Product.objects.filter(
+                Q(name__icontains=query)
+                | Q(description__icontains=query)
+            )
+        
+        if category_id:
+            search_results = search_results.filter(category__id=category_id)
+
+        return render(
+            request, self.template, context={"query": query, "search_results": search_results}
+        )
