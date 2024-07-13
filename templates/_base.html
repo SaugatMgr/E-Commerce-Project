@@ -381,6 +381,21 @@
                 }
             });
 
+            // Focus on search input if user clicks on search icon without typing anything
+            document.addEventListener("DOMContentLoaded", function() {
+                const searchForm = document.getElementById("search_form");
+                const searchInput = document.getElementById("search_input");
+                const searchButton = document.getElementById("search_button");
+        
+                searchButton.addEventListener("click", function(event) {
+                    if (searchInput.value.trim() === "") {
+                        event.preventDefault();
+                        searchInput.focus();
+                    }
+                });
+            });
+        
+
             $(document).ready(function() {
                 // Function to handle account checkbox and label click
                 $('#account').change(function() {
