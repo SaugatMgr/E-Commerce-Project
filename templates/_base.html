@@ -216,6 +216,32 @@
                 });
             });
 
+            // Update Cart Item Ajax
+            $(document).ready(function () {
+                $(".update-cart-form").submit(function (e) {
+                    e.preventDefault();
+                    var serialized_data = $(this).serialize();
+            
+                    $.ajax({
+                        type: "post",
+                        url: "{% url "update_cart" %}",
+                        data: serialized_data,
+                        success: function (response) {
+                            alertify.set('notifier', 'position', 'top-right');
+                            alertify.success(response.message);
+                            var updatedCartItems = response.updated_cart_items;
+                            updatedCartItems.forEach(function(item) {
+                                $('#id_quantity_' + item.prod_slug).val(item.quantity);
+                            });
+                        },
+                        error: function (response) {
+                            alertify.set('notifier', 'position', 'top-right');
+                            alertify.error(response.responseJSON.message);
+                        },
+                    });
+                });
+            });
+            
             // WishList Ajax
             $(document).ready(function () {
                 $(".wishlist_form").submit(function (event) {
