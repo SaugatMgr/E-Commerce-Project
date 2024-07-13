@@ -9,120 +9,126 @@
 {% block content %}
 <!--shopping cart area start -->
 <div class="shopping_cart_area mt-60">
-    <div class="container">            
-            <div class="row">
-                <div class="col-12">
-                    <div class="table_desc">
-                        <div class="cart_page table-responsive">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="table_desc">
+                    <div class="cart_page table-responsive">
+                        <form method="post" class="update-cart-form" action="{% url 'update_cart' %}">
+                            {% csrf_token %}
                             <table>
-                        <thead>
-                            <tr>
-                                <th class="product_remove">Delete</th>
-                                <th class="product_thumb">Image</th>
-                                <th class="product_name">Product</th>
-                                <th class="product-price">Price</th>
-                                <th class="product_quantity">Quantity</th>
-                                <th class="product_total">Total</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% if cart_item_count == 0 %}
-                                <tr>
-                                    <td colspan="6" class="text-center">
-                                        <h4>Your cart is empty</h4>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="6" class="text-center">
-                                        <a href="{% url 'shop' %}">Continue Shopping</a>
-                                    </td>
-                            {% else %}
-                                {% for item in user_cart_items %}
-                                    <tr id="rem-prod-from-cart-{{ item.product.slug }}">
-                                        <td class="product_remove">
-                                            <form method="post" class="cart-prod-rem-form" action="{% url "remove_from_cart" %}">{% csrf_token %}
-                                                <input type="hidden" name="prod_slug" value="{{ item.product.slug }}">
-                                                <button type="submit" class="btn btn-danger fa fa-trash-o"></button>
-                                            </form>
-                                        </td>
-                                        <td class="product_thumb">
-                                            <a href="#">
-                                                <img src="{{ item.product.product_img_thumbnail.url }}"
-                                                    alt="{{ item.product.name }}"
-                                                    style="height: 110px;width: 110px;">
-                                            </a>
-                                        </td>
-                                        <td class="product_name">
-                                            <a href="#">
-                                                {{ item.product.name }}
-                                            </a>
-                                        </td>
-                                        <td class="product-price">
-                                            Rs.{{ item.product.price|intcomma }}
-                                        </td>
-                                        <td class="product_quantity">
-                                            <label>Quantity</label> 
-                                            <input min="1" max="100" value="{{ item.quantity }}" type="number">
-                                        </td>
-                                        <td class="product_total">
-                                            Rs.{{ item.total_price|intcomma }}
-                                        </td>
+                                <thead>
+                                    <tr>
+                                        <th class="product_remove">Delete</th>
+                                        <th class="product_thumb">Image</th>
+                                        <th class="product_name">Product</th>
+                                        <th class="product-price">Price</th>
+                                        <th class="product_quantity">Quantity</th>
+                                        <th class="product_total">Total</th>
                                     </tr>
-                                {% endfor %}
-                            
-                            {% endif %}
-
-
-                        </tbody>
-                    </table>   
-                        </div>  
-                        <div class="cart_submit">
-                            <button type="submit">update cart</button>
-                        </div>      
+                                </thead>
+                                <tbody>
+                                    {% if cart_item_count == 0 %}
+                                        <tr>
+                                            <td colspan="7" class="text-center">
+                                                <h4>Your cart is empty</h4>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="7" class="text-center">
+                                                <a href="{% url 'shop' %}">Continue Shopping</a>
+                                            </td>
+                                        </tr>
+                                    {% else %}
+                                        {% for item in user_cart_items %}
+                                            <tr id="rem-prod-from-cart-{{ item.product.slug }}">
+                                                <td class="product_remove">
+                                                    <form></form>
+                                                    <form method="post" class="cart-prod-rem-form" action="{% url "remove_from_cart" %}">
+                                                        {% csrf_token %}
+                                                        <input type="hidden" name="prod_slug" value="{{ item.product.slug }}">
+                                                        <button type="submit" class="btn btn-danger fa fa-trash-o"></button>
+                                                    </form>
+                                                </td>
+                                                <td class="product_thumb">
+                                                    <a href="#">
+                                                        <img src="{{ item.product.product_img_thumbnail.url }}"
+                                                            alt="{{ item.product.name }}"
+                                                            style="height: 110px;width: 110px;">
+                                                    </a>
+                                                </td>
+                                                <td class="product_name">
+                                                    <a href="#">
+                                                        {{ item.product.name }}
+                                                    </a>
+                                                </td>
+                                                <td class="product-price">
+                                                    Rs.{{ item.product.price|intcomma }}
+                                                </td>
+                                                <td class="product_quantity">
+                                                    <input type="hidden" name="prod_slug" value="{{ item.product.slug }}">
+                                                    <label for="id_quantity_{{ item.product.slug }}">Quantity</label>
+                                                    <input id="id_quantity_{{ item.product.slug }}" name="quantity" min="1" max="100" value="{{ item.quantity }}" type="number">
+                                                </td>
+                                                <td class="product_total">
+                                                    Rs.{{ item.total_price|intcomma }}
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    {% endif %}
+                                </tbody>
+                            </table>
+                            <div class="cart_submit">
+                                <button type="submit">
+                                    Update Cart
+                                </button>
+                            </div>
+                        </form>
                     </div>
-                 </div>
-             </div>
-             <!--coupon code area start-->
-            <div class="coupon_area">
-                <div class="row">
-                    <div class="col-lg-6 col-md-6">
-                        <div class="coupon_code left">
-                            <h3>Coupon</h3>
-                            <div class="coupon_inner">   
-                                <p>Enter your coupon code if you have one.</p>                                
-                                <input placeholder="Coupon code" type="text">
-                                <button type="submit">Apply coupon</button>
-                            </div>    
+                </div>
+            </div>
+        </div>
+        <!--coupon code area start-->
+        <div class="coupon_area">
+            <div class="row">
+                <div class="col-lg-6 col-md-6">
+                    <div class="coupon_code left">
+                        <h3>Coupon</h3>
+                        <div class="coupon_inner">
+                            <p>Enter your coupon code if you have one.</p>
+                            <input placeholder="Coupon code" type="text">
+                            <button type="submit">Apply coupon</button>
                         </div>
                     </div>
-                    <div class="col-lg-6 col-md-6">
-                        <div class="coupon_code right">
-                            <h3>Cart Totals</h3>
-                            <div class="coupon_inner">
-                               <div class="cart_subtotal">
-                                   <p>Subtotal</p>
-                                   <p class="cart_amount">£215.00</p>
-                               </div>
-                               <div class="cart_subtotal ">
-                                   <p>Shipping</p>
-                                   <p class="cart_amount"><span>Flat Rate:</span> £255.00</p>
-                               </div>
-                               <a href="#">Calculate shipping</a>
+                </div>
+                <div class="col-lg-6 col-md-6">
+                    <div class="coupon_code right">
+                        <h3>Cart Totals</h3>
+                        <div class="coupon_inner">
+                            <div class="cart_subtotal">
+                                <p>Subtotal</p>
+                                <p class="cart_amount">£215.00</p>
+                            </div>
+                            <div class="cart_subtotal ">
+                                <p>Shipping</p>
+                                <p class="cart_amount"><span>Flat Rate:</span> £255.00</p>
+                            </div>
+                            <a href="#">Calculate shipping</a>
 
-                               <div class="cart_subtotal">
-                                   <p>Total</p>
-                                   <p class="cart_amount">£215.00</p>
-                               </div>
-                               <div class="checkout_btn">
-                                   <a href="#">Proceed to Checkout</a>
-                               </div>
+                            <div class="cart_subtotal">
+                                <p>Total</p>
+                                <p class="cart_amount">£215.00</p>
+                            </div>
+                            <div class="checkout_btn">
+                                <a href="#">Proceed to Checkout</a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <!--coupon code area end-->
-    </div>     
+        </div>
+        <!--coupon code area end-->
+    </div>
 </div>
 <!--shopping cart area end -->
 {% endblock content %}
