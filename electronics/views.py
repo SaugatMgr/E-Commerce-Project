@@ -331,6 +331,60 @@ class AddProductToCartView(View):
                 )
 
 
+@require_POST
+def update_cart_item_quantity(request):
+    ajax_format = request.headers.get("x-requested-with")
+
+    with transaction.atomic():
+        if ajax_format == "XMLHttpRequest":
+            data = request.POST
+            product_slugs = data.getlist("prod_slug")
+            new_quantities = data.getlist("quantity")
+
+            if len(product_slugs) == len(new_quantities):
+                user = request.user
+                customer = Customer.objects.get(user=user)
+                cart = Cart.objects.get(customer=customer)
+
+                products = Product.objects.filter(slug__in=product_slugs)
+                cart_items = CartItems.objects.filter(cart=cart, product__in=products)
+
+                cart_items_with_new_quantity = zip(cart_items, new_quantities)
+                for cart_item, quantity in cart_items_with_new_quantity:
+                    cart_item.quantity = quantity
+                CartItems.objects.bulk_update(cart_items, ["quantity"])
+
+                updated_cart_items = [
+                    {"prod_slug": item.product.slug, "quantity": item.quantity}
+                    for item in cart_items
+                ]
+
+                return JsonResponse(
+                    {
+                        "success": True,
+                        "message": "Cart updated successfully.",
+                        "updated_cart_items": updated_cart_items,
+                    },
+                    status=200,
+                )
+            else:
+                return JsonResponse(
+                    {
+                        "success": False,
+                        "message": "Product slug and quantity must be provided.",
+                    },
+                    status=400,
+                )
+        else:
+            return JsonResponse(
+                {
+                    "success": False,
+                    "message": "Cannot process.Must be and AJAX XMLHttpRequest.",
+                },
+                status=400,
+            )
+
+
 class ShowCartItemsView(ListView):
     model = CartItems
     template_name = "users/shopping_cart.html"
