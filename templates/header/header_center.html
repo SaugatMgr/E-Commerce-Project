@@ -13,20 +13,20 @@
             <div class="col-lg-9">
                 <div class="header_middle_inner">
                     <div class="search-container">
-                       <form action="#">
+                        <form id="search_form" action="{% url "search" %}" method="get">
                            <div class="hover_category">
                                 <select class="select_option" name="select" id="categori">
-                                    <option selected value="1">All Categories</option>
+                                    <option selected value="0">All Categories</option>
                                     {% for category in categories %}
-                                        <option value="{{ forloop.counter }}">
+                                        <option value="{{ category.id }}">
                                             {{ category.name }}
                                         </option>
                                     {% endfor %}
-                                </select>                        
+                                </select>
                            </div>
                             <div class="search_box">
-                                <input placeholder="Search product..." type="text">
-                                <button type="submit"><i class="zmdi zmdi-search"></i></button> 
+                                <input id="search_input" placeholder="Search product..." type="text" name="query">
+                                <button id="search_button" type="submit"><i class="zmdi zmdi-search"></i></button>
                             </div>
                         </form>
                     </div>
