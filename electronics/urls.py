@@ -5,6 +5,7 @@ from .views import (
     AboutUsPageView,
     ContactUsPageView,
     ProductDetailView,
+    ProductSearchView,
     ReviewView,
     NewsLetterView,
     ShopItemsView,
@@ -42,4 +43,6 @@ urlpatterns = [
     path("add-to-cart/", AddProductToCartView.as_view(), name="add_to_cart"),
     path("update-cart/", update_cart_item_quantity, name="update_cart"),
     path("remove-from-cart/", remove_cart_item, name="remove_from_cart"),
+    # Search
+    path("search/", ProductSearchView.as_view(), name="search"),
 ]
