@@ -1,0 +1,12 @@
+<div class="widget_list widget_categories">
+    <h2>all categories</h2>
+    <ul>
+        
+        {% for category in categories %}
+            <li>
+                <a href="#">{{ category }} <span>({{ category.products.count }})</span></a> 
+            </li>
+        {% endfor %}
+            
+    </ul>
+</div>

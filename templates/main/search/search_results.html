@@ -1,0 +1,39 @@
+{% extends "_base.html" %}
+{% load static %}
+{% block page_name %}
+    Search results for {{ query }}
+{% endblock page_name %}
+
+{% block content %}
+    <!--shop  area start-->
+    <div class="shop_area shop_reverse mt-50 mb-50">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-md-12">
+                <!--sidebar widget start-->
+                    <aside class="sidebar_widget">
+                        {% include "main/search/left side/categories.html" %}
+                        {% include "main/search/left side/filter.html" %}
+                        {% include "main/search/left side/manufacturer.html" %}
+                        {% include "main/search/left side/select_by_color.html" %}
+                        {% include "main/search/left side/top_rated_products.html" %}
+                    </aside>
+                    <!--sidebar widget end-->
+                </div>
+                <div class="col-lg-9 col-md-12">
+                    <!--shop wrapper start-->
+                    <!--shop toolbar start-->
+                    {% include "main/search/right side/shop_toolbar.html" %}
+                    <!--shop toolbar end-->
+
+                    {% include "main/search/right side/shop_content.html" %}
+
+                    {% include "main/search/right side/shop_toolbar_bottom.html" %}
+                    <!--shop toolbar end-->
+                    <!--shop wrapper end-->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--shop  area end-->
+{% endblock content %}

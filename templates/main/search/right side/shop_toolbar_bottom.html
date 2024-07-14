@@ -1,0 +1,66 @@
+{% if is_paginated %}
+    <div class="shop_toolbar t_bottom" id="pagination-link-div">
+        <div class="pagination">
+            <ul>
+                {% if page_obj.has_previous %}
+
+                    <li class="next">
+                        <a href="?page=1"
+                           class="search_res_pagination_link">
+                        First
+                        </a>
+                    </li>
+                    
+                    <li style="width: 60px;">
+                        <a href="?page={{ page_obj.previous_page_number }}"
+                           class="search_res_pagination_link">
+                            Previous
+                        </a>
+                    </li>
+
+                {% endif %}
+
+                {% for page_no in page_obj.paginator.page_range %}
+
+                    {% if page_obj.number == page_no %}
+                        <li class="current">
+                            <a href="?page={{ page_no }}"
+                               class="search_res_pagination_link">
+                                {{ page_no }}
+                            </a>
+                        </li>
+                    
+                    {% elif page_no > page_obj.number|add:"-3" and page_no < page_obj.number|add:"3" %}
+
+                        <li>
+                            <a href="?page={{ page_no }}"
+                               class="search_res_pagination_link">
+                                {{ page_no }}
+                            </a>
+                        </li>
+
+                    {% endif %}
+
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+
+                    <li class="next">
+                        <a href="?page={{ page_obj.next_page_number }}"
+                           class="search_res_pagination_link">
+                            Next
+                        </a>
+                    </li>
+
+                    <li class="next">
+                        <a href="?page={{ page_obj.paginator.num_pages }}"
+                           class="search_res_pagination_link">
+                        Last
+                        </a>
+                    </li>
+
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+{% endif %}

@@ -1,0 +1,32 @@
+{% load static %}
+<div class="shop_title">
+    <h3>Search results for {{ query }}</h3>
+</div>
+<div class="shop_toolbar_wrapper">
+    <div class="shop_toolbar_btn">
+
+        <button data-role="grid_3" type="button" class="active btn-grid-3" data-bs-toggle="tooltip" title="3"></button>
+
+        <button data-role="grid_4" type="button"  class=" btn-grid-4" data-bs-toggle="tooltip" title="4"></button>
+
+        <button data-role="grid_list" type="button"  class="btn-list" data-bs-toggle="tooltip" title="List"></button>
+    </div>
+    <div class=" niceselect_option">
+
+        <form class="select_option" id="sort_form" action="#">
+            <select name="orderby" id="short">
+                <option selected value="-added_date">Sort by newness</option>
+                <option value="name">Sort by name</option>
+                <option value="views_count">Sort by popularity</option>
+                <option value="average_rating">Sort by average rating</option>
+                <option value="price">Sort by price: low to high</option>
+                <option value="-price">Sort by price: high to low</option>
+            </select>
+        </form>
+
+
+    </div>
+    <div class="page_amount">
+        <p>Showing {{ page_obj.start_index }}–{{ page_obj.end_index }} of {{ page_obj.paginator.count }} results</p>
+    </div>
+</div>
