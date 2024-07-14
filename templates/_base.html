@@ -395,7 +395,47 @@
                 });
             });
         
+            // Pagination Ajax
+            {% comment %} $(document).on("click", ".search_res_pagination_link", function(e) {
+                e.preventDefault();
+                
+                let current_url = window.location.href.split('?')[0]
+                console.log(current_url);
+                let params = new URL(document.location).searchParams;
+                console.log(params);
+                let select = params.get("select"); // category_id
+                let query = params.get("query"); // j search word ho tei
+                let href = $(this).attr("href"); //?page=pagination_number
+                console.log(href);
+                // http://localhost:8000/post-search/?page=2&query=j search word ho tei
+                let new_url = `${current_url}${href}&select=${select}&query=${query}`;
+                console.log(new_url);
 
+                $.ajax({
+                    url: new_url,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(response) {
+
+                        if (response.success && response.html_content) {
+                            // Convert response.html_content to jQuery object
+                            let $html = $(response.html_content);
+                            
+                            let pagination_link_section = $html.find('#pagination-link-div').html();
+                            let search_res_content = $html.find('#search-res-pagination-section').html();
+
+                            $('#pagination-link-div').html(pagination_link_section);
+                            $('#search-res-pagination-section').html(search_res_content);
+                        } else {
+                            console.error('Invalid response format or missing html_content.');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('AJAX Error:', status, error);
+                    }
+                });
+            }); {% endcomment %}
+                
             $(document).ready(function() {
                 // Function to handle account checkbox and label click
                 $('#account').change(function() {
