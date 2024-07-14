@@ -1,4 +1,5 @@
 from django.db.models import Q
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import redirect, render
 from django.views.decorators.http import require_POST
 from django.urls import reverse_lazy
@@ -439,20 +440,57 @@ class ProductSearchView(View):
     template = "main/search/search_results.html"
 
     def get(self, request, *args, **kwargs):
-        query = request.GET.get("query", "")
-        category_id = request.GET.get("select", 0)
-        category_id = int(category_id)
+        get_data = request.GET
+        query = get_data.get("query", "")
+        category_id = get_data.get("select", 0)
 
-        search_results = None
+        search_results = Product.objects.all()
         if query:
             search_results = Product.objects.filter(
-                Q(name__icontains=query)
-                | Q(description__icontains=query)
+                Q(name__icontains=query) | Q(description__icontains=query)
             )
-        
-        if category_id:
-            search_results = search_results.filter(category__id=category_id)
 
+        if category_id:
+            category_id = int(category_id)
+            if category_id > 0:
+                search_results = search_results.filter(category__id=category_id)
+
+        search_results = search_results.order_by("-added_date")
+
+        page_obj = Paginator(search_results, 12)
+        page = request.GET.get("page", 1)
+
+        try:
+            page_obj = page_obj.page(page)
+        except PageNotAnInteger:
+            page_obj = page_obj.page(1)
+        except EmptyPage:
+            page_obj = page_obj.page(page_obj.num_pages)
+
+        # ajax_format = request.headers.get("x-requested-with")
+
+        # if ajax_format == "XMLHttpRequest":
+        #     html_content = render_to_string(
+        #         self.template,
+        #         {
+        #             "query": query,
+        #             "category_id": get_data.get("select"),
+        #             "page_obj": page_obj,
+        #             "is_paginated": page_obj.has_other_pages(),
+        #         },
+        #         request,
+        #     )
+        #     return JsonResponse(
+        #         {"success": True, "html_content": html_content}, status=200
+        #     )
+        # else:
         return render(
-            request, self.template, context={"query": query, "search_results": search_results}
+            request,
+            self.template,
+            context={
+                "query": query,
+                "category_id": get_data.get("select"),
+                "page_obj": page_obj,
+                "is_paginated": page_obj.has_other_pages(),
+            },
         )
