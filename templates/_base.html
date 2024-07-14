@@ -435,7 +435,42 @@
                     }
                 });
             }); {% endcomment %}
-                
+
+
+            // Sorting Ajax
+            $(document).ready(function() {
+                $('.niceselect_option').on('click', '.option', function() {
+                    let selectedValue = $(this).data('value');
+                    $('#short').val(selectedValue).trigger('change');
+                });
+            
+                $('#short').on('change', function(e) {
+                    e.preventDefault();
+            
+                    $.ajax({
+                        url: "{% url 'search' %}",
+                        type: 'GET',
+                        data: $('#sort_form').serialize(),  
+                        dataType: 'json',
+                        success: function(response) {
+                            if (response.success && response.html_content) {
+                                let $html = $(response.html_content);
+                                console.log($html);
+                                let search_res_content = $html.find('#search-res-pagination-section').html();
+                                console.log(search_res_content);
+                                $('#search-res-pagination-section').html(search_res_content);
+                            } else {
+                                console.error('Invalid response format or missing html_content.');
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('AJAX Error:', status, error);
+                        }
+                    });
+                });
+            });            
+            
+
             $(document).ready(function() {
                 // Function to handle account checkbox and label click
                 $('#account').change(function() {
