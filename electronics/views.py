@@ -1,5 +1,6 @@
 from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.template.loader import render_to_string
 from django.shortcuts import redirect, render
 from django.views.decorators.http import require_POST
 from django.urls import reverse_lazy
@@ -443,6 +444,8 @@ class ProductSearchView(View):
         get_data = request.GET
         query = get_data.get("query", "")
         category_id = get_data.get("select", 0)
+        orderby = get_data.get("orderby", "")
+        ajax_format = request.headers.get("x-requested-with")
 
         search_results = Product.objects.all()
         if query:
@@ -457,6 +460,9 @@ class ProductSearchView(View):
 
         search_results = search_results.order_by("-added_date")
 
+        if orderby:
+            search_results = search_results.order_by(orderby)
+
         page_obj = Paginator(search_results, 12)
         page = request.GET.get("page", 1)
 
@@ -467,23 +473,29 @@ class ProductSearchView(View):
         except EmptyPage:
             page_obj = page_obj.page(page_obj.num_pages)
 
-        # ajax_format = request.headers.get("x-requested-with")
-
-        # if ajax_format == "XMLHttpRequest":
-        #     html_content = render_to_string(
-        #         self.template,
-        #         {
-        #             "query": query,
-        #             "category_id": get_data.get("select"),
-        #             "page_obj": page_obj,
-        #             "is_paginated": page_obj.has_other_pages(),
-        #         },
-        #         request,
-        #     )
-        #     return JsonResponse(
-        #         {"success": True, "html_content": html_content}, status=200
-        #     )
-        # else:
+        if ajax_format == "XMLHttpRequest":
+            if orderby:
+                html_content = render_to_string(
+                    self.template,
+                    {
+                        "query": query,
+                        "category_id": get_data.get("select"),
+                        "page_obj": page_obj,
+                        "is_paginated": page_obj.has_other_pages(),
+                    },
+                    request,
+                )
+                return JsonResponse(
+                    {"success": True, "html_content": html_content}, status=200
+                )
+        else:
+            return JsonResponse(
+                {
+                    "success": False,
+                    "message": "Cannot process.Must be and AJAX XMLHttpRequest.",
+                },
+                status=400,
+            )
         return render(
             request,
             self.template,
