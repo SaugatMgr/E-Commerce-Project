@@ -8,17 +8,17 @@ This project is an E-Commerce platform developed using Django. It allows users t
 ### Current Features:
 - Add to cart/remove from cart
 - Add to wishlist/add to cart from wishlist/remove from wishlist
+- Advanced search
+- Sorting of products based on rating, popularity, price,etc.
 
 ### Ongoing:
 - Checkout
+- Payment gateway integration
 
 ### Upcoming:
 - Social authentication
 - Anonymous user add to cart functionality
-- Payment gateway integration
 - Buyer/seller role login functionality
-- Advanced search
-- Sorting of products on the shop page
 - Blog integration
 
 ## Getting Started
