@@ -20,8 +20,6 @@ from django.db import transaction
 from .models import (
     Product,
     Image,
-    Category,
-    SubCategory,
     Review,
 )
 from accounts.models import (
@@ -242,6 +240,10 @@ class AddProductToCartView(View):
                             data = {
                                 "success": True,
                                 "message": f"You added {product.name} {get_matching_cart_product.quantity} times.",
+                                "cart_update_html_content": render_to_string(
+                                    template_name="users/shopping_cart.html",
+                                    request=request,
+                                ),
                             }
                             if req_from_wishlist == "true":
                                 data.update(extra_message)
@@ -255,6 +257,10 @@ class AddProductToCartView(View):
                             data = {
                                 "success": True,
                                 "message": f"{product.name} added to cart successfully.",
+                                "cart_update_html_content": render_to_string(
+                                    template_name="users/shopping_cart.html",
+                                    request=request,
+                                ),
                             }
                             if req_from_wishlist == "true":
                                 data.update(extra_message)
