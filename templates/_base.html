@@ -148,6 +148,12 @@
                         alertify.set('notifier','position', 'top-right');
                         alertify.success(response.message);
 
+                        if (response.cart_update_html_content) {
+                            var $html = $(response.cart_update_html_content);
+                            var cartWrapper = $html.find('.mini_cart_wrapper').html();
+                            $('.mini_cart_wrapper').html(cartWrapper);
+                        }
+
                         if (response.wish_list_prod_removed) {
                             var productSlug = $(e.target).find('input[name="prod_slug"]').val();
                             $('#product-' + productSlug).remove();
@@ -278,7 +284,7 @@
                         success: function(response){
                             alertify.set('notifier','position', 'top-right');
                             alertify.success(response.message);
-
+                            
                             var productSlug = $(event.target).find('input[name="prod_slug"]').val();
                             $('#product-' + productSlug).remove();
             
