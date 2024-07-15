@@ -9,16 +9,17 @@ from accounts.models import (
     CartItems,
 )
 
+
 def electronics_context(request):
     context = {}
     user = request.user
     all_categories = Category.objects.all()
     all_products = Product.objects.all()
+    first_category = all_categories.first()
+    today_deals_categories = all_categories[1:8]
 
     filter_product_by_views = Product.objects.filter(views_count__gte=0)
-    filter_product_by_higher_views = filter_product_by_views.order_by(
-        "-views_count"
-    )
+    filter_product_by_higher_views = filter_product_by_views.order_by("-views_count")
     products_by_date = filter_product_by_views.order_by("-added_date")
 
     context["categories"] = all_categories
@@ -26,9 +27,12 @@ def electronics_context(request):
     context["product_category_rem"] = all_categories[9:12]
     context["product_sub_category"] = SubCategory.objects.all()
 
-    context["today_deals_categories_first"] = all_categories.first()
-    context["today_deals_categories"] = all_categories[1:8]
-    context["today_deals_products"] = products_by_date
+    context["today_deals_categories_first"] = first_category
+    context["today_deals_categories"] = today_deals_categories
+    context["today_deals_products"] = products_by_date.filter(category=first_category)
+    context["rem_today_deals_products"] = products_by_date.filter(
+        category__in=today_deals_categories
+    )
 
     context["best_sellers"] = filter_product_by_higher_views
     context["all_products"] = all_products
