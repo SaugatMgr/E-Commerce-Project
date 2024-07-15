@@ -8172,7 +8172,7 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
 }
 @media only screen and (min-width: 992px) and (max-width: 1199px) {
   .widget_list.widget_filter form input {
-    width: 65px;
+    width: 135px;
   }
 }
 .widget_list.widget_filter form button {
@@ -9684,6 +9684,26 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
   border-radius: 3px;
 }
 .cart_submit button:hover {
+  background: #ea000d;
+}
+
+.update_cart_submit button {
+  background: #262626;
+  border: 0;
+  color: #ffffff;
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 600;
+  height: 38px;
+  line-height: 18px;
+  padding: 10px 15px;
+  text-transform: uppercase;
+  cursor: pointer;
+  -webkit-transition: 0.3s;
+  transition: 0.3s;
+  border-radius: 3px;
+}
+.update_cart_submit button:hover {
   background: #ea000d;
 }
 
