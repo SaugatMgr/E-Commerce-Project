@@ -43,54 +43,6 @@ class HomePageView(ListView):
     template_name = "main/home/home.html"
     context_object_name = "products"
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
-        user = self.request.user
-        all_categories = Category.objects.all()
-        all_products = Product.objects.all()
-
-        filter_product_by_views = Product.objects.filter(views_count__gte=0)
-        filter_product_by_higher_views = filter_product_by_views.order_by(
-            "-views_count"
-        )
-        products_by_date = filter_product_by_views.order_by("-added_date")
-
-        context["categories"] = all_categories
-        context["product_category"] = all_categories[:9]
-        context["product_category_rem"] = all_categories[9:12]
-        context["product_sub_category"] = SubCategory.objects.all()
-
-        context["today_deals_categories_first"] = all_categories.first()
-        context["today_deals_categories"] = all_categories[1:8]
-        context["today_deals_products"] = products_by_date
-
-        context["best_sellers"] = filter_product_by_higher_views
-        context["all_products"] = all_products
-
-        context["new_products_left_sidebar"] = products_by_date[:2]
-        context["new_products_center"] = products_by_date[2]
-        context["new_products_right_sidebar"] = products_by_date[3:5]
-
-        context["featured_products"] = all_products.filter(is_featured=True)
-        context["default_active_tab_category"] = Category.objects.first()
-        context["remaining_categories"] = all_categories[1:8]
-
-        if user.is_authenticated:
-            current_customer = Customer.objects.filter(user=user).first()
-            if current_customer:
-                cart = Cart.objects.filter(customer=current_customer).first()
-                if cart:
-                    cart_items = CartItems.objects.filter(cart=cart)
-                    if cart_items:
-                        context["cart_items"] = cart_items
-                        context["cart_items_count"] = cart_items.count()
-                        context["sub_total"] = sum(
-                            [item.quantity * item.product.price for item in cart_items]
-                        )
-
-        return context
-
 
 class ShopItemsView(HomePageView):
     model = Product
@@ -445,6 +397,7 @@ class ProductSearchView(View):
         query = get_data.get("query", "")
         category_id = get_data.get("select", 0)
         orderby = get_data.get("orderby", "")
+        filter_by_price_range = get_data.get("text", "")
         ajax_format = request.headers.get("x-requested-with")
 
         search_results = Product.objects.all()
@@ -463,6 +416,16 @@ class ProductSearchView(View):
         if orderby:
             search_results = search_results.order_by(orderby)
 
+        if filter_by_price_range:
+            filter_by_price_range = filter_by_price_range.replace("Rs.", "")
+            min_price, max_price = filter_by_price_range.split(" - ")
+            min_price = int(min_price)
+            max_price = int(max_price)
+
+            search_results = search_results.filter(
+                price__gte=min_price, price__lte=max_price
+            )
+
         page_obj = Paginator(search_results, 12)
         page = request.GET.get("page", 1)
 
@@ -473,29 +436,42 @@ class ProductSearchView(View):
         except EmptyPage:
             page_obj = page_obj.page(page_obj.num_pages)
 
-        if ajax_format == "XMLHttpRequest":
-            if orderby:
-                html_content = render_to_string(
-                    self.template,
-                    {
-                        "query": query,
-                        "category_id": get_data.get("select"),
-                        "page_obj": page_obj,
-                        "is_paginated": page_obj.has_other_pages(),
-                    },
-                    request,
-                )
+        if ajax_format:
+            if ajax_format == "XMLHttpRequest":
+                if orderby:
+                    html_content = render_to_string(
+                        self.template,
+                        {
+                            "query": query,
+                            "page_obj": page_obj,
+                            "is_paginated": page_obj.has_other_pages(),
+                        },
+                        request,
+                    )
+                    return JsonResponse(
+                        {"success": True, "html_content": html_content}, status=200
+                    )
+                if filter_by_price_range:
+                    html_content = render_to_string(
+                        self.template,
+                        {
+                            "query": query,
+                            "page_obj": page_obj,
+                            "is_paginated": page_obj.has_other_pages(),
+                        },
+                        request,
+                    )
+                    return JsonResponse(
+                        {"success": True, "html_content": html_content}, status=200
+                    )
+            else:
                 return JsonResponse(
-                    {"success": True, "html_content": html_content}, status=200
+                    {
+                        "success": False,
+                        "message": "Cannot process.Must be and AJAX XMLHttpRequest.",
+                    },
+                    status=400,
                 )
-        else:
-            return JsonResponse(
-                {
-                    "success": False,
-                    "message": "Cannot process.Must be and AJAX XMLHttpRequest.",
-                },
-                status=400,
-            )
         return render(
             request,
             self.template,
