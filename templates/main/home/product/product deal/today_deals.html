@@ -6,43 +6,42 @@
     <div class="deals_product_inner">
         <div class="deals_tab_list">
             <ul class="nav" role="tablist">
-                <li>
-                    <a class="active" data-bs-toggle="tab" href="#{{ today_deals_categories_first.name }}" role="tab" aria-controls="Funiture" aria-selected="true"> 
-                        <i class="zmdi zmdi-boat"></i>
-                        <h3>{{ today_deals_categories_first.name }}</h3>
-                    </a>
-                </li>
-                
-                {% for today_deals_category in today_deals_categories %}
+                {% for category in today_deals_categories %}
                     <li>
-                        <a data-bs-toggle="tab" href="#{{ today_deals_category.name }}" role="tab" aria-controls="laptop" aria-selected="false">
-                            <i class="zmdi zmdi-laptop-mac"></i>
-                            <h3>{{ today_deals_category.name }}</h3>
+                        <a class="{% if forloop.first %}active{% endif %}"
+                           data-bs-toggle="tab"
+                           href="#today-deals-{{ category.name|slugify }}"
+                           role="tab"
+                           aria-controls="today-deals-{{ category.name|slugify }}"
+                           aria-selected="{% if forloop.first %}true{% else %}false{% endif %}">
+                            <i class="zmdi zmdi-boat"></i>
+                            <h3>{{ category.name }}</h3>
                         </a>
                     </li>
                 {% endfor %}
-                    
             </ul>
         </div>
         <div class="deals_product_wrapper">
             <div class="tab-content">
-                <div class="tab-pane fade show active" id="{{ today_deals_categories_first.name }}" role="tabpanel">
-                    <div class="deals_product_list">
-                        {% for product in today_deals_products %}
-                        
-                            {% if product.category.name == today_deals_categories_first.name %}
+                {% for category in today_deals_categories %}
+                    <div class="tab-pane fade {% if forloop.first %}show active{% endif %}"
+                         id="today-deals-{{ category.name|slugify }}"
+                         role="tabpanel"
+                         aria-labelledby="today-deals-{{ category.name|slugify }}-tab">
+                        <div class="deals_product_list">
+                            {% for product in category.products.all %}
                                 <div class="single_deals_product">
                                     <div class="product_thumb">
                                         <a href="{% url 'product_detail' product.slug %}">
-                                            <img src="{{ product.product_img_thumbnail.url }}"
-                                                alt="{{ product.name }}"
-                                                style="width: 326.24px;height: 276.04px;">
+                                            <img src="{{ product.product_img_thumbnail.url }}" alt="{{ product.name }}" style="width: 326.24px; height: 276.04px;">
                                         </a>
                                         <div class="label_product">
                                             <span class="label_sale">sale</span>
                                         </div>
                                         <div class="quick_button">
-                                            <a href="#" data-bs-toggle="modal" data-bs-target="#modal_box"  title="quick view"> <i class="zmdi zmdi-eye"></i></a>
+                                            <a href="#" data-bs-toggle="modal" data-bs-target="#modal_box" title="quick view">
+                                                <i class="zmdi zmdi-eye"></i>
+                                            </a>
                                         </div>
                                         <div class="product_timing">
                                             <div data-countdown="2030/12/15"></div>
@@ -67,34 +66,26 @@
                                         </div>
                                         <div class="price_box">
                                             {% if product.discount %}
-
                                                 <span class="current_price">Rs.{{ product.new_price|intcomma }}</span>
                                                 <span class="old_price">Rs.{{ product.price|intcomma }}</span>
                                                 <span class="discount">(-{{ product.discount }}%)</span>
-
                                             {% else %}
-
                                                 <span class="current_price">Rs.{{ product.price|intcomma }}</span>
-                                                
-                                            {% endif %}     
+                                            {% endif %}
                                         </div>
                                         <div class="action_links">
                                             <ul>
-                                            <li class="wishlist">
-                                                <form method="post" class="wishlist_form">{% csrf_token %}
-                                                    <input type="hidden"
-                                                           name="prod_slug"
-                                                           value="{{ product.slug }}">
-                                                    <button type="submit">
-                                                        <i class="fa fa-heart-o" aria-hidden="true"></i>
-                                                    </button>
-                                                </form>
-                                            </li>
+                                                <li class="wishlist">
+                                                    <form method="post" class="wishlist_form">{% csrf_token %}
+                                                        <input type="hidden" name="prod_slug" value="{{ product.slug }}">
+                                                        <button type="submit">
+                                                            <i class="fa fa-heart-o" aria-hidden="true"></i>
+                                                        </button>
+                                                    </form>
+                                                </li>
                                                 <li class="add_to_cart">
                                                     <form method="post" class="cart_form">{% csrf_token %}
-                                                        <input type="hidden"
-                                                               name="prod_slug"
-                                                               value="{{ product.slug }}">
+                                                        <input type="hidden" name="prod_slug" value="{{ product.slug }}">
                                                         <button type="submit">
                                                             <i class="zmdi zmdi-shopping-cart-plus"></i>
                                                             add to cart
@@ -110,97 +101,12 @@
                                         </div>
                                     </div>
                                 </div>
-                            {% endif %}
-                            
-                        {% endfor %}
-                            
-                    </div>
-                </div>
-                
-                {% for today_deals_category in today_deals_categories %}
-                    <div class="tab-pane fade" id="{{ today_deals_category.name }}" role="tabpanel">
-                        <div class="deals_product_list">
-                            {% for product in today_deals_products %}
-                                {% if product.category.name == today_deals_category.name %}
-                                    <div class="single_deals_product">
-                                        <div class="product_thumb">
-                                            <a href="{% url 'product_detail' product.slug %}">
-                                                <img src="{{ product.product_img_thumbnail.url }}"
-                                                    alt="{{ product.name }}"
-                                                    style="width: 326.24px;height: 276.04px;">
-                                            </a>
-                                            <div class="quick_button">
-                                                <a href="#" data-bs-toggle="modal" data-bs-target="#modal_box"  title="quick view"> <i class="zmdi zmdi-eye"></i></a>
-                                            </div>
-                                            <div class="product_timing">
-                                                <div data-countdown="2030/12/15"></div>
-                                            </div>
-                                        </div>
-                                        <div class="product_content">
-                                            <div class="product_name">
-                                                <h3>
-                                                    <a href="{% url 'product_detail' product.slug %}">
-                                                        {{ product.name }}
-                                                    </a>
-                                                </h3>
-                                            </div>
-                                            <div class="product_rating">
-                                                <ul>
-                                                    <li><a href="#"><i class="zmdi zmdi-star-outline"></i></a></li>
-                                                    <li><a href="#"><i class="zmdi zmdi-star-outline"></i></a></li>
-                                                    <li><a href="#"><i class="zmdi zmdi-star-outline"></i></a></li>
-                                                    <li><a href="#"><i class="zmdi zmdi-star-outline"></i></a></li>
-                                                    <li><a href="#"><i class="zmdi zmdi-star-outline"></i></a></li>
-                                                </ul>
-                                            </div>
-                                            <div class="price_box">
-                                                {% if product.discount %}
-
-                                                    <span class="current_price">Rs.{{ product.new_price|intcomma }}</span>
-                                                    <span class="old_price">Rs.{{ product.price|intcomma }}</span>
-                                                    <span class="discount">(-{{ product.discount }}%)</span>
-
-                                                {% else %}
-
-                                                    <span class="current_price">Rs.{{ product.price|intcomma }}</span>
-                                                    
-                                                {% endif %}     
-                                            </div>
-                                            <div class="action_links">
-                                                <ul>
-                                                    <li class="wishlist">
-                                                        <a href="#" title="Add to Wishlist">
-                                                            <i class="fa fa-heart-o" aria-hidden="true"></i>
-                                                        </a>
-                                                    </li>
-                                                    <li class="add_to_cart">
-                                                        <form method="post" class="cart_form">{% csrf_token %}
-                                                            <input type="hidden"
-                                                                   name="prod_slug"
-                                                                   value="{{ product.slug }}">
-                                                            <button type="submit">
-                                                                <i class="zmdi zmdi-shopping-cart-plus"></i>
-                                                                add to cart
-                                                            </button>
-                                                        </form>
-                                                    </li>
-                                                    <li class="compare">
-                                                        <a href="#" title="compare">
-                                                            <i class="zmdi zmdi-swap"></i>
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                {% endif %}
-                                    
                             {% endfor %}
                         </div>
-                    </div> 
+                    </div>
                 {% endfor %}
-                    
-            </div> 
+            </div>
         </div>
     </div>
+    
 </div>
