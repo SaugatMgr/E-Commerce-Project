@@ -9662,11 +9662,14 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
 .cart_page table thead tr:last-child th, .table_desc table tbody tr td:last-child {
   border-right: 0;
 }
-
-.cart_submit {
-  text-align: right;
+.cart_buttons_container {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
   padding: 12px;
+  gap: 10px;
 }
+
 .cart_submit button {
   background: #262626;
   border: 0;
@@ -9816,9 +9819,9 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
   margin-right: 30px;
 }
 
-.checkout_btn {
+/* .checkout_btn {
   text-align: right;
-}
+} */
 .checkout_btn a {
   background: #ea000d;
   color: #ffffff;
@@ -9829,6 +9832,7 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
   display: inline-block;
   text-transform: capitalize;
   margin-bottom: 0;
+  border-radius: 3px;
 }
 .checkout_btn a:hover {
   background: #262626;
