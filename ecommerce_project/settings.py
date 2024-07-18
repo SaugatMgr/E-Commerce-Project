@@ -49,6 +49,7 @@ CUSTOM_APPS = [
 ]
 THIRD_PARTY_APPS = [
     "allauth",
+    "tinymce",
     "allauth.account",
     "allauth.socialaccount",
     "crispy_forms",
@@ -212,4 +213,26 @@ JAZZMIN_UI_TWEAKS = {
         "danger": "btn-danger",
         "success": "btn-success",
     },
+}
+
+TINYMCE_DEFAULT_CONFIG = {
+    'height': 360,
+    'width': 530,
+    'cleanup_on_startup': True,
+    'custom_undo_redo_levels': 20,
+    'selector': 'textarea',
+    'theme': 'silver',
+    'plugins': '''
+        textcolor save link image media preview codesample contextmenu
+        table code lists fullscreen  insertdatetime  nonbreaking
+        contextmenu directionality searchreplace wordcount visualblocks
+        visualchars code fullscreen autolink lists  charmap print  hr
+        anchor pagebreak
+    ''',
+    'toolbar': '''
+        undo redo | styleselect | bold italic | alignleft alignright |
+        bullist numlist outdent indent | link image | print preview media
+        fullpage | forecolor backcolor emoticons | codesample |
+        table | charmap hr pagebreak nonbreaking anchor | insertdatetime
+    ''',
 }
