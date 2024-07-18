@@ -94,7 +94,7 @@
             {% endif %}
           </div>
           <div class="product_desc">
-            <p>{{ product.description|linebreaksbr }}</p>
+            <p>{{ product.description|safe }}</p>
           </div>
           <div class="product_variant color">
             <h3>Available Options</h3>
