@@ -1,3 +1,4 @@
+from tinymce.models import HTMLField
 from django.db import models
 from django.urls import reverse
 from django.utils.text import slugify
@@ -61,7 +62,7 @@ class Product(TimeStamp):
     name = models.CharField(max_length=150)
     slug = models.SlugField(max_length=200, unique=True, blank=True, null=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    description = models.TextField()
+    description = HTMLField()
     product_img_thumbnail = models.ImageField(upload_to="product/")
     views_count = models.PositiveBigIntegerField(default=0)
     is_featured = models.BooleanField(default=False)
