@@ -41,12 +41,6 @@ class AddProductForm(forms.ModelForm):
                     "placeholder": "Enter the price of the product..."
                 }
             ),
-            "description": forms.Textarea(
-                attrs={
-                    "class": "form-control",
-                    "placeholder": "Enter the description of the product..."
-                }
-            ),
             "product_img_thumbnail": forms.ClearableFileInput(
                 attrs={
                     "class": "form-control",
