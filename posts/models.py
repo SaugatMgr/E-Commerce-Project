@@ -12,6 +12,27 @@ class CommonInfo(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
 
+    class Meta:
+        abstract = True
+
+
+class PostCategory(models.Model):
+    name = models.CharField(max_length=64)
+
+    class Meta:
+        verbose_name = "PostCategory"
+        verbose_name_plural = "PostCategories"
+
+    def __str__(self):
+        return self.name
+
+
+class PostTag(models.Model):
+    name = models.CharField(max_length=64)
+
+    def __str__(self):
+        return self.name
+
 
 class Post(CommonInfo):
     title = models.CharField(max_length=150)
@@ -27,11 +48,12 @@ class Post(CommonInfo):
         default="draft",
     )
     category = models.ForeignKey(
-        "Category",
+        "PostCategory",
         related_name="posts",
         on_delete=models.SET_NULL,
+        null=True,
     )
-    tag = models.ManyToManyField("Tag", related_name="posts", blank=True)
+    tag = models.ManyToManyField("PostTag", related_name="posts", blank=True)
     likes = models.PositiveIntegerField(default=0, blank=True)
     views = models.PositiveBigIntegerField(default=0, blank=True)
     published_on = models.DateTimeField(null=True, blank=True)
@@ -58,7 +80,7 @@ class Comment(CommonInfo):
         on_delete=models.CASCADE,
     )
     comment = models.TextField()
-    parent = models.ForeignKey(
+    reply = models.ForeignKey(
         "self", null=True, blank=True, on_delete=models.CASCADE, related_name="replies"
     )
 
