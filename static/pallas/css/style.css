@@ -10344,7 +10344,8 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
     margin-bottom: 20px;
   }
 }
-.account_form form {
+.account_form form,
+.social_auth_btns {
   border: 1px solid #e5e5e5;
   padding: 23px 20px 29px;
   border-radius: 5px;
@@ -10382,10 +10383,47 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
   -webkit-transition: 0.3s;
   transition: 0.3s;
   margin-left: 20px;
-  border-radius: 20px;
+  border-radius: 5px;
 }
 .account_form button:hover {
   background: #262626;
+}
+
+.social_auth_container{
+  margin-top: 50px;
+}
+
+.social_auth_container .btn {
+  border: 0;
+  color: #ffffff;
+  display: block;
+  width: 100%;
+  margin-bottom: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  height: 40px;
+  line-height: 21px;
+  padding: 5px 20px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: 0.3s;
+  border-radius: 5px;
+}
+
+.social_auth_container .btn-facebook {
+  background: #1877f2;
+}
+
+.social_auth_container .btn-facebook:hover {
+  background: #0e5a8a;
+}
+
+.social_auth_container .btn-google {
+  background: #db4437;
+}
+
+.social_auth_container .btn-google:hover {
+  background: #c13524;
 }
 
 .login_submit label input[type="checkbox"] {
