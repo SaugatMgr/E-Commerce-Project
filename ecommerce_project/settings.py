@@ -46,6 +46,7 @@ DJANGO_APPS = [
 CUSTOM_APPS = [
     "accounts.apps.AccountsConfig",
     "electronics.apps.ElectronicsConfig",
+    "posts.apps.PostsConfig",
 ]
 THIRD_PARTY_APPS = [
     "allauth",
