@@ -56,6 +56,7 @@ THIRD_PARTY_APPS = [
     "crispy_bootstrap5",
     "phonenumber_field",
     "allauth.socialaccount.providers.google",
+    "allauth.socialaccount.providers.facebook",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + CUSTOM_APPS + THIRD_PARTY_APPS
@@ -216,23 +217,50 @@ JAZZMIN_UI_TWEAKS = {
 }
 
 TINYMCE_DEFAULT_CONFIG = {
-    'height': 360,
-    'width': 530,
-    'cleanup_on_startup': True,
-    'custom_undo_redo_levels': 20,
-    'selector': 'textarea',
-    'theme': 'silver',
-    'plugins': '''
+    "height": 360,
+    "width": 530,
+    "cleanup_on_startup": True,
+    "custom_undo_redo_levels": 20,
+    "selector": "textarea",
+    "theme": "silver",
+    "plugins": """
         textcolor save link image media preview codesample contextmenu
         table code lists fullscreen  insertdatetime  nonbreaking
         contextmenu directionality searchreplace wordcount visualblocks
         visualchars code fullscreen autolink lists  charmap print  hr
         anchor pagebreak
-    ''',
-    'toolbar': '''
+    """,
+    "toolbar": """
         undo redo | styleselect | bold italic | alignleft alignright |
         bullist numlist outdent indent | link image | print preview media
         fullpage | forecolor backcolor emoticons | codesample |
         table | charmap hr pagebreak nonbreaking anchor | insertdatetime
-    ''',
+    """,
 }
+
+SOCIALACCOUNT_PROVIDERS = {
+    "facebook": {
+        "METHOD": "oauth2",
+        "SCOPE": ["email", "public_profile"],
+        "AUTH_PARAMS": {"auth_type": "reauthenticate"},
+        "FIELDS": [
+            "id",
+            "email",
+            "name",
+            "first_name",
+            "last_name",
+            "verified",
+            "locale",
+            "timezone",
+            "link",
+            "gender",
+            "updated_time",
+        ],
+        "EXCHANGE_TOKEN": True,
+        "LOCALE_FUNC": lambda request: "en_US",
+        "VERIFIED_EMAIL": False,
+        "VERSION": "v13.0",
+    }
+}
+SOCIAL_AUTH_FACEBOOK_KEY = env("SOCIAL_AUTH_FACEBOOK_KEY")
+SOCIAL_AUTH_FACEBOOK_SECRET = env("SOCIAL_AUTH_FACEBOOK_SECRET")
