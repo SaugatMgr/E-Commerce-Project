@@ -1,1 +1,1 @@
-POST_CHOICES = [("Draft", "Draft"), ("Published", "Published")]
+POST_CHOICES = [("draft", "Draft"), ("published", "Published")]
