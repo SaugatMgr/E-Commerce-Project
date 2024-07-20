@@ -1,0 +1,27 @@
+{% extends "_base.html" %}
+{% block page_name %}Blog{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-md-10 mx-auto">
+                {% for post in posts %}
+                    <div class="post-preview">
+                        <a href="{% url "blog_detail" post.id %}">
+                            <h2 class="post-title">{{ post.title }}</h2>
+                        </a>
+                        <p class="post-meta">Posted by
+                            <a href="#">{{ post.author.first_name }} {{ post.author.last_name }}</a>
+                            on {{ post.published_on }}</p>
+                    </div>
+                    <hr>
+                    <div class="post-image">
+                        <img src="{{ post.featured_image.url }}" alt="{{ post.title }}">
+                    </div>
+                    <div class="post-detail">
+                        {{ post.content | safe | truncatewords:50 }}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
