@@ -55,6 +55,7 @@ class Post(CommonInfo):
     )
     tag = models.ManyToManyField("PostTag", related_name="posts", blank=True)
     likes = models.PositiveIntegerField(default=0, blank=True)
+    dislikes = models.PositiveIntegerField(default=0, blank=True)
     views = models.PositiveBigIntegerField(default=0, blank=True)
     published_on = models.DateTimeField(null=True, blank=True)
     featured_image = models.ImageField(
@@ -83,6 +84,9 @@ class Comment(CommonInfo):
     reply = models.ForeignKey(
         "self", null=True, blank=True, on_delete=models.CASCADE, related_name="replies"
     )
+    likes = models.PositiveIntegerField(default=0, blank=True)
+    dislikes = models.PositiveIntegerField(default=0, blank=True)
+    is_pinned = models.BooleanField(default=False)
 
     class Meta:
         ordering = ["-created_at"]
