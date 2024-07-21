@@ -3,11 +3,13 @@ from accounts.models import (
     Cart,
     CartItems,
 )
+from electronics.models import Category
 
 
 def electronics_context(request):
     context = {}
     user = request.user
+    context["footer_categories"] = Category.objects.filter()[:5]
 
     if user.is_authenticated:
         current_customer = Customer.objects.filter(user=user).first()
