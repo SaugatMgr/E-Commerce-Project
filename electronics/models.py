@@ -1,4 +1,7 @@
 from tinymce.models import HTMLField
+
+from decimal import Decimal
+
 from django.db import models
 from django.urls import reverse
 from django.utils.text import slugify
@@ -74,15 +77,19 @@ class Product(TimeStamp):
     )
 
     category = models.ForeignKey(
-        Category, default="", related_name="products", on_delete=models.CASCADE
+        Category, related_name="products", on_delete=models.CASCADE
     )
 
-    tag = models.ManyToManyField(Tag)
+    tag = models.ManyToManyField(Tag, related_name="products")
 
     @property
     def new_price(self):
-        if Product.discount:
-            return self.price - (self.price * (self.discount / 100))
+        if self.discount:
+            discount_amount = self.price * Decimal(self.discount / 100)
+            new_price = self.price - discount_amount
+        else:
+            new_price = self.price
+        return new_price.quantize(Decimal('0.01'))
 
     def __str__(self):
         return self.name
