@@ -10357,10 +10357,15 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
   line-height: 12px;
   margin-bottom: 12px;
 }
-.account_form label:hover {
+.my_account_address_form label span {
   color: #ea000d;
 }
-.account_form input {
+.account_form label:hover,
+.my_account_address_form label:hover {
+  color: #ea000d;
+}
+.account_form input,
+.my_account_address_form input {
   border: 1px solid #e5e5e5;
   height: 40px;
   max-width: 100%;
@@ -10387,6 +10392,39 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
 }
 .account_form button:hover {
   background: #262626;
+}
+
+/* My Account page Billing Address Form css */
+.my_account_address_form form {
+  border: 1px solid #e5e5e5;
+  padding: 13px 20px 29px;
+  border-radius: 5px;
+}
+
+.my_account_address_form button{
+  background: #ea000d;
+  border: 0;
+  color: #ffffff;
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  height: 34px;
+  line-height: 21px;
+  padding: 5px 20px;
+  text-transform: uppercase;
+  cursor: pointer;
+  -webkit-transition: 0.3s;
+  transition: 0.3s;
+  border-radius: 5px;
+  margin-top: 20px;
+}
+
+.my_account_address_form label {
+  font-size: 15px;
+  font-weight: 400;
+  cursor: pointer;
+  line-height: 12px;
+  margin: 20px 0px 12px;
 }
 
 .social_auth_container{
