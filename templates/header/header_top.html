@@ -32,6 +32,15 @@
                             <li class="language">
                                 {{ user }}
                             </li>
+                            <li class="top_links"><a href="#"><i class="zmdi zmdi-account"></i> My account <i class="zmdi zmdi-caret-down"></i></a>
+                                <ul class="dropdown_links">
+                                    <li><a href="{% url 'checkout' %}">Checkout </a></li>
+                                    <li><a href="{% url 'user_account' %}">My Account </a></li>
+                                    <li><a href="{% url 'cart' %}">Shopping Cart</a></li>
+                                    <li><a href="{% url 'wishlist' %}">Wishlist</a></li>
+                                    <li><a href="{% url 'account_change_password' %}">Change Password</a></li>
+                                </ul>
+                            </li>
                         {% else %}
                             <li class="language">
                                 <a href="{% url 'account_login' %}">
@@ -44,17 +53,6 @@
                                 </a>
                             </li>
                         {% endif %}
-                            
-                        <li class="top_links"><a href="#"><i class="zmdi zmdi-account"></i> My account <i class="zmdi zmdi-caret-down"></i></a>
-                            <ul class="dropdown_links">
-                                <li><a href="{% url 'checkout' %}">Checkout </a></li>
-                                <li><a href="{% url 'user_account' %}">My Account </a></li>
-                                <li><a href="{% url 'cart' %}">Shopping Cart</a></li>
-                                <li><a href="{% url 'wishlist' %}">Wishlist</a></li>
-                                <li><a href="{% url 'account_change_password' %}">Change Password</a></li>
-                            </ul>
-                        </li>
-
                     </ul>
                 </div> 
             </div>
