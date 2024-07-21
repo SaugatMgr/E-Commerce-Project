@@ -49,9 +49,19 @@ class CustomUserForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(CustomUserForm, self).__init__(*args, **kwargs)
-        
+
         if "password" not in self.data:
             del self.fields["password"]
+
+
+class MyAccountDetailsForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = (
+            "first_name",
+            "last_name",
+            "email",
+        )
 
 
 class CheckOutForm(forms.ModelForm):
@@ -88,6 +98,18 @@ class BillingAddressForm(forms.ModelForm):
         model = BillingAddress
         fields = (
             "customer",
+            "address_line_1",
+            "address_line_2",
+            "city",
+            "state_or_province",
+            "postal_code",
+        )
+
+
+class MyAccountBillingAddressForm(forms.ModelForm):
+    class Meta:
+        model = BillingAddress
+        fields = (
             "address_line_1",
             "address_line_2",
             "city",
