@@ -331,44 +331,24 @@
                 document.getElementById("total_order_price").innerHTML = formatted_total_price;
             }
 
-            // Address Form Ajax
-            $("#address_form").submit(function(e){
+            // My Account Page BillingAddress Form Ajax
+            $(".my_acc_details_page_form").submit(function(e){
                 e.preventDefault();
-
                 var serialized_data = $(this).serialize();
-                console.log(serialized_data);
+
                 $.ajax({
                     type: "post",
                     url: "{% url 'user_account' %}",
                     data: serialized_data,
-                
 
                     success: function(response){
-                        $("#address_form_msg").append(
-                            `
-                            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                ${response.message}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div>
-                            `
-                        )
-                        setTimeout(function(){
-                            $('.alert').alert('close')
-                        }, 2000)
+                        alertify.set('notifier','position', 'top-right');
+                        alertify.success(response.message);
                     },
 
                     error: function(response){
-                        $("#address_form_msg").append(
-                            `
-                            <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                                ${response.responseJSON.message}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div>
-                            `
-                        )
-                        setTimeout(function(){
-                            $('.alert').alert('close')
-                        }, 2000)
+                        alertify.set('notifier','position', 'top-right');
+                        alertify.error(response.responseJSON.message);
                     }
                 })
             })
