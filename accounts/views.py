@@ -39,17 +39,18 @@ class UserAccountView(View):
 
     def get(self, request, *args, **kwargs):
         user = self.request.user
-        customer = Customer.objects.get(user=user)
-        billing_address_instance = BillingAddress.objects.filter(
-            customer=customer
-        ).first()
+        customer = Customer.objects.filter(user=user).first()
+        if customer:
+            billing_address_instance = BillingAddress.objects.filter(
+                customer=customer
+            ).first()
 
-        self.form_classes = {
-            "user_form": MyAccountDetailsForm(instance=user),
-            "billing_address_form": MyAccountBillingAddressForm(
-                instance=billing_address_instance
-            ),
-        }
+            self.form_classes = {
+                "user_form": MyAccountDetailsForm(instance=user),
+                "billing_address_form": MyAccountBillingAddressForm(
+                    instance=billing_address_instance
+                ),
+            }
 
         context = {
             form_name: form_class for form_name, form_class in self.form_classes.items()
@@ -59,7 +60,7 @@ class UserAccountView(View):
     def post(self, request, *args, **kwargs):
         data = request.POST
         current_user = request.user
-        customer = Customer.objects.get(user=current_user)
+        customer, _ = Customer.objects.get_or_create(user=current_user)
         ajax_format = request.headers.get("x-requested-with")
 
         with transaction.atomic():
@@ -104,11 +105,13 @@ class UserAccountView(View):
                     ).first()
                     if existing_billing_address:
                         billing_address_form = MyAccountBillingAddressForm(
-                            billing_address_data, instance=existing_billing_address
+                            billing_address_data,
+                            instance=existing_billing_address,
+                            customer=customer,
                         )
                     else:
                         billing_address_form = MyAccountBillingAddressForm(
-                            billing_address_data
+                            billing_address_data, customer=customer
                         )
 
                     if billing_address_form.is_valid():

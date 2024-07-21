@@ -116,6 +116,16 @@ class MyAccountBillingAddressForm(forms.ModelForm):
             "state_or_province",
             "postal_code",
         )
+    
+    def __init__(self, *args, **kwargs):
+        self.customer = kwargs.pop('customer', None)
+        super(MyAccountBillingAddressForm, self).__init__(*args, **kwargs)
+    
+    def save(self):
+        billing_address = super(MyAccountBillingAddressForm, self).save(commit=False)
+        billing_address.customer = self.customer
+        billing_address.save()
+        return billing_address
 
 
 class ShippingAddressForm(forms.ModelForm):
