@@ -1,7 +1,5 @@
 import decimal
 
-from multi_form_view import MultiModelFormView
-
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.db import transaction
@@ -17,6 +15,8 @@ from .forms import (
     CheckOutForm,
     CustomUserForm,
     CustomerForm,
+    MyAccountBillingAddressForm,
+    MyAccountDetailsForm,
     ShippingAddressForm,
 )
 from .models import (
@@ -30,26 +30,110 @@ from .models import (
 )
 
 
-class UserAccountView(MultiModelFormView):
-    form_classes = {"customer_form": CustomerForm, "checkout_form": CheckOutForm}
-
+class UserAccountView(View):
     template_name = "users/my_account/my_account.html"
+    form_classes = {
+        "user_form": MyAccountDetailsForm(),
+        "billing_address_form": MyAccountBillingAddressForm(),
+    }
 
-    def forms_valid(self, forms):
+    def get(self, request, *args, **kwargs):
         user = self.request.user
-        customer_order = Order.objects.get(
-            customer=Customer.objects.get(user=user)
-        ).customer
+        customer = Customer.objects.get(user=user)
+        billing_address_instance = BillingAddress.objects.filter(
+            customer=customer
+        ).first()
 
-        print(customer_order)
+        self.form_classes = {
+            "user_form": MyAccountDetailsForm(instance=user),
+            "billing_address_form": MyAccountBillingAddressForm(
+                instance=billing_address_instance
+            ),
+        }
 
-        forms["customer_form"].instance.user = user
-        forms["checkout_form"].instance.customer = customer_order
+        context = {
+            form_name: form_class for form_name, form_class in self.form_classes.items()
+        }
+        return render(request, self.template_name, context)
 
-        forms["customer_form"].save()
-        forms["checkout_form"].save()
+    def post(self, request, *args, **kwargs):
+        data = request.POST
+        current_user = request.user
+        customer = Customer.objects.get(user=current_user)
+        ajax_format = request.headers.get("x-requested-with")
 
-        return super(UserAccountView, self).forms_valid(forms)
+        with transaction.atomic():
+            if ajax_format == "XMLHttpRequest":
+                # User Form input data
+                user_data = {
+                    "email": data.get("email"),
+                    "first_name": data.get("first_name"),
+                    "last_name": data.get("last_name"),
+                }
+
+                # Billing Address Form input data
+                billing_address_data = {
+                    "customer": customer,
+                    "address_line_1": data.get("address_line_1"),
+                    "address_line_2": data.get("address_line_2"),
+                    "city": data.get("city"),
+                    "state_or_province": data.get("state_or_province"),
+                    "postal_code": data.get("postal_code"),
+                }
+                if data.get("from_account_details_page"):
+                    user_form = MyAccountDetailsForm(user_data, instance=current_user)
+                    if user_form.is_valid():
+                        user_form.save()
+                        return JsonResponse(
+                            {
+                                "success": True,
+                                "message": "Account details updated successfully.",
+                            },
+                            status=200,
+                        )
+                    return JsonResponse(
+                        {
+                            "success": False,
+                            "message": "An error occurred while updating your account details.",
+                        },
+                        status=400,
+                    )
+                if data.get("from_billing_address_page"):
+                    existing_billing_address = BillingAddress.objects.filter(
+                        customer=customer
+                    ).first()
+                    if existing_billing_address:
+                        billing_address_form = MyAccountBillingAddressForm(
+                            billing_address_data, instance=existing_billing_address
+                        )
+                    else:
+                        billing_address_form = MyAccountBillingAddressForm(
+                            billing_address_data
+                        )
+
+                    if billing_address_form.is_valid():
+                        billing_address_form.save()
+                        return JsonResponse(
+                            {
+                                "success": True,
+                                "message": "Billing address updated successfully.",
+                            },
+                            status=200,
+                        )
+                    return JsonResponse(
+                        {
+                            "success": False,
+                            "message": "An error occurred while updating your billing address.",
+                        },
+                        status=400,
+                    )
+            return JsonResponse(
+                {
+                    "success": False,
+                    "message": "Cannot process.Must be and AJAX XMLHttpRequest.",
+                },
+                status=400,
+            )
 
 
 class CheckOutView(View):
@@ -185,7 +269,9 @@ class CheckOutView(View):
                 ]
                 if all(is_form_valid):
                     if create_acc and password:
-                        current_user.set_password(user_form.cleaned_data.get("password"))
+                        current_user.set_password(
+                            user_form.cleaned_data.get("password")
+                        )
                         current_user.save()
                     user_form.save()
                     customer_form.save()
