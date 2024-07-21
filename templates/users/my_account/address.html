@@ -3,33 +3,24 @@
 <div class="tab-pane" id="address">
     <p>The following addresses will be used on the checkout page by default.</p>
         <h4 class="billing-address">Billing address</h4>
-        <div class="account_form">
-            <div id="address_form_msg">
-
-            </div>
-            <form id="address_form" method="post">{% csrf_token %}
-                {{ forms.customer_form.field_errors }}
-                {{ forms.customer_form.phone_number.errors }}
-
-                {{ forms.customer_form|crispy }}
-                
-                {{ forms.checkout_form.field_errors }}
-                {{ forms.checkout_form.non_field_errors }}
-
-                {{ forms.checkout_form|crispy }}
-    
+        <div class="my_account_address_form">
+            <form class="my_acc_details_page_form" method="post">{% csrf_token %}
+                <input type="hidden" name="from_billing_address_page" value="true">
+                {% for field in billing_address_form %}
+                    <label for="{{ field.id_for_label }}">
+                        {{ field.label }}
+                        {% if field.field.required %}
+                            <span>*</span>
+                        {% endif %}
+                    </label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <div class="text-danger">
+                            {{ field.errors }}
+                        </div>
+                    {% endif %}
+                {% endfor %}
                 <button type="submit">Save</button>
             </form>
         </div>
-        <a href="#" class="view">Edit</a>
-        <p><strong>Bobby Jackson</strong></p>
-        <address>
-            House #15<br>
-            Road #1<br>
-            Block #C <br>
-            Banasree <br>
-            Dhaka <br>
-            1212
-        </address>
-        <p>Bangladesh</p>   
     </div>
