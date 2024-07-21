@@ -18,11 +18,9 @@
                     <div class="footer_tag_menu">
                         <h3>Electronic :</h3>
                         <ul>
-                            <li><a href="#">Laptop</a></li>
-                            <li><a href="#">TV</a></li>
-                            <li><a href="#">Computer</a></li>
-                            <li><a href="#">Mobile</a></li>
-                            <li><a href="#">Tablet</a></li>
+                            {% for category in footer_categories %}
+                                <li><a href="#">{{ category }}</a></li>
+                            {% endfor %}
                         </ul>
                     </div>
                 </div>
