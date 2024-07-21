@@ -1,5 +1,5 @@
 import uuid
-import decimal
+from decimal import Decimal
 
 from django.contrib.auth.models import AbstractUser
 from django.db import models
@@ -112,19 +112,17 @@ class CartItems(TimeStamp):
     @property
     def total_price(self):
         vat_added_price = self.quantity * (
-            self.product.price * decimal.Decimal((1 + self.VAT / 100))
+            self.product.price * Decimal((1 + self.VAT / 100))
         )
         discount = self.product.discount
 
         if discount:
-            discount_added_price = self.product.price * decimal.Decimal(
-                (1 - (discount / 100))
-            )
-            final_price = "{:.3f}".format(vat_added_price - discount_added_price)
+            discount_added_price = vat_added_price * Decimal((discount / 100))
+            final_price = vat_added_price - discount_added_price
         else:
-            final_price = "{:.3f}".format(vat_added_price)
+            final_price = vat_added_price
 
-        return final_price
+        return final_price.quantize(Decimal("0.001"))
 
     def __str__(self):
         return self.product.name
