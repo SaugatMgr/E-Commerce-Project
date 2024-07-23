@@ -1,16 +1,17 @@
 from typing import Any
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models.query import QuerySet
 from django.views import View
 from django.views.generic import ListView, DetailView
 from django.shortcuts import render
 from django.db.models import Q
 
-from posts.helpers import PostContextMixin
+from helpers.pagination import PaginationMixin
 
 from .models import Post
 
 
-class PostListView(ListView):
+class PostListView(PaginationMixin, ListView):
     model = Post
     template_name = "blog/blog list/blog.html"
     context_object_name = "posts"
@@ -39,7 +40,7 @@ class PostDetailView(DetailView):
         return context
 
 
-class PostByCategoryView(PostContextMixin, ListView):
+class PostByCategoryView(PaginationMixin, ListView):
     model = Post
     template_name = "blog/blog list/blog.html"
     context_object_name = "posts"
@@ -50,7 +51,7 @@ class PostByCategoryView(PostContextMixin, ListView):
         )
 
 
-class PostByTagView(PostContextMixin, ListView):
+class PostByTagView(PaginationMixin, ListView):
     model = Post
     template_name = "blog/blog list/blog.html"
     context_object_name = "posts"
@@ -73,4 +74,26 @@ class PostSearchView(View):
                 | Q(author__first_name__icontains=query)
                 | Q(author__last_name__icontains=query)
             ).distinct()
-        return render(request, self.template_name, {"posts": posts})
+        else:
+            posts = Post.objects.all()
+
+        page_obj = Paginator(posts, 10)
+        page = request.GET.get("page", 1)
+
+        try:
+            page_obj = page_obj.page(page)
+        except PageNotAnInteger:
+            page_obj = page_obj.page(1)
+        except EmptyPage:
+            page_obj = page_obj.page(page_obj.num_pages)
+
+        return render(
+            request,
+            self.template_name,
+            {
+                "posts": posts,
+                "page_obj": page_obj,
+                "query": query,
+                "is_paginated": page_obj.has_other_pages(),
+            },
+        )
