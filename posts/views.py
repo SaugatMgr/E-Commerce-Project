@@ -9,7 +9,7 @@ from .models import Post
 
 class PostListView(PostContextMixin, ListView):
     model = Post
-    template_name = "blog/blog.html"
+    template_name = "blog/blog list/blog.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -20,7 +20,7 @@ class PostListView(PostContextMixin, ListView):
 
 class PostDetailView(PostContextMixin, DetailView):
     model = Post
-    template_name = "blog/blog_detail.html"
+    template_name = "blog/blog detail/blog_detail.html"
 
     def get(self, request, *args, **kwargs):
         context = self.get_shared_context_data(**kwargs)
