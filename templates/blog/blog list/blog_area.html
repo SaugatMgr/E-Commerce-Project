@@ -9,7 +9,7 @@
             <div class="single_blog mb-50">
                 <div class="blog_title">
                     <span>
-                        <a href="#">{{ post.category }}</a>
+                        <a href="{% url "post_by_category_list" post.category.name %}">{{ post.category }}</a>
                     </span>
                     <h2><a href="{% url "post_detail" post.id %}">{{ post.title }}</a></h2>
                     <div class="blog_post">
