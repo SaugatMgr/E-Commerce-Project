@@ -11394,7 +11394,19 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
     font-size: 14px;
   }
 }
-.blog_content > a {
+.blog_content .blog_desc {
+  line-height: 22px;
+  margin-bottom: 26px;
+  font-size: 15px;
+}
+@media only screen and (max-width: 767px) {
+  .blog_content .blog_desc {
+    margin-bottom: 20px;
+    font-size: 14px;
+  }
+}
+.blog_content > a,
+.blog_content .read_more a {
   font-weight: 500;
   height: 45px;
   letter-spacing: .2em;
@@ -11407,14 +11419,18 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
   padding: 0 30px;
   border-radius: 3px;
 }
+
 @media only screen and (max-width: 767px) {
-  .blog_content > a {
+  .blog_content > a,
+  .blog_content .read_more a {
     height: 36px;
     line-height: 36px;
     padding: 0 15px;
   }
 }
-.blog_content > a:hover {
+
+.blog_content > a:hover,
+.blog_content .read_more a:hover {
   background: #ea000d;
 }
 
