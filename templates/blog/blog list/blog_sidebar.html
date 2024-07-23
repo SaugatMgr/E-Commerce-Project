@@ -14,7 +14,7 @@
         </div>
         <div class="widget_list widget_search mb-30">
         <h2>Search</h2>
-        <form action="{% url "post_search" %}" method="get">
+        <form action="{% url "post_search" %}" method="get" id="post_search_form">
             <input placeholder="search.." type="text" name="post_search_query">
             <button type="submit"><i class="fa fa-search"></i></button>
         </form>

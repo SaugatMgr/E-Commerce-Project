@@ -368,7 +368,7 @@
                 }
             });
 
-            // Focus on search input if user clicks on search icon without typing anything
+            // Focus on search input if user clicks on product search icon without typing anything
             document.addEventListener("DOMContentLoaded", function() {
                 const searchForm = document.getElementById("search_form");
                 const searchInput = document.getElementById("search_input");
@@ -380,6 +380,15 @@
                         searchInput.focus();
                     }
                 });
+            });
+
+            // Focus on search input if user clicks on blog search icon without typing anything
+            document.getElementById('post_search_form').addEventListener('submit', function(event) {
+                const searchInput = this.querySelector('input[name="post_search_query"]');
+                if (searchInput.value.trim() === "") {
+                    event.preventDefault();
+                    searchInput.focus();
+                }
             });
         
             // Pagination Ajax
