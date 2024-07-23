@@ -1,58 +1,60 @@
 <div class="col-lg-3 col-md-8 offset-md-2 offset-lg-0">
     <div class="blog_sidebar_widget">
-         <div class="widget_list widget_categories">
-             <h2>categories</h2>
-             <ul>
+        <div class="widget_list widget_categories">
+            <h2>categories</h2>
+            <ul>
                 {% for category in post_categories %}
                     <li>
-                        <a href="#">{{ category }} <span>({{ category.posts.count }})</span></a> 
+                        <a href="{% url "post_by_category_list" category.name %}" class="post_by_catgory_link">
+                            {{ category.name }} <span>({{ category.posts.count }})</span>
+                        </a> 
                     </li>
                 {% endfor %}
-             </ul>
-         </div>
-         <div class="widget_list widget_search mb-30">
-            <h2>Search</h2>
-            <form action="#">
-                <input placeholder="search.." type="text">
-                <button type="submit"><i class="fa fa-search"></i></button>
-            </form>
-         </div>
-         <div class="widget_list recent_post">
-             <h2>Recent Posts</h2>
-             <ul>
-                {% for recent_post in recent_posts %}
-                    <li>
-                        <a href="{% url "post_detail" recent_post.id %}">{{ recent_post.title | truncatechars:20 }}</a> 
-                    </li>
+            </ul>
+        </div>
+        <div class="widget_list widget_search mb-30">
+        <h2>Search</h2>
+        <form action="{% url "post_search" %}" method="get">
+            <input placeholder="search.." type="text" name="post_search_query">
+            <button type="submit"><i class="fa fa-search"></i></button>
+        </form>
+        </div>
+        <div class="widget_list recent_post">
+            <h2>Recent Posts</h2>
+            <ul>
+            {% for recent_post in recent_posts %}
+                <li>
+                    <a href="{% url "post_detail" recent_post.id %}">{{ recent_post.title | truncatechars:20 }}</a> 
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+        <div class="widget_list widget_archives">
+            <h2>Blog Archives</h2>
+            <ul>
+            {% comment %}archive is same as post{% endcomment %}
+            {% comment %} {% for archive in post_archives %}
+                <li>
+                    <a href="#">March 2021 <span>(1)</span></a> 
+                </li>
+            {% endfor %} {% endcomment %}
+            </ul>
+        </div>
+        <div class="widget_list widget_tags">
+            <h2>Tags</h2>
+            <div class="tag_cloud">
+            <ul>
+                {% for tag in post_tags %}
+                    <li><a href="{% url "post_by_tag_list" tag.name %}" class="post_by_tag_link">{{ tag.name }}</a></li>
                 {% endfor %}
-             </ul>
-         </div>
-         <div class="widget_list widget_archives">
-             <h2>Blog Archives</h2>
-             <ul>
-                {% comment %}archive is same as post{% endcomment %}
-                {% comment %} {% for archive in post_archives %}
-                    <li>
-                        <a href="#">March 2021 <span>(1)</span></a> 
-                    </li>
-                {% endfor %} {% endcomment %}
-             </ul>
-         </div>
-         <div class="widget_list widget_tags">
-             <h2>Tags</h2>
-             <div class="tag_cloud">
-                <ul>
-                    {% for tag in post_tags %}
-                        <li><a href="">{{ tag.name }}</a></li>
-                    {% endfor %}
-                </ul>
-             </div>
-         </div>
-         <div class="widget_list widget_facebook">
-             <h2>Facebook Like Box</h2>
-             <div class="facebook_like_box">
-                 <div class="fb-page" data-href="https://www.facebook.com/devItems" data-tabs="timeline" data-width="270" data-height="200" data-small-header="false" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true"><blockquote cite="https://www.facebook.com/devItems" class="fb-xfbml-parse-ignore"><a href="https://www.facebook.com/devItems">DevItems</a></blockquote></div>
-             </div> 
-         </div>
+            </ul>
+            </div>
+        </div>
+        <div class="widget_list widget_facebook">
+            <h2>Facebook Like Box</h2>
+            <div class="facebook_like_box">
+                <div class="fb-page" data-href="https://www.facebook.com/devItems" data-tabs="timeline" data-width="270" data-height="200" data-small-header="false" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true"><blockquote cite="https://www.facebook.com/devItems" class="fb-xfbml-parse-ignore"><a href="https://www.facebook.com/devItems">DevItems</a></blockquote></div>
+            </div> 
+        </div>
     </div>
  </div>
