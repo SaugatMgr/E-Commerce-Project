@@ -14,9 +14,9 @@
                         <div class="single_blog mb-50">
                             <div class="blog_title">
                                 <span>
-                                    <a href="#">{{ blg_post_detail.category }}</a>
+                                    <a href="{% url "post_by_category_list" blg_post_detail.category.name %}">{{ blg_post_detail.category }}</a>
                                 </span>
-                                <h2><a href="#">{{ blg_post_detail.title }}</a></h2>
+                                <h2><a href="{% url "post_detail" blg_post_detail.id %}">{{ blg_post_detail.title }}</a></h2>
                                 <div class="blog_post">
                                     <ul>
                                         <li class="post_author">Posted by: {{ blg_post_detail.author.first_name }} {{ blg_post_detail.author.last_name }}</li>
@@ -26,7 +26,9 @@
                             </div>
                             <div class="blog_container">
                                 <div class="blog_thumb">
-                                    <a href="#"><img src="{{ blg_post_detail.featured_image.url }}" alt="{{ blg_post_detail.title }}"></a>
+                                    <a href="{% url "post_detail" blg_post_detail.id %}">
+                                        <img src="{{ blg_post_detail.featured_image.url }}" alt="{{ blg_post_detail.title }}">
+                                    </a>
                                 </div>
                                 <div class="blog_content">
                                     <div class="post_content">
@@ -37,7 +39,7 @@
                                             <span>Tags: </span>
                                             {% for tag in blg_post_detail.tag.all %}
                                                 <span>
-                                                    <a href="#">{{ tag.name }}, </a>
+                                                    <a href="{% url "post_by_tag_list" tag.name %}">{{ tag.name }}, </a>
                                                 </span>
                                             {% endfor %}
                                         </div>
@@ -132,24 +134,24 @@
                             <ul>
                                 {% for category in post_categories %}
                                     <li>
-                                        <a href="#">{{ category.name }} <span>({{ category.posts.count }})</span></a> 
+                                        <a href="{% url "post_by_category_list" category.name %}">{{ category.name }} <span>({{ category.posts.count }})</span></a> 
                                     </li>
                                 {% endfor %}
                             </ul>
                         </div>
                         <div class="widget_list widget_search mb-30">
-                           <h2>Search</h2>
-                           <form action="#">
-                               <input placeholder="search.." type="text">
-                               <button type="submit"><i class="fa fa-search"></i></button>
-                           </form>
+                            <h2>Search</h2>
+                            <form action="{% url "post_search" %}" method="get" class="post_search_form">
+                                <input placeholder="search.." type="text" name="post_search_query">
+                                <button type="submit"><i class="fa fa-search"></i></button>
+                            </form>
                         </div>
                         <div class="widget_list recent_post">
                             <h2>Recent Posts</h2>
                             <ul>
                                 {% for recent_post in recent_posts %}
                                     <li>
-                                        <a href="{% url "post_detail" recent_post.id %}">{{ recent_post.title }}</a> 
+                                        <a href="{% url "post_detail" recent_post.id %}">{{ recent_post.title|truncatechars:40 }}</a> 
                                     </li>
                                 {% endfor %}
                             </ul>
@@ -157,11 +159,13 @@
                         <div class="widget_list widget_archives">
                             <h2>Blog Archives</h2>
                             <ul>
-                                {% comment %} {% for archive in post_archives %}
+                                {% for archive in blog_archives %}
                                     <li>
-                                        <a href="#">{{ archive.date|date:"F Y" }} <span>({{ archive.post_count }})</span></a> 
+                                        <a href="{% url "monthly_archive" archive.month archive.year %}">
+                                            {{ archive.month }} {{ archive.year }} <span>({{ archive.count }})</span>
+                                        </a> 
                                     </li>
-                                {% endfor %} {% endcomment %}
+                                {% endfor %}
                             </ul>
                         </div>
                         <div class="widget_list widget_tags">
@@ -169,16 +173,10 @@
                             <div class="tag_cloud">
                                 <ul>
                                     {% for tag in post_tags %}
-                                        <li><a href="#">{{ tag.name }}</a></li>
+                                        <li><a href="{% url "post_by_tag_list" tag.name %}">{{ tag.name }}</a></li>
                                     {% endfor %}
                                 </ul>
                             </div>
-                        </div>
-                        <div class="widget_list widget_facebook">
-                            <h2>Facebook Like Box</h2>
-                            <div class="facebook_like_box">
-                                <div class="fb-page" data-href="https://www.facebook.com/devItems" data-tabs="timeline" data-width="270" data-height="200" data-small-header="false" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true"><blockquote cite="https://www.facebook.com/devItems" class="fb-xfbml-parse-ignore"><a href="https://www.facebook.com/devItems">DevItems</a></blockquote></div>
-                            </div> 
                         </div>
                     </div>
                 </div>
