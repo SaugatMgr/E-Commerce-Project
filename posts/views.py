@@ -1,4 +1,5 @@
 from typing import Any
+from datetime import datetime
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models.query import QuerySet
 from django.views import View
@@ -96,4 +97,20 @@ class PostSearchView(View):
                 "query": query,
                 "is_paginated": page_obj.has_other_pages(),
             },
+        )
+
+
+class MonthlyArchiveView(PaginationMixin, ListView):
+    model = Post
+    template_name = "blog/blog list/blog.html"
+    context_object_name = "posts"
+
+    def get_queryset(self):
+        return (
+            super()
+            .get_queryset()
+            .filter(
+                published_on__year=self.kwargs["year"],
+                published_on__month=datetime.strptime(self.kwargs["month"], "%B").month,
+            )
         )
