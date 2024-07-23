@@ -8375,6 +8375,9 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
     margin-top: 19px;
   }
 }
+.pagination .previous_li {
+  width: 60px;
+}
 .pagination ul li {
   display: inline-block;
   width: 30px;
