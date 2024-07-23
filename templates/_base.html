@@ -383,12 +383,18 @@
             });
 
             // Focus on search input if user clicks on blog search icon without typing anything
-            document.getElementById('post_search_form').addEventListener('submit', function(event) {
-                const searchInput = this.querySelector('input[name="post_search_query"]');
-                if (searchInput.value.trim() === "") {
-                    event.preventDefault();
-                    searchInput.focus();
-                }
+            document.addEventListener('DOMContentLoaded', function() {
+                const searchForms = document.querySelectorAll('.post_search_form');
+                
+                searchForms.forEach(function(form) {
+                    form.addEventListener('submit', function(event) {
+                        const searchInput = this.querySelector('input[name="post_search_query"]');
+                        if (searchInput.value.trim() === "") {
+                            event.preventDefault();
+                            searchInput.focus();
+                        }
+                    });
+                });
             });
         
             // Pagination Ajax
