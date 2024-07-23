@@ -261,7 +261,11 @@ SOCIALACCOUNT_PROVIDERS = {
         "LOCALE_FUNC": lambda request: "en_US",
         "VERIFIED_EMAIL": False,
         "VERSION": "v13.0",
-    }
+    },
+    "google": {
+        "SCOPE": ["email", "profile"],
+        "AUTH_PARAMS": {"access_type": "online"},
+    },
 }
 SOCIAL_AUTH_FACEBOOK_KEY = env("SOCIAL_AUTH_FACEBOOK_KEY")
 SOCIAL_AUTH_FACEBOOK_SECRET = env("SOCIAL_AUTH_FACEBOOK_SECRET")
