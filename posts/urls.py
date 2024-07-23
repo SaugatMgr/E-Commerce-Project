@@ -1,6 +1,7 @@
 from django.urls import path
 
 from .views import (
+    MonthlyArchiveView,
     PostByCategoryView,
     PostByTagView,
     PostListView,
@@ -20,4 +21,9 @@ urlpatterns = [
         "post-by-tag/<str:tag_name>/", PostByTagView.as_view(), name="post_by_tag_list"
     ),
     path("post-search/", PostSearchView.as_view(), name="post_search"),
+    path(
+        "monthly-archive/<str:month>/<int:year>/",
+        MonthlyArchiveView.as_view(),
+        name="monthly_archive",
+    ),
 ]
