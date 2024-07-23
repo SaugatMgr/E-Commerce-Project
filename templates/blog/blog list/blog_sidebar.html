@@ -24,7 +24,7 @@
             <ul>
             {% for recent_post in recent_posts %}
                 <li>
-                    <a href="{% url "post_detail" recent_post.id %}">{{ recent_post.title | truncatechars:20 }}</a> 
+                    <a href="{% url "post_detail" recent_post.id %}">{{ recent_post.title | truncatechars:40 }}</a> 
                 </li>
             {% endfor %}
             </ul>
@@ -32,12 +32,14 @@
         <div class="widget_list widget_archives">
             <h2>Blog Archives</h2>
             <ul>
-            {% comment %}archive is same as post{% endcomment %}
-            {% comment %} {% for archive in post_archives %}
+            {% comment %} archive is same as post {% endcomment %}
+            {% for archive in blog_archives %}
                 <li>
-                    <a href="#">March 2021 <span>(1)</span></a> 
+                    <a href="{% url "monthly_archive" archive.month archive.year %}">
+                        {{ archive.month }} {{ archive.year }} <span>({{ archive.count }})</span>
+                    </a> 
                 </li>
-            {% endfor %} {% endcomment %}
+            {% endfor %}
             </ul>
         </div>
         <div class="widget_list widget_tags">
@@ -49,12 +51,6 @@
                 {% endfor %}
             </ul>
             </div>
-        </div>
-        <div class="widget_list widget_facebook">
-            <h2>Facebook Like Box</h2>
-            <div class="facebook_like_box">
-                <div class="fb-page" data-href="https://www.facebook.com/devItems" data-tabs="timeline" data-width="270" data-height="200" data-small-header="false" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true"><blockquote cite="https://www.facebook.com/devItems" class="fb-xfbml-parse-ignore"><a href="https://www.facebook.com/devItems">DevItems</a></blockquote></div>
-            </div> 
         </div>
     </div>
  </div>
