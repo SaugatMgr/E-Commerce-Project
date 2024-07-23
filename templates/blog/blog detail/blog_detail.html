@@ -1,0 +1,190 @@
+{% extends "_base.html" %}
+
+{% block title %}{{ post.title }}{% endblock %}
+{% block page_name %}Blog / Blog Detail{% endblock %}
+
+{% block content %}
+    <!--blog body area start-->
+    <div class="blog_details mt-50 mb-50">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-9 col-md-12">
+                    <!--blog grid area start-->
+                    <div class="blog_details_wrapper">
+                        <div class="single_blog mb-50">
+                            <div class="blog_title">
+                                <span>
+                                    <a href="#">{{ blg_post_detail.category }}</a>
+                                </span>
+                                <h2><a href="#">{{ blg_post_detail.title }}</a></h2>
+                                <div class="blog_post">
+                                    <ul>
+                                        <li class="post_author">Posted by: {{ blg_post_detail.author.first_name }} {{ blg_post_detail.author.last_name }}</li>
+                                        <li class="post_date">{{ blg_post_detail.published_on }}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="blog_container">
+                                <div class="blog_thumb">
+                                    <a href="#"><img src="{{ blg_post_detail.featured_image.url }}" alt="{{ blg_post_detail.title }}"></a>
+                                </div>
+                                <div class="blog_content">
+                                    <div class="post_content">
+                                        <p>{{ blg_post_detail.content|safe }}</p>
+                                    </div>
+                                    <div class="entry_content">
+                                        <div class="post_meta">
+                                            <span>Tags: </span>
+                                            {% for tag in blg_post_detail.tag.all %}
+                                                <span>
+                                                    <a href="#">{{ tag.name }}, </a>
+                                                </span>
+                                            {% endfor %}
+                                        </div>
+    
+                                        <div class="social_sharing">
+                                            <p>share this post:</p>
+                                            <ul>
+                                                <li><a href="#" title="facebook"><i class="fa fa-facebook"></i></a></li>
+                                                <li><a href="#" title="twitter"><i class="fa fa-twitter"></i></a></li>
+                                                <li><a href="#" title="pinterest"><i class="fa fa-pinterest"></i></a></li>
+                                                <li><a href="#" title="google+"><i class="fa fa-google-plus"></i></a></li>
+                                                <li><a href="#" title="linkedin"><i class="fa fa-linkedin"></i></a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="related_posts">
+                                    <h3>Related posts</h3>
+                                    <div class="row">
+                                        {% for related_post in related_posts %}
+                                            <div class="col-lg-4 col-md-6">
+                                                <div class="single_related">
+                                                    <div class="related_thumb">
+                                                        <img src="{{ related_post.featured_image.url }}" alt="{{ related_post.title }}">
+                                                    </div>
+                                                    <div class="related_content">
+                                                        <h4><a href="{% url "post_detail" related_post.id %}">{{ related_post.title }}</a></h4>
+                                                        <span><i class="fa fa-calendar" aria-hidden="true"></i> {{ related_post.published_on }} </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div> 
+                            </div>
+                        </div>
+                        <!-- Comments and Comment Form -->
+                        <div class="comments_area">
+                            <div class="comments_box">
+                                <h3>{{ blg_post_detail.comments.count }} Comments</h3>
+                                {% for comment in blg_post_detail.comments.all %}
+                                    {% comment %} <div class="comment_list">
+                                        <div class="comment_thumb">
+                                            <img src="assets/img/blog/comment3.png.jpg" alt="">
+                                        </div>
+                                        <div class="comment_content">
+                                            <div class="comment_meta">
+                                                <h5><a href="#">{{ comment.author }}</a></h5>
+                                                <span>{{ comment.created_on }}</span> 
+                                            </div>
+                                            <p>{{ comment.text }}</p>
+                                            <div class="comment_reply">
+                                                <a href="#">Reply</a>
+                                            </div>
+                                        </div>
+                                    </div> {% endcomment %}
+                                {% endfor %}
+                            </div>
+                            <div class="comments_form">
+                                <h3>Leave a Reply</h3>
+                                <p>Your email address will not be published. Required fields are marked *</p>
+                                <form action="#">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <label for="review_comment">Comment</label>
+                                            <textarea name="comment" id="review_comment"></textarea>
+                                        </div> 
+                                        <div class="col-lg-4 col-md-4">
+                                            <label for="author">Name</label>
+                                            <input id="author" type="text">
+                                        </div> 
+                                        <div class="col-lg-4 col-md-4">
+                                            <label for="email">Email</label>
+                                            <input id="email" type="text">
+                                        </div>
+                                        <div class="col-lg-4 col-md-4">
+                                            <label for="website">Website</label>
+                                            <input id="website" type="text">
+                                        </div>   
+                                    </div>
+                                    <button class="button" type="submit">Post Comment</button>
+                                 </form>    
+                            </div>
+                        </div>
+                    </div>
+                    <!--blog grid area end-->
+                </div>
+                <div class="col-lg-3 col-md-12">
+                    <div class="blog_sidebar_widget">
+                        <div class="widget_list widget_categories">
+                            <h2>Categories</h2>
+                            <ul>
+                                {% for category in post_categories %}
+                                    <li>
+                                        <a href="#">{{ category.name }} <span>({{ category.posts.count }})</span></a> 
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        <div class="widget_list widget_search mb-30">
+                           <h2>Search</h2>
+                           <form action="#">
+                               <input placeholder="search.." type="text">
+                               <button type="submit"><i class="fa fa-search"></i></button>
+                           </form>
+                        </div>
+                        <div class="widget_list recent_post">
+                            <h2>Recent Posts</h2>
+                            <ul>
+                                {% for recent_post in recent_posts %}
+                                    <li>
+                                        <a href="{% url "post_detail" recent_post.id %}">{{ recent_post.title }}</a> 
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        <div class="widget_list widget_archives">
+                            <h2>Blog Archives</h2>
+                            <ul>
+                                {% comment %} {% for archive in post_archives %}
+                                    <li>
+                                        <a href="#">{{ archive.date|date:"F Y" }} <span>({{ archive.post_count }})</span></a> 
+                                    </li>
+                                {% endfor %} {% endcomment %}
+                            </ul>
+                        </div>
+                        <div class="widget_list widget_tags">
+                            <h2>Tags</h2>
+                            <div class="tag_cloud">
+                                <ul>
+                                    {% for tag in post_tags %}
+                                        <li><a href="#">{{ tag.name }}</a></li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="widget_list widget_facebook">
+                            <h2>Facebook Like Box</h2>
+                            <div class="facebook_like_box">
+                                <div class="fb-page" data-href="https://www.facebook.com/devItems" data-tabs="timeline" data-width="270" data-height="200" data-small-header="false" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true"><blockquote cite="https://www.facebook.com/devItems" class="fb-xfbml-parse-ignore"><a href="https://www.facebook.com/devItems">DevItems</a></blockquote></div>
+                            </div> 
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!--blog section area end-->
+{% endblock %}

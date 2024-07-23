@@ -1,0 +1,48 @@
+<div class="blog_left_area">
+    {% for post in posts %}
+        <div class="single_blog mb-50">
+            <div class="blog_title">
+                <span>
+                    <a href="#">{{ post.category }}</a>
+                </span>
+                <h2><a href="{% url "post_detail" post.id %}">{{ post.title }}</a></h2>
+                <div class="blog_post">
+                    <ul>
+                        <li class="post_author">Posted by : {{ post.author.first_name }} {{ post.author.last_name }}</li>
+                        <li class="post_date"> {{ post.published_on }}	</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="blog_container">
+                <div class="blog_thumb">
+                    <a href="{% url "post_detail" post.id %}">
+                        <img src="{{ post.featured_image.url }}" alt="{{ post.title }}">
+                    </a>
+                </div>
+                <div class="blog_content">
+                    <div class="blog_desc">
+                        {{ post.content|safe|truncatechars:235 }}
+                    </div>
+                    <div class="read_more">
+                        <a href="{% url "post_detail" post.id %}">Read more</a>
+                    </div>
+                    <div class="blog_footer">
+                        <div class="blog_social">
+                            <p>Share this post</p>
+                            <ul>
+                                <li><a href="#" title="Facebook"><i class="fa fa-facebook"></i></a></li>
+                                <li><a href="#" title="Facebook"><i class="fa fa-twitter"></i></a></li>
+                                <li><a href="#" title="Facebook"><i class="fa fa-pinterest"></i></a></li>
+                                <li><a href="#" title="Facebook"><i class="fa fa-google-plus"></i></a></li>
+                                <li><a href="#" title="Facebook"><i class="fa fa-linkedin"></i></a></li>
+                            </ul>
+                        </div>
+                        <div class="blog_comment">
+                            <a href="#">{{ post.comments.count }} comments</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>

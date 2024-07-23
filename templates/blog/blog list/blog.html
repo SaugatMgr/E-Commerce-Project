@@ -1,0 +1,22 @@
+{% extends "_base.html" %}
+{% block page_name %}Blog{% endblock %}
+
+{% block content %}
+
+<!--blog area start-->
+<div class="main_blog_area blog_reverse mt-50 mb-50">
+    <div class="container">
+        <div class="row">
+            {% include "blog/blog list/blog_sidebar.html" %}
+            <div class="col-lg-9 col-md-12">
+                {% include "blog/blog list/blog_area.html" %}
+                <!--blog pagination area start-->
+                {% include "blog/blog list/blog_pagination.html" %}
+                <!--blog pagination area end-->
+            </div>
+        </div>
+    </div>
+</div>
+<!--blog area end-->
+
+{% endblock content %}
