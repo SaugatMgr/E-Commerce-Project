@@ -58,7 +58,6 @@ class HomePageView(PaginationMixin, ListView):
             category__in=all_categories
         )
 
-        context["categories"] = all_categories
         context["product_category"] = all_categories[:9]
         context["product_category_rem"] = all_categories[9:12]
         context["product_sub_category"] = SubCategory.objects.all()
@@ -106,15 +105,6 @@ class ShopItemsView(PaginationMixin, ListView):
             queryset = queryset.filter(price__gte=min_price, price__lte=max_price)
 
         return queryset
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        all_categories = Category.objects.all()
-        filter_product_by_higher_views = Product.objects.all().order_by("-views_count")
-        context["categories"] = all_categories
-        context["top_rated_products"] = filter_product_by_higher_views[:3]
-
-        return context
 
     def get(self, request, *args, **kwargs):
         get_data = request.GET
