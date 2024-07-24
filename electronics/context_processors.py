@@ -3,13 +3,16 @@ from accounts.models import (
     Cart,
     CartItems,
 )
-from electronics.models import Category
+from electronics.models import Category, Product, Tag
 
 
 def electronics_context(request):
     context = {}
     user = request.user
     context["footer_categories"] = Category.objects.filter()[:5]
+    context["categories"] = Category.objects.all()
+    context["product_tags"] = Tag.objects.all()
+    context["top_rated_products"] = Product.objects.all().order_by("-views_count")[:3]
 
     if user.is_authenticated:
         current_customer = Customer.objects.filter(user=user).first()
