@@ -89,7 +89,13 @@ class ShopItemsView(PaginationMixin, ListView):
         get_data = self.request.GET
         order_by = get_data.get("orderby", "")
         filter_by_price_range = get_data.get("text", "")
+        category_id = self.kwargs.get("category_id", "")
+        tag_id = self.kwargs.get("tag_id", "")
 
+        if category_id:
+            queryset = queryset.filter(category__id=category_id)
+        if tag_id:
+            queryset = queryset.filter(tag__id=tag_id).distinct()
         if order_by:
             queryset = queryset.order_by(order_by)
         if filter_by_price_range:
