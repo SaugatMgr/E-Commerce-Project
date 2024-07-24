@@ -82,6 +82,9 @@ class Product(TimeStamp):
 
     tag = models.ManyToManyField(Tag, related_name="products")
 
+    class Meta:
+        ordering = ("-added_date",)
+
     @property
     def new_price(self):
         if self.discount:
