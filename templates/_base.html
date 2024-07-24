@@ -464,8 +464,70 @@
                                 console.error('Invalid response format or missing html_content.');
                             }
                         },
-                        error: function(xhr, status, error) {
-                            console.error('AJAX Error:', status, error);
+                        error: function(response){
+                            alertify.set('notifier','position', 'top-right');
+                            alertify.error(response.responseJSON.message);
+                        }
+                    });
+                });
+            });
+
+            // Shop sort form
+            $(document).ready(function() {
+                $('.niceselect_option').on('click', '.option', function() {
+                    let selectedValue = $(this).data('value');
+                    $('#shop_sort').val(selectedValue).trigger('change');
+                });
+            
+                $('#shop_sort').on('change', function(e) {
+                    e.preventDefault();
+            
+                    $.ajax({
+                        url: "{% url 'shop' %}",
+                        type: 'GET',
+                        data: $('#shop_sort_form').serialize(),  
+                        success: function(response) {
+                            if (response.success && response.html_content) {
+                                let $html = $(response.html_content);
+                                let shop_paginated_content = $html.find('#shop_paginated_content').html();
+                                let shop_pagination_info = $html.find('#shop_pagination_info').html();
+                                $('#shop_paginated_content').html(shop_paginated_content);
+                                $('#shop_pagination_info').html(shop_pagination_info);
+                            } else {
+                                console.error('Invalid response format or missing html_content.');
+                            }
+                        },
+                        error: function(response){
+                            alertify.set('notifier','position', 'top-right');
+                            alertify.error(response.responseJSON.message);
+                        }
+                    });
+                });
+            });
+
+            // Filter By Price Ajax for shop page
+            $(document).ready(function() {
+                $('#shop_page_filter_form').submit(function(e) {
+                    e.preventDefault();
+            
+                    $.ajax({
+                        url: "{% url 'shop' %}", // Update the URL to match your view
+                        type: 'GET',
+                        data: $('#shop_page_filter_form').serialize(),  
+                        success: function(response) {
+                            if (response.success && response.html_content) {
+                                let $html = $(response.html_content);
+                                let shop_paginated_content = $html.find('#shop_paginated_content').html();
+                                let shop_pagination_info = $html.find('#shop_pagination_info').html();
+                                $('#shop_paginated_content').html(shop_paginated_content);
+                                $('#shop_pagination_info').html(shop_pagination_info);
+                            } else {
+                                console.error('Invalid response format or missing html_content.');
+                            }
+                        },
+                        error: function(response){
+                            alertify.set('notifier','position', 'top-right');
+                            alertify.error(response.responseJSON.message);
                         }
                     });
                 });
@@ -473,13 +535,13 @@
 
             // Filter By Price Ajax
             $(document).ready(function() {
-                $('.filter-by-price-form').submit(function(e) {
+                $('#search_page_filter_form').submit(function(e) {
                     e.preventDefault();
             
                     $.ajax({
                         url: "{% url 'search' %}",
                         type: 'GET',
-                        data: $('.filter-by-price-form').serialize(),
+                        data: $('#search_page_filter_form').serialize(),
                         success: function(response) {
                             if (response.success && response.html_content) {
                                 let $html = $(response.html_content);
@@ -491,8 +553,9 @@
                                 console.error('Invalid response format or missing html_content.');
                             }
                         },
-                        error: function(xhr, status, error) {
-                            console.error('AJAX Error:', status, error);
+                        error: function(response){
+                            alertify.set('notifier','position', 'top-right');
+                            alertify.error(response.responseJSON.message);
                         }
                     });
                 });
