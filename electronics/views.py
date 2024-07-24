@@ -17,6 +17,8 @@ from django.contrib import messages
 from django.http import JsonResponse
 from django.db import transaction
 
+from helpers.pagination import PaginationMixin
+
 from .models import (
     Category,
     Product,
@@ -38,7 +40,7 @@ from .forms import (
 )
 
 
-class HomePageView(ListView):
+class HomePageView(PaginationMixin, ListView):
     model = Product
     template_name = "main/home/home.html"
     context_object_name = "products"
@@ -77,10 +79,81 @@ class HomePageView(ListView):
         return context
 
 
-class ShopItemsView(HomePageView):
+class ShopItemsView(PaginationMixin, ListView):
     model = Product
     template_name = "main/shop/shop.html"
     paginate_by = 3
+
+    def get_queryset(self):
+        queryset = Product.objects.all()
+        get_data = self.request.GET
+        order_by = get_data.get("orderby", "")
+        filter_by_price_range = get_data.get("text", "")
+
+        if order_by:
+            queryset = queryset.order_by(order_by)
+        if filter_by_price_range:
+            filter_by_price_range = filter_by_price_range.replace("Rs.", "")
+            min_price, max_price = filter_by_price_range.split(" - ")
+            min_price = int(min_price)
+            max_price = int(max_price)
+            queryset = queryset.filter(price__gte=min_price, price__lte=max_price)
+
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        all_categories = Category.objects.all()
+        filter_product_by_higher_views = Product.objects.all().order_by("-views_count")
+        context["categories"] = all_categories
+        context["top_rated_products"] = filter_product_by_higher_views[:3]
+
+        return context
+
+    def get(self, request, *args, **kwargs):
+        get_data = request.GET
+        paginator, page_obj, queryset, is_paginated = self.paginate_queryset(
+            self.get_queryset(), self.paginate_by
+        )
+        ajax_format = request.headers.get("x-requested-with")
+        order_by = get_data.get("orderby", "")
+        filter_by_price_range = get_data.get("text", "")
+
+        if ajax_format:
+            if ajax_format == "XMLHttpRequest":
+                if order_by:
+                    html_content = render_to_string(
+                        "main/shop/right side/right_side.html",
+                        {
+                            "page_obj": page_obj,
+                            "is_paginated": page_obj.has_other_pages(),
+                        },
+                        request,
+                    )
+                    return JsonResponse(
+                        {"success": True, "html_content": html_content}, status=200
+                    )
+                if filter_by_price_range:
+                    html_content = render_to_string(
+                        "main/shop/right side/right_side.html",
+                        {
+                            "page_obj": page_obj,
+                            "is_paginated": page_obj.has_other_pages(),
+                        },
+                        request,
+                    )
+                    return JsonResponse(
+                        {"success": True, "html_content": html_content}, status=200
+                    )
+            else:
+                return JsonResponse(
+                    {
+                        "success": False,
+                        "message": "Cannot process.Must be and AJAX XMLHttpRequest.",
+                    },
+                    status=400,
+                )
+        return super().get(request, *args, **kwargs)
 
 
 class AboutUsPageView(TemplateView):
@@ -431,7 +504,8 @@ def remove_cart_item(request):
 
 
 class ProductSearchView(View):
-    template = "main/search/search_results.html"
+    model = Product
+    template_name = "main/search/search_results.html"
 
     def get(self, request, *args, **kwargs):
         get_data = request.GET
@@ -481,7 +555,7 @@ class ProductSearchView(View):
             if ajax_format == "XMLHttpRequest":
                 if orderby:
                     html_content = render_to_string(
-                        self.template,
+                        self.template_name,
                         {
                             "query": query,
                             "page_obj": page_obj,
@@ -494,7 +568,7 @@ class ProductSearchView(View):
                     )
                 if filter_by_price_range:
                     html_content = render_to_string(
-                        self.template,
+                        self.template_name,
                         {
                             "query": query,
                             "page_obj": page_obj,
@@ -515,10 +589,9 @@ class ProductSearchView(View):
                 )
         return render(
             request,
-            self.template,
-            context={
+            self.template_name,
+            {
                 "query": query,
-                "category_id": get_data.get("select"),
                 "page_obj": page_obj,
                 "is_paginated": page_obj.has_other_pages(),
             },
