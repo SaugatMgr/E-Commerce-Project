@@ -1,8 +1,8 @@
+{% if is_paginated %}
 <div class="shop_toolbar t_bottom">
     <div class="pagination">
         
         <ul>
-            {% if is_paginated %}
 
                 {% if page_obj.has_previous %}
 
@@ -57,9 +57,9 @@
 
                 {% endif %}            
 
-            {% endif %}
+                
+            </ul>
             
-        </ul>
-            
+        </div>
     </div>
-</div>
+{% endif %}
