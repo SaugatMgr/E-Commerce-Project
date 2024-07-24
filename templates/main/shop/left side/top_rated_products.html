@@ -3,20 +3,20 @@
 <div class="widget_list recent_product">
     <h2>Top Rated Products</h2>
     <div class="recent_product_container">
-        {% for best_seller in best_sellers %}
+        {% for top_rated_product in top_rated_products %}
 
             <div class="recent_product_list">
                 <div class="recent_product_thumb">
-                    <a href="{% url 'product_detail' best_seller.slug %}">
-                        <img src="{{ best_seller.product_img_thumbnail.url }}"
-                            alt="{{ best_seller.name }}"
+                    <a href="{% url 'product_detail' top_rated_product.slug %}">
+                        <img src="{{ top_rated_product.product_img_thumbnail.url }}"
+                            alt="{{ top_rated_product.name }}"
                             style="height: 72.3px;width: 72.3px;">
                     </a>
                 </div>
                 <div class="recent_product_content">
                     <h3>
-                        <a href="{% url 'product_detail' best_seller.slug %}">
-                        {{ best_seller.name }}
+                        <a href="{% url 'product_detail' top_rated_product.slug %}">
+                        {{ top_rated_product.name }}
                         </a>
                     </h3>
                     <div class="product_rating">
@@ -29,15 +29,15 @@
                         </ul>
                     </div>
                     <div class="price_box">
-                        {% if best_seller.discount %}
+                        {% if top_rated_product.discount %}
 
-                            <span class="current_price">Rs.{{ best_seller.new_price|intcomma }}</span>
-                            <span class="old_price">Rs.{{ best_seller.price|intcomma }}</span>
-                            <span class="discount">(-{{ best_seller.discount }}%)</span>
+                            <span class="current_price">Rs.{{ top_rated_product.new_price|intcomma }}</span>
+                            <span class="old_price">Rs.{{ top_rated_product.price|intcomma }}</span>
+                            <span class="discount">(-{{ top_rated_product.discount }}%)</span>
 
                         {% else %}
 
-                            <span class="current_price">Rs.{{ best_seller.price|intcomma }}</span>
+                            <span class="current_price">Rs.{{ top_rated_product.price|intcomma }}</span>
                             
                         {% endif %}     
                     </div>
