@@ -1,0 +1,95 @@
+{% extends "_base.html" %}
+
+{% block page_name %}Payment / Khalti{% endblock page_name %}
+
+{% block content %}
+    <div class="container">
+        <h1>Complete Your Payment</h1>
+        <p>Please review your order details and complete your payment.</p>
+
+        <h2>Order Summary</h2>
+        <h4>Products</h4>
+        {% for item in cart_items %}
+        
+            <p>{{ item.product.name }} × {{ item.quantity }}</p>
+        
+        {% endfor %}
+        <p><strong>Subtotal:</strong> Rs. {{ order.subtotal }}</p>
+        <p><strong>Shipping Cost:</strong> Rs. {{ order.shipping_cost }}</p>
+        <p><strong>Total:</strong> Rs. {{ order.total }}</p>
+
+        <h2>Payment Instructions</h2>
+        <p>To proceed with the payment, please follow the instructions provided by your payment provider.</p>
+        <p><strong>Payment Method:</strong> Khalti</p>
+
+        <button id="payment-button" class="khalti-button">Pay with Khalti</button>
+
+    </div>
+    <script>
+        // Khalti Payment Gateway Integration Script
+        document.addEventListener("DOMContentLoaded", function() {
+            var config = {
+                // replace the publicKey with yours
+                "publicKey": "{{ khalti_public_key }}",
+                "productIdentity": "order#{{ order.id }}",
+                "productName": "order#{{ order.id }}",
+                "productUrl": "http://localhost:8000",
+                "paymentPreference": [
+                    "KHALTI",
+                    "EBANKING",
+                    "MOBILE_BANKING",
+                    "CONNECT_IPS",
+                    "SCT",
+                    ],
+                "eventHandler": {    
+                    onSuccess (payload) {
+                        fetch('{% url "khalti_payment_verify" %}', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRFToken': '{{ csrf_token }}'
+                            },
+                            body: JSON.stringify({
+                                'order_id': "{{ order.id }}",
+                                'token': payload.token,
+                                'amount': {{ order.total }}
+                            })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log("Verification Response Data:", data);
+                            console.log(data.success);
+                            console.log(data.message);
+                            if (data.success === true) {
+                                alertify.set('notifier','position', 'top-right');
+                                alertify.success(data.message);
+                                setTimeout(() => {
+                                    window.location.href = "/";
+                                }, 2000);
+                            } else {
+                                alertify.set('notifier','position', 'top-right');
+                                alertify.error(data.message);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alertify.set('notifier','position', 'top-right');
+                            alertify.error('An unexpected error occurred during payment verification.');
+                        });
+                    },
+                    onClose() {
+                        console.log('widget is closing');
+                    }
+                }
+            }
+    
+            var checkout = new KhaltiCheckout(config);
+            var btn = document.getElementById("payment-button");
+            btn.onclick = function () {
+                // minimum transaction amount must be 10, i.e 1000 in paisa.
+                checkout.show({amount: 1000});
+            }
+        });
+    </script>
+            
+{% endblock content %}
