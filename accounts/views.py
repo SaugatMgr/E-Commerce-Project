@@ -1,5 +1,8 @@
 import decimal
+import requests
+import json
 
+from django.conf import settings
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.db import transaction
@@ -38,9 +41,16 @@ class UserAccountView(View):
     }
 
     def get(self, request, *args, **kwargs):
+        context = {}
         user = self.request.user
         customer = Customer.objects.filter(user=user).first()
         if customer:
+            # For Order tab
+            orders = Order.objects.filter(customer=customer)
+            if orders:
+                context["orders_by_customer"] = orders
+
+            # For Account Details and Billing Address tab
             billing_address_instance = BillingAddress.objects.filter(
                 customer=customer
             ).first()
@@ -52,9 +62,12 @@ class UserAccountView(View):
                 ),
             }
 
-        context = {
-            form_name: form_class for form_name, form_class in self.form_classes.items()
-        }
+        context.update(
+            {
+                form_name: form_class
+                for form_name, form_class in self.form_classes.items()
+            }
+        )
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
@@ -183,6 +196,9 @@ class CheckOutView(View):
         data = request.POST
         current_user = request.user
         customer = Customer.objects.get(user=current_user)
+        existing_order = Order.objects.filter(
+            customer=customer, status="Pending", payment_status="UNPAID"
+        ).first()
         # User Form input data
         user_data = {
             "email": data.get("email"),
@@ -238,7 +254,10 @@ class CheckOutView(View):
             if ship_to_diff_address == "false":
                 user_form = CustomUserForm(user_data, instance=current_user)
                 customer_form = CustomerForm(customer_data, instance=customer)
-                order_form = CheckOutForm(order_data)
+                if existing_order:
+                    order_form = CheckOutForm(order_data, instance=existing_order)
+                else:
+                    order_form = CheckOutForm(order_data)
 
                 existing_billing_address = BillingAddress.objects.filter(
                     customer=customer
@@ -281,14 +300,12 @@ class CheckOutView(View):
                     billing_address = billing_address_form.save()
                     shipping_address = shipping_address_form.save()
 
-                    order_data["billing_address"] = billing_address
-                    order_data["shipping_address"] = shipping_address
-                    order_form = CheckOutForm(order_data)
-                    order = order_form.save()
+                    order = order_form.save(commit=False)
+                    order.billing_address = billing_address
+                    order.shipping_address = shipping_address
+                    order.save()
 
-                    return redirect(
-                        reverse("khalti_payment") + "?order_id=" + str(order.id)
-                    )
+                    return redirect(reverse("khalti_payment", args=[order.id]))
                 else:
                     context = {
                         "user_form": user_form,
@@ -304,15 +321,99 @@ class CheckOutView(View):
 
 
 class KhaltiPaymentView(View):
-    template_name = "main/payment/khalti.html"
+    template_name = "payment/khalti.html"
 
     def get(self, request, *args, **kwargs):
-        order_id = request.GET.get("order_id")
+        order_id = kwargs.get("order_id")
         order = Order.objects.get(id=order_id)
+        cart = Cart.objects.get(customer=order.customer)
+        cart_items = CartItems.objects.filter(cart=cart)
         context = {
             "order": order,
+            "cart_items": cart_items,
+            "khalti_public_key": settings.KHALTI_PUBLIC_KEY,
         }
         return render(request, self.template_name, context)
+
+
+class KhaltiPaymentVerifyView(View):
+    def post(self, request, *args, **kwargs):
+        try:
+            data = request.body
+            data = json.loads(data)
+
+            order_id = data.get("order_id")
+            amount = data.get("amount")
+            token = data.get("token")
+
+            if not order_id or not amount or not token:
+                return JsonResponse(
+                    {
+                        "success": False,
+                        "message": "Missing required parameters.",
+                    }
+                )
+
+            url = "https://khalti.com/api/v2/payment/verify/"
+            payload = {
+                "token": token,
+                "amount": 1000,
+            }
+            headers = {
+                "Authorization": f"key {settings.KHALTI_SECRET_KEY}",
+            }
+
+            with transaction.atomic():
+                response = requests.post(url, headers=headers, data=payload)
+                response_data = response.json()
+                if response_data.get("idx"):
+                    order = Order.objects.get(id=order_id)
+                    order.payment_status = "PAID"
+                    order.status = "Completed"
+                    order.save()
+
+                    cart = Cart.objects.get(customer=order.customer)
+                    CartItems.objects.filter(cart=cart).delete()
+
+                    return JsonResponse(
+                        {
+                            "success": True,
+                            "message": "Payment successful.",
+                        },
+                        status=200,
+                    )
+        except json.JSONDecodeError:
+            return JsonResponse(
+                {
+                    "success": False,
+                    "message": "Invalid JSON data.",
+                },
+                status=400,
+            )
+        except requests.RequestException:
+            return JsonResponse(
+                {
+                    "success": False,
+                    "message": "Payment verification request failed.",
+                },
+                status=500,
+            )
+        except Order.DoesNotExist:
+            return JsonResponse(
+                {
+                    "success": False,
+                    "message": "Order does not exist.",
+                },
+                status=404,
+            )
+        except Exception:
+            return JsonResponse(
+                {
+                    "success": False,
+                    "message": "An unexpected error occurred.",
+                },
+                status=500,
+            )
 
 
 class WishListView(TemplateView):
