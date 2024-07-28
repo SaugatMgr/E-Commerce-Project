@@ -10756,6 +10756,63 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
   color: #262626;
 }
 
+.order_container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding-bottom: 20px;
+}
+
+.order_content {
+  border: 1px solid #ddd;
+  padding: 0 20px 20px 20px;
+  border-radius: 5px;
+  margin-top: 20px;
+}
+
+.order_header {
+    text-align: center;
+    padding: 20px;
+}
+.order_thank_you {
+    background-color: #ea000d;
+    color: white;
+    text-align: center;
+    font-size: 1.5em;
+    margin-bottom: 40px;
+    padding: 20px;
+}
+.order_greetings {
+    margin-bottom: 40px;
+}
+.order_details, .order_addresses, .order_summary {
+    margin-bottom: 20px;
+}
+.order_details h2, .order_addresses h2, .order_summary h2 {
+    border-bottom: 2px solid #ea000d;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+.order_addresses .address {
+    margin-bottom: 10px;
+}
+.order_footer {
+  text-align: center;
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #ea000d;
+  color: white;
+}
+
+.order_footer h4 {
+  margin: 5px 0;
+  font-size: 20px;
+}
+
+.order_footer p {
+  margin: 5px 0;
+  font-size: 16px;
+}
+
 /*my account css end*/
 /* 10. about page css here */
 .about_section {
