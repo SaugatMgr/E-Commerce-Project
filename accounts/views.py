@@ -11,6 +11,7 @@ from django.views.decorators.http import require_POST
 from django.http import JsonResponse
 
 from accounts.helpers import calc_tracking_number
+from accounts.tasks import generate_and_send_order_pdf
 from electronics.models import Product
 
 from .forms import (
@@ -373,8 +374,57 @@ class KhaltiPaymentVerifyView(View):
                     order.save()
 
                     cart = Cart.objects.get(customer=order.customer)
-                    CartItems.objects.filter(cart=cart).delete()
+                    cart_items = CartItems.objects.filter(cart=cart)
+                    # cart_items_ids = list(cart_items.values_list("id", flat=True))
 
+                    generate_and_send_order_pdf(
+                        {
+                            "request": request,
+                            "order": order,
+                            "cart_items": cart_items,
+                        },
+                        order_id=order.id,
+                        user_email=order.customer.user.email,
+                        customer_first_name=order.customer.user.first_name,
+                        customer_last_name=order.customer.user.last_name,
+                    )
+
+                    # base_url = request.build_absolute_uri("/")
+                    # css_url = f"{base_url}static/pallas/css/style.css"
+                    # plugins_css_url = f"{base_url}static/pallas/css/plugins.css"
+                    # logo_url = f"{base_url}static/pallas/img/logo/logo.png"
+
+                    # generate_and_send_order_pdf.delay(
+                    #     {
+                    #         "order_id": order.id,
+                    #         "cart_items_ids": cart_items_ids,
+                    #         "css_url": css_url,
+                    #         "plugins_css_url": plugins_css_url,
+                    #         "logo_url": logo_url,
+                    #     },
+                    #     user_email=order.customer.user.email,
+                    #     customer_first_name=order.customer.user.first_name,
+                    #     customer_last_name=order.customer.user.last_name,
+                    # )
+
+                    # result = chain(
+                    #     generate_order_pdf.s(
+                    #         {
+                    #             "order_id": order.id,
+                    #             "cart_items_ids": cart_items_ids,
+                    #             "css_url": css_url,
+                    #             "plugins_css_url": plugins_css_url,
+                    #             "logo_url": logo_url,
+                    #         }
+                    #     )
+                    #     | send_order_pdf_email.s(
+                    #         order_id=order.id,
+                    #         user_email=order.customer.user.email,
+                    #         customer_first_name=order.customer.user.first_name,
+                    #         customer_last_name=order.customer.user.last_name,
+                    #     )
+                    # ).apply_async()
+                    cart_items.delete()
                     return JsonResponse(
                         {
                             "success": True,
@@ -406,7 +456,8 @@ class KhaltiPaymentVerifyView(View):
                 },
                 status=404,
             )
-        except Exception:
+        except Exception as e:
+            print(str(e))
             return JsonResponse(
                 {
                     "success": False,
