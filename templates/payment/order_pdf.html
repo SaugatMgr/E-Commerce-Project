@@ -1,0 +1,117 @@
+{% load static %}
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Pallas</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ request.scheme }}://{{ request.get_host }}{% static 'pallas/css/plugins.css' %}">
+    <link rel="stylesheet" href="{{ request.scheme }}://{{ request.get_host }}{% static 'pallas/css/style.css' %}">
+    <style>
+        * {
+            overflow: visible !important;
+            height: auto !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="order_container">
+        <div class="order_content">
+            <div class="order_header">
+                <img src="{{ request.scheme }}://{{ request.get_host }}{% static 'pallas/img/logo/logo.png' %}" alt="Pallas Logo">
+            </div>
+            <div class="order_thank_you">
+                <h3>Thank you for shopping with Pallas!</h3>
+            </div>
+            <div class="order_greetings">
+                <h4>Hi, {{ order.customer }}</h4>
+                <h4>Your order has been placed successfully.</h4>
+            </div>
+
+            <div class="order_details">
+                <h2>Order Details</h2>
+                <table class="table table-responsive">
+                    <tr>
+                        <th>Order ID</th>
+                        <td>{{ order.id }}</td>
+                    </tr>
+                    <tr>
+                        <th>Order Date</th>
+                        <td>{{ order.order_date }}</td>
+                    </tr>
+                    <tr>
+                        <th>Tracking Number</th>
+                        <td>{{ order.tracking_number }}</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="table table-responsive">
+                <h2>Products</h2>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in cart_items %}
+                        <tr>
+                            <td>{{ item.product.name }}</td>
+                            <td>{{ item.quantity }}</td>
+                            <td>Rs.{{ item.product.price|intcomma }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="order_summary">
+                <h2>Order Summary</h2>
+                <table class="table table-responsive">
+                    <tr>
+                        <th>Subtotal</th>
+                        <td>Rs. {{ order.subtotal|intcomma }}</td>
+                    </tr>
+                    <tr>
+                        <th>Shipping Cost</th>
+                        <td>Rs. {{ order.shipping_cost }}</td>
+                    </tr>
+                    <tr>
+                        <th>Total</th>
+                        <td>Rs. {{ order.total|intcomma }}</td>
+                    </tr>
+                    <tr>
+                        <th>Payment Method</th>
+                        <td>{{ order.payment_method }}</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="order_addresses">
+                <h2>Billing Address</h2>
+                <div class="address">
+                    <p>{{ order.billing_address.address_line_1 }}</p>
+                    <p>{{ order.billing_address.address_line_2 }}</p>
+                    <p>{{ order.billing_address.city }}, {{ order.billing_address.state_or_province }}</p>
+                    <p>{{ order.billing_address.postal_code }}</p>
+                </div>
+                <h2>Shipping Address</h2>
+                <div class="address">
+                    <p>{{ order.shipping_address.address_line_1 }}</p>
+                    <p>{{ order.shipping_address.address_line_2 }}</p>
+                    <p>{{ order.shipping_address.city }}, {{ order.shipping_address.state_or_province }}</p>
+                    <p>{{ order.shipping_address.postal_code }}</p>
+                </div>
+            </div>
+            <div class="order_footer">
+                <h4>Pallas</h4>
+                <p>Empowering Your Shopping Experience</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
