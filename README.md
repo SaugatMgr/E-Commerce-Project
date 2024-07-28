@@ -12,10 +12,11 @@ This project is an E-Commerce platform developed using Django. It allows users t
 - Sorting of products based on rating, popularity, price,etc.
 - Social authentication
 - Checkout
-
-### Ongoing:
 - Payment gateway integration
 - Blog integration
+
+### Ongoing:
+- Code optimization
 
 ### Upcoming:
 - Buyer/seller role login functionality
