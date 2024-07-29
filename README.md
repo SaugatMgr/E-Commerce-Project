@@ -12,8 +12,9 @@ This project is an E-Commerce platform developed using Django. It allows users t
 - Sorting of products based on rating, popularity, price,etc.
 - Social authentication
 - Checkout
-- Payment gateway integration
 - Blog integration
+- Payment gateway integration
+- Send Order details pdf to user on successful payment
 
 ### Ongoing:
 - Code optimization
@@ -47,6 +48,31 @@ SECRET_KEY=your_secret_key
 DEBUG=True
 ALLOWED_HOSTS=*
 DATABASE_URL=postgres://db_user:db_password@localhost:db_port_number/db_name
+
+# Authentication & Payment Gateway
+
+SOCIAL_AUTH_FACEBOOK_KEY=Your Facebook API key
+SOCIAL_AUTH_FACEBOOK_SECRET=Your Facebook API secret
+
+KHALTI_PUBLIC_KEY=Your Khalti public key
+KHALTI_SECRET_KEY=Your Khalti secret key
+
+ESEWA_MERCHANT_ID=Your eSewa merchant ID
+ESEWA_SECRET=Your eSewa secret key
+
+# Celery Configuration
+
+CELERY_BROKER_URL=URL of your message broker (e.g., RabbitMQ, Redis)
+CELERY_RESULT_BACKEND=Backend for storing Celery task results
+CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP=Whether to retry connecting to the broker on startup (True or False)
+
+# Email Configuration
+
+EMAIL_HOST_USER=Your email address for sending emails
+EMAIL_HOST_PASSWORD=Your app password
+EMAIL_HOST=Email server host (e.g., smtp.gmail.com)
+EMAIL_PORT=Port number for the email server (e.g., 465 for SSL)
+EMAIL_USE_SSL=Whether to use SSL for the email server connection (True for SSL)
 ```
 
 Then follow the following steps:
@@ -71,6 +97,7 @@ Then follow the following steps:
 
 - Django for the web framework
 - Jazzmin for the admin panel customization
+- Weasyprint for pdf generation
 
 ## Contributing
 
