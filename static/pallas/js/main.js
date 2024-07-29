@@ -533,10 +533,10 @@
         max: 500000,
         values: [ 0, 500000 ],
         slide: function( event, ui ) {
-        $( "#amount" ).val( "Rs." + ui.values[ 0 ] + " - Rs." + ui.values[ 1 ] );
+        $( "#filter_by_price_amount" ).val( "Rs." + ui.values[ 0 ] + " - Rs." + ui.values[ 1 ] );
        }
     });
-    $( "#amount" ).val( "Rs." + $( "#slider-range" ).slider( "values", 0 ) +
+    $( "#filter_by_price_amount" ).val( "Rs." + $( "#slider-range" ).slider( "values", 0 ) +
        " - Rs." + $( "#slider-range" ).slider( "values", 1 ) );
     
     /*---niceSelect---*/
