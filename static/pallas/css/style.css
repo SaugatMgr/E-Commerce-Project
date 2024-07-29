@@ -9713,6 +9713,17 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
   background: #ea000d;
 }
 
+.view-cart-disabled-button { 
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.view-cart-checkout-disabled-link { 
+  pointer-events: none;
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .coupon_inner {
   padding: 10px 20px 25px;
 }
