@@ -1,7 +1,10 @@
 import decimal
 import requests
 import json
+import uuid
+import base64
 
+from django.contrib import messages
 from django.conf import settings
 from django.shortcuts import render, redirect
 from django.urls import reverse
@@ -10,7 +13,11 @@ from django.views.generic import View, TemplateView
 from django.views.decorators.http import require_POST
 from django.http import JsonResponse
 
-from accounts.helpers import calc_tracking_number
+from accounts.helpers import (
+    build_abs_uri,
+    calc_tracking_number,
+    generate_hmac_signature,
+)
 from accounts.tasks import generate_and_send_order_pdf
 from electronics.models import Product
 
@@ -195,6 +202,7 @@ class CheckOutView(View):
 
     def post(self, request, *args, **kwargs):
         data = request.POST
+        payment_method = data.get("payment_method")
         current_user = request.user
         customer = Customer.objects.get(user=current_user)
         existing_order = Order.objects.filter(
@@ -240,7 +248,7 @@ class CheckOutView(View):
         order_data = {
             "customer": customer,
             "order_notes": data.get("order_notes"),
-            "payment_method": data.get("payment_method"),
+            "payment_method": payment_method,
             "subtotal": float(data.get("sub_total")),
             "shipping_cost": data.get("shipping_cost"),
             "total": float(data.get("total")),
@@ -306,7 +314,10 @@ class CheckOutView(View):
                     order.shipping_address = shipping_address
                     order.save()
 
-                    return redirect(reverse("khalti_payment", args=[order.id]))
+                    if payment_method == "Khalti":
+                        return redirect(reverse("khalti_payment", args=[order.id]))
+                    if payment_method == "Esewa":
+                        return redirect(reverse("esewa_payment", args=[order.id]))
                 else:
                     context = {
                         "user_form": user_form,
@@ -322,7 +333,7 @@ class CheckOutView(View):
 
 
 class KhaltiPaymentView(View):
-    template_name = "payment/khalti.html"
+    template_name = "payment/Khalti/khalti.html"
 
     def get(self, request, *args, **kwargs):
         order_id = kwargs.get("order_id")
@@ -465,6 +476,107 @@ class KhaltiPaymentVerifyView(View):
                 },
                 status=500,
             )
+
+
+class EsewaPaymentView(View):
+    template_name = "payment/Esewa/esewa.html"
+
+    def get(self, request, *args, **kwargs):
+        order_id = kwargs.get("order_id")
+        order = Order.objects.get(id=order_id)
+        cart = Cart.objects.get(customer=order.customer)
+        cart_items = CartItems.objects.filter(cart=cart)
+
+        transaction_uuid = uuid.uuid4()
+        product_code = settings.ESEWA_MERCHANT_ID
+        message = f"total_amount=110,transaction_uuid={transaction_uuid},product_code={product_code}"
+
+        context = {
+            "order": order,
+            "shipping_cost": order.shipping_cost,
+            "cart_items": cart_items,
+            "success_url": build_abs_uri(request, "esewa_payment_verify", order_id),
+            "failure_url": build_abs_uri(request, "esewa_payment", order_id),
+            "transaction_uuid": transaction_uuid,
+            "hmac_signature": generate_hmac_signature(settings.ESEWA_SECRET, message),
+            "esewa_merchant_id": product_code,
+        }
+        return render(request, self.template_name, context)
+
+
+class EsewaPaymentVerifyView(View):
+    def get(self, request, *args, **kwargs):
+        try:
+            order_id = kwargs.get("order_id")
+            get_response_encoded_data = request.GET.get("data")
+            get_response_decoded_data = base64.b64decode(
+                get_response_encoded_data
+            ).decode("utf-8")
+            get_response_decoded_data = json.loads(get_response_decoded_data)
+
+            get_url = (
+                f"https://uat.esewa.com.np/api/epay/transaction/status/"
+                f"?product_code=EPAYTEST"
+                f"&total_amount={get_response_decoded_data.get('total_amount')}"
+                f"&transaction_uuid={get_response_decoded_data.get('transaction_uuid')}"
+            )
+
+            with transaction.atomic():
+                response = requests.get(get_url)
+                response = response.json()
+
+                if response.get("status") == "COMPLETE" and response.get("ref_id"):
+                    order = Order.objects.get(id=order_id)
+                    order.payment_status = "PAID"
+                    order.status = "Completed"
+                    order.save()
+
+                    cart = Cart.objects.get(customer=order.customer)
+                    cart_items = CartItems.objects.filter(cart=cart)
+
+                    generate_and_send_order_pdf(
+                        {
+                            "request": request,
+                            "order": order,
+                            "cart_items": cart_items,
+                        },
+                        order_id=order_id,
+                        user_email=order.customer.user.email,
+                        customer_first_name=order.customer.user.first_name,
+                        customer_last_name=order.customer.user.last_name,
+                    )
+                    cart_items.delete()
+
+                    messages.success(
+                        request,
+                        "Payment successful.",
+                    )
+                    return redirect(reverse("home"))
+                else:
+                    messages.error(
+                        request, "Payment verification failed. Please try again."
+                    )
+                    return redirect(reverse("esewa_payment", args=[order_id]))
+
+        except requests.RequestException as e:
+            messages.error(request, f"Request error: {e}")
+            return redirect(reverse("esewa_payment", args=[order_id]))
+
+        except base64.binascii.Error as e:
+            messages.error(request, f"Base64 decoding error: {e}")
+            return redirect(reverse("esewa_payment", args=[order_id]))
+
+        except json.JSONDecodeError as e:
+            messages.error(request, f"JSON decoding error: {e}")
+            return redirect(reverse("esewa_payment", args=[order_id]))
+
+        except Order.DoesNotExist:
+            messages.error(request, "Order does not exist.")
+            return redirect(reverse("esewa_payment", args=[order_id]))
+
+        except Exception as e:
+            messages.error(request, f"Unexpected error: {e}")
+            return redirect(reverse("esewa_payment", args=[order_id]))
 
 
 class WishListView(TemplateView):
