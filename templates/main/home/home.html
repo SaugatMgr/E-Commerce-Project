@@ -24,5 +24,18 @@
     <!-- custom product area start -->
     {% include "main/home/product/custom product/custom_product_area.html" %}
     <!-- custom product area end -->
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            {% if messages %}
+                {% for message in messages %}
+                    {% if "success" in message.tags %}
+                        alertify.set('notifier','position', 'top-right');
+                        alertify.success("{{ message }}");
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        });
+    </script>
     
 {% endblock content %}
