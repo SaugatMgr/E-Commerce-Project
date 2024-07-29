@@ -189,48 +189,21 @@
                 });
             });
 
-            // Remove from cart Ajax
-            $(".cart-prod-rem-form").submit(function (e) { 
-                e.preventDefault();
-                var serialized_data = $(this).serialize();
-
-                $.ajax({
-                    type: "post",
-                    url: "{% url 'remove_from_cart' %}",
-                    data: serialized_data,
-
-                    success: function (response) {
-                        alertify.set('notifier','position', 'top-right');
-                        alertify.success(response.message);
-
-                        var productSlug = $(e.target).find('input[name="prod_slug"]').val();
-                        $('#rem-prod-from-cart-' + productSlug).remove();
             
-                        if ($('tbody').children('tr').length === 0) {
-                            $('tbody').html(`
-                                <tr>
-                                    <td colspan="6" class="text-center">
-                                        <h4>Your cart is empty</h4>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="6" class="text-center">
-                                        <a href="{% url "shop" %}">Continue Shopping</a>    
-                                    </td>
-                                </tr>
-                            `);
-                        }
-                    },
-
-                    error: function (response) {
-                        alertify.set('notifier','position', 'top-right');
-                        alertify.error(response.responseJSON.message);
-                    },
-                });
-            });
 
             // Update Cart Item Ajax
             $(document).ready(function () {
+                var cartItemCount = parseInt($("#cart-info").data("cart-item-count"), 10);
+                function toggleButtons(cartItemCount) {
+                    if (cartItemCount === 0) {
+                        $(".cart_submit button").attr("disabled", true).addClass("view-cart-disabled-button");
+                        $(".checkout_btn a").addClass("view-cart-checkout-disabled-link").attr("aria-disabled", "true");
+                    } else {
+                        $(".cart_submit button").attr("disabled", false).removeClass("view-cart-disabled-button");
+                        $(".checkout_btn a").removeClass("view-cart-checkout-disabled-link").attr("aria-disabled", "false");
+                    }
+                }
+                toggleButtons(cartItemCount);
                 $(".update-cart-form").submit(function (e) {
                     e.preventDefault();
                     var serialized_data = $(this).serialize();
@@ -249,6 +222,48 @@
                         },
                         error: function (response) {
                             alertify.set('notifier', 'position', 'top-right');
+                            alertify.error(response.responseJSON.message);
+                        },
+                    });
+                });
+
+                // Remove from cart Ajax
+                $(".cart-prod-rem-form").submit(function (e) { 
+                    e.preventDefault();
+                    var serialized_data = $(this).serialize();
+
+                    $.ajax({
+                        type: "post",
+                        url: "{% url 'remove_from_cart' %}",
+                        data: serialized_data,
+
+                        success: function (response) {
+                            alertify.set('notifier','position', 'top-right');
+                            alertify.success(response.message);
+
+                            var productSlug = $(e.target).find('input[name="prod_slug"]').val();
+                            $('#rem-prod-from-cart-' + productSlug).remove();
+                
+                            var cartItemCount = $('tbody').children('tr').length;
+                            if (cartItemCount === 0) {
+                                $('tbody').html(`
+                                    <tr>
+                                        <td colspan="6" class="text-center">
+                                            <h4>Your cart is empty</h4>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="6" class="text-center">
+                                            <a href="{% url 'shop' %}">Continue Shopping</a>    
+                                        </td>
+                                    </tr>
+                                `);
+                                toggleButtons(cartItemCount);
+                            }
+                        },
+
+                        error: function (response) {
+                            alertify.set('notifier','position', 'top-right');
                             alertify.error(response.responseJSON.message);
                         },
                     });
