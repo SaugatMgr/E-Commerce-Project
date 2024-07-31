@@ -4,6 +4,7 @@ from accounts.models import (
     CartItems,
 )
 from electronics.models import Category, Product, Tag
+from posts.models import Post
 
 
 def electronics_context(request):
@@ -13,6 +14,7 @@ def electronics_context(request):
     context["categories"] = Category.objects.all()
     context["product_tags"] = Tag.objects.all()
     context["top_rated_products"] = Product.objects.all().order_by("-views_count")[:3]
+    context["latest_posts"] = Post.objects.all().order_by("-created_at")[:3]
 
     if user.is_authenticated:
         current_customer = Customer.objects.filter(user=user).first()
