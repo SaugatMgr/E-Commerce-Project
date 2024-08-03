@@ -77,53 +77,7 @@
                             </div>
                         </div>
                         <!-- Comments and Comment Form -->
-                        <div class="comments_area">
-                            <div class="comments_box">
-                                <h3>{{ blg_post_detail.comments.count }} Comments</h3>
-                                {% for comment in blg_post_detail.comments.all %}
-                                    {% comment %} <div class="comment_list">
-                                        <div class="comment_thumb">
-                                            <img src="assets/img/blog/comment3.png.jpg" alt="">
-                                        </div>
-                                        <div class="comment_content">
-                                            <div class="comment_meta">
-                                                <h5><a href="#">{{ comment.author }}</a></h5>
-                                                <span>{{ comment.created_on }}</span> 
-                                            </div>
-                                            <p>{{ comment.text }}</p>
-                                            <div class="comment_reply">
-                                                <a href="#">Reply</a>
-                                            </div>
-                                        </div>
-                                    </div> {% endcomment %}
-                                {% endfor %}
-                            </div>
-                            <div class="comments_form">
-                                <h3>Leave a Reply</h3>
-                                <p>Your email address will not be published. Required fields are marked *</p>
-                                <form action="#">
-                                    <div class="row">
-                                        <div class="col-12">
-                                            <label for="review_comment">Comment</label>
-                                            <textarea name="comment" id="review_comment"></textarea>
-                                        </div> 
-                                        <div class="col-lg-4 col-md-4">
-                                            <label for="author">Name</label>
-                                            <input id="author" type="text">
-                                        </div> 
-                                        <div class="col-lg-4 col-md-4">
-                                            <label for="email">Email</label>
-                                            <input id="email" type="text">
-                                        </div>
-                                        <div class="col-lg-4 col-md-4">
-                                            <label for="website">Website</label>
-                                            <input id="website" type="text">
-                                        </div>   
-                                    </div>
-                                    <button class="button" type="submit">Post Comment</button>
-                                 </form>    
-                            </div>
-                        </div>
+                        {% include "blog/blog detail/comment_area.html" %}
                     </div>
                     <!--blog grid area end-->
                 </div>
