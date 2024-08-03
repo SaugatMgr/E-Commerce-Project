@@ -11929,6 +11929,9 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
   }
 }
 
+#blg_comment_form {
+  margin-bottom: 25px;
+}
 .comments_form h3 {
   font-size: 14px;
   margin: 0 0 20px;
@@ -11973,13 +11976,93 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
   border: 0;
   line-height: 36px;
   background: #333;
-  font-weight: 500;
+  font-weight: 600;
 }
 .comments_form form button:hover {
   background: #ea000d;
 }
+.comments_form form button:disabled {
+  background: #ccc;
+  color: #666;
+  font-weight: 600;
+  cursor: default;
+  opacity: 0.6;
+}
+
+.reply_form_container .reply_textbox {
+  width: 100%;
+  height: 100px;
+  background: #ffffff;
+  border: 1px solid #e5e5e5;
+  margin-bottom: 10px;
+  resize: none;
+  padding: 10px;
+  font-size: 14px;
+  border-radius: 4px;
+}
+
+.reply_form_container .reply_buttons {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.reply_form_container .submit_reply_btn {
+  padding: 8px 15px;
+  background: linear-gradient(135deg, #ff4b2b, #ea000d);
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 600;
+  line-height: 20px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  margin-left: 10px;
+}
+
+.reply_form_container .submit_reply_btn:hover {
+  background: linear-gradient(135deg, #ea000d, #ff4b2b);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+  transform: translateY(-2px);
+}
+
+.reply_form_container .submit_reply_btn:disabled {
+  background: #ccc;
+  color: #666;
+  cursor: default;
+  box-shadow: none;
+  transform: none;
+}
+
+.reply_form_container .cancel_reply_btn {
+  background: none;
+  color: #888;
+  border: none;
+  padding: 8px 15px;
+  margin-left: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  line-height: 20px;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+}
+
+.reply_form_container .cancel_reply_btn:hover {
+  background: linear-gradient(135deg, #888, #555);
+  color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px);
+}
+
+.reply_form_container .cancel_reply_btn:active {
+  background: linear-gradient(135deg, #555, #888);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  transform: translateY(0);
+}
 
 .comment_list.list_two {
+  margin-top: 20px;
   padding-left: 50px;
 }
 @media only screen and (max-width: 767px) {
