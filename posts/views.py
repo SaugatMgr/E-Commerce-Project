@@ -1,15 +1,18 @@
 from typing import Any
 from datetime import datetime
+from django.db import transaction
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models.query import QuerySet
 from django.views import View
 from django.views.generic import ListView, DetailView
 from django.shortcuts import render
 from django.db.models import Q
+from django.http import JsonResponse
+from django.template.loader import render_to_string
 
 from helpers.pagination import PaginationMixin
 
-from .models import Post
+from .models import Post, Comment, Reply
 
 
 class PostListView(PaginationMixin, ListView):
@@ -114,3 +117,101 @@ class MonthlyArchiveView(PaginationMixin, ListView):
                 published_on__month=datetime.strptime(self.kwargs["month"], "%B").month,
             )
         )
+
+
+class PostCommentView(View):
+    def post(self, request, *args, **kwargs):
+        data = request.POST
+        comment = data.get("comment")
+        post_id = data.get("blg_post_detail_id")
+
+        with transaction.atomic():
+            if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+                if comment:
+                    current_post = Post.objects.get(id=post_id)
+                    comment = Comment.objects.create(
+                        post=current_post,
+                        comment_writer=request.user,
+                        comment=comment,
+                    )
+                    html_content = render_to_string(
+                        "blog/blog detail/comment_area.html",
+                        {
+                            "blg_post_detail": current_post,
+                        },
+                        request,
+                    )
+                    return JsonResponse(
+                        {
+                            "success": True,
+                            "message": "Reply added.",
+                            "html_content": html_content,
+                        },
+                        status=201,
+                    )
+                else:
+                    return JsonResponse(
+                        {
+                            "success": False,
+                            "message": "Comment cannot be empty.",
+                        },
+                        status=400,
+                    )
+            else:
+                return JsonResponse(
+                    {
+                        "success": False,
+                        "message": "Cannot process.Must be and AJAX XMLHttpRequest.",
+                    },
+                    status=400,
+                )
+
+
+class ReplyView(View):
+    def post(self, request, *args, **kwargs):
+        data = request.POST
+        reply = data.get("reply")
+        comment_id = data.get("comment_id")
+
+        with transaction.atomic():
+            if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+                if reply:
+                    current_comment = Comment.objects.get(id=comment_id)
+                    reply = Reply.objects.create(
+                        comment=current_comment,
+                        reply_writer=request.user,
+                        reply_content=reply,
+                    )
+                    html_content = render_to_string(
+                        "blog/blog detail/comment_area.html",
+                        {
+                            "blg_post_detail": Post.objects.get(
+                                id=data.get("blg_post_detail_id")
+                            ),
+                        },
+                        request,
+                    )
+                    return JsonResponse(
+                        {
+                            "success": True,
+                            "message": "Reply added.",
+                            "html_content": html_content,
+                        },
+                        status=201,
+                    )
+                else:
+                    return JsonResponse(
+                        {
+                            "success": False,
+                            "message": "Reply cannot be empty.",
+                        },
+                        status=400,
+                    )
+            else:
+                return JsonResponse(
+                    {
+                        "success": False,
+                        "message": "Cannot process.Must be and AJAX XMLHttpRequest.",
+                    },
+                    status=400,
+                )
