@@ -189,8 +189,6 @@
                 });
             });
 
-            
-
             // Update Cart Item Ajax
             $(document).ready(function () {
                 var cartItemCount = parseInt($("#cart-info").data("cart-item-count"), 10);
@@ -609,6 +607,84 @@
                     $(this).slideDown(300);
                 }).on('hidden.bs.collapse', function() {
                     $(this).slideUp(300);
+                });
+            });
+
+            // Blog Comment Form
+            $(document).ready(function() {
+                toggleSubmitButton();
+            
+                $(document).on('input', '#review_comment', function() {
+                    toggleSubmitButton();
+                });
+            
+                function toggleSubmitButton() {
+                    var commentContent = $("#review_comment").val().trim();
+                    $(".comments_form .button").prop('disabled', commentContent === '');
+                }
+            
+                $(document).on('submit', '#blg_comment_form', function(e) {
+                    e.preventDefault();
+            
+                    $.ajax({
+                        type: "POST",
+                        url: "{% url 'post_comment' %}",
+                        data: $(this).serialize(),
+                        success: function(response) {
+                            if (response.success && response.html_content) {
+                                let $temp = $('<div>').html(response.html_content);
+                                let new_comments_area_content = $temp.find('.comments_area').html();
+                                $('.comments_area').html(new_comments_area_content);
+                            } else {
+                                console.error('Invalid response format or missing html_content.');
+                            }
+                        },
+                        error: function(response) {
+                            alertify.set("notifier", "position", "top-right");
+                            alertify.error(response.responseJSON.message);
+                        }
+                    });
+                });
+            });
+
+            // Blog Reply Form
+            $(document).ready(function() {
+                $(document).on('click', '.reply_btn', function(e) {
+                    e.preventDefault();
+                    $(this).closest(".comment_content").find(".reply_form_container").toggle();
+                });
+            
+                $(document).on('input', '.reply_textbox', function() {
+                    var replyContent = $(this).val().trim();
+                    $(this).closest(".reply_form_container").find(".submit_reply_btn").prop('disabled', replyContent === '');
+                });
+            
+                $(document).on('submit', '#reply_form', function(e) {
+                    e.preventDefault();
+            
+                    $.ajax({
+                        type: "POST",
+                        url: "{% url 'reply' %}",
+                        data: $(this).serialize(),
+                        success: function(response) {
+                            if (response.success && response.html_content) {
+                                let $temp = $('<div>').html(response.html_content);
+                                let new_comments_area_content = $temp.find('.comments_area').html();
+                                $('.comments_area').html(new_comments_area_content);
+                            } else {
+                                console.error('Invalid response format or missing html_content.');
+                            }
+                        },
+                        error: function(response) {
+                            alertify.error('Failed to post reply.');
+                        }
+                    });
+                });
+            
+                $(document).on('click', '.cancel_reply_btn', function() {
+                    $(this).closest(".reply_form_container").hide();
+                    $(this).closest(".reply_form_container").find(".reply_textbox").val('');
+                    $(this).closest(".reply_form_container").find(".submit_reply_btn").prop('disabled', true);
                 });
             });
         </script>
