@@ -1,0 +1,69 @@
+{% load static %}
+{% load custom_filters %}
+
+<div class="comments_area">
+    <div class="comments_form">
+        <form action="{% url "post_comment" %}" method="post" id="blg_comment_form">{% csrf_token %}
+            <div class="row">
+                <div class="col-12">
+                    <label for="review_comment">Comment</label>
+                    <textarea name="comment" id="review_comment"></textarea>
+                </div>
+            </div>
+            <input type="hidden" name="blg_post_detail_id" value="{{ blg_post_detail.id }}">
+            <button class="button" type="submit" disabled>Post Comment</button>
+        </form>    
+    </div>
+    <div class="comments_box">
+        <h3>{{ blg_post_detail.comments.count }} Comments</h3>
+        {% for comment in blg_post_detail.comments.all %}
+            <div class="comment_list">
+                <div class="comment_thumb">
+                    <img src="{% static "pallas/img/blog/comment3.png.jpg" %}" alt="">
+                </div>
+                <div class="comment_content">
+                    <div class="comment_meta">
+                        <h5><a href="#">{{ comment.comment_writer }}</a></h5>
+                        <span>{{ comment.created_at }}</span> 
+                    </div>
+                    <p>{{ comment.comment }}</p>
+                    <div class="comment_reply">
+                        <a href="#" class="reply_btn">Reply</a>
+                    </div>
+                    <div class="reply_form_container" style="display: none;">
+                        <form id="reply_form">{% csrf_token %}
+                            <input type="hidden" name="comment_id" value="{{ comment.id }}">
+                            <input type="hidden" name="blg_post_detail_id" value="{{ blg_post_detail.id }}">
+                            <textarea name="reply" class="reply_textbox" placeholder="Write a reply..." required></textarea>
+                            <div class="reply_buttons">
+                                <button type="submit" class="submit_reply_btn" disabled>Reply</button>
+                                <button type="button" class="cancel_reply_btn">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- Replies Section -->
+                    {% for reply in comment.replies.all %}
+                        <div class="comment_list list_two">
+                            <div class="comment_thumb">
+                                <img src="{% static "pallas/img/blog/comment3.png.jpg" %}" alt="">
+                            </div>
+                            <div class="comment_content">
+                                <div class="comment_meta">
+                                    <h5><a href="#">{{ reply.reply_writer }}</a></h5>
+                                    <span>{{ reply.created_at }}</span>
+                                </div>
+                                <p>{{ reply.reply_content }}</p>
+                                <div class="comment_reply">
+                                    <a href="#" class="reply_btn">Reply</a>
+                                </div>
+                            </div>
+                        </div>
+                        {% if reply.child_replies.exists %}
+                            {% include "blog/blog detail/nested_replies.html" with replies=reply.child_replies.all %}
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
