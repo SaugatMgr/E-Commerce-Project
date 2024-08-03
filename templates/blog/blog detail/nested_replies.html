@@ -1,0 +1,18 @@
+{% load static %}
+{% load custom_filters %}
+
+{% for child_reply in replies|top_level_replies %}
+    <div class="comment_list list_two">
+    <div class="comment_thumb">
+        <img src="{% static "pallas/img/blog/comment3.png.jpg" %}" alt="">
+    </div>
+    <div class="comment_content">
+        <div class="comment_meta">
+            <h5><a href="#" class="reply_btn">{{ child_reply.reply_writer }}</a></h5>
+            <span>{{ child_reply.created_at }}</span>
+        </div>
+        <a>@{{ reply.reply_writer.first_name }} {{ reply.reply_writer.last_name }} </a>
+        <p>{{ child_reply.reply_content }}</p>
+    </div>
+    </div>
+{% endfor %}
