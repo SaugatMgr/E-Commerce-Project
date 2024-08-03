@@ -81,9 +81,6 @@ class Comment(CommonInfo):
         on_delete=models.CASCADE,
     )
     comment = models.TextField()
-    reply = models.ForeignKey(
-        "self", null=True, blank=True, on_delete=models.CASCADE, related_name="replies"
-    )
     likes = models.PositiveIntegerField(default=0, blank=True)
     dislikes = models.PositiveIntegerField(default=0, blank=True)
     is_pinned = models.BooleanField(default=False)
@@ -92,4 +89,35 @@ class Comment(CommonInfo):
         ordering = ["-created_at"]
 
     def __str__(self):
-        return f"Comment by {self.author} on {self.post.title[:20]}"
+        return f"Comment by {self.comment_writer} on {self.post.title[:20]}"
+
+
+class Reply(CommonInfo):
+    comment = models.ForeignKey(
+        Comment, null=True, blank=True, on_delete=models.CASCADE, related_name="replies"
+    )
+    parent = models.ForeignKey(
+        "self",
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name="child_replies",
+    )
+    reply_writer = models.ForeignKey(
+        CustomUser,
+        on_delete=models.CASCADE,
+        related_name="replies",
+    )
+    reply_content = models.TextField()
+    likes = models.PositiveIntegerField(default=0, blank=True)
+    dislikes = models.PositiveIntegerField(default=0, blank=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+
+    @property
+    def is_parent(self):
+        return self.parent is None
+
+    def __str__(self):
+        return f"Reply by {self.reply_writer} on {self.comment.post.title[:20]}"
