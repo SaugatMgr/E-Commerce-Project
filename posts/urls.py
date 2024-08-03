@@ -4,9 +4,11 @@ from .views import (
     MonthlyArchiveView,
     PostByCategoryView,
     PostByTagView,
+    PostCommentView,
     PostListView,
     PostDetailView,
     PostSearchView,
+    ReplyView,
 )
 
 urlpatterns = [
@@ -25,5 +27,15 @@ urlpatterns = [
         "monthly-archive/<str:month>/<int:year>/",
         MonthlyArchiveView.as_view(),
         name="monthly_archive",
+    ),
+    path(
+        "post-comment/",
+        PostCommentView.as_view(),
+        name="post_comment",
+    ),
+    path(
+        "reply/",
+        ReplyView.as_view(),
+        name="reply",
     ),
 ]
