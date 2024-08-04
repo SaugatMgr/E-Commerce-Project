@@ -54,12 +54,53 @@
                                 </div>
                                 <p>{{ reply.reply_content }}</p>
                                 <div class="comment_reply">
-                                    <a href="#" class="reply_btn">Reply</a>
+                                    <a href="#" class="top_lvl_reply_btn">Reply</a>
+                                </div>
+                                <div class="top_lvl_reply_form_container" style="display: none;">
+                                    <form id="top_lvl_reply_form">{% csrf_token %}
+                                        <input type="hidden" name="blg_post_detail_id" value="{{ blg_post_detail.id }}">
+                                        <input type="hidden" name="parent_reply_id" value="{{ reply.id }}">
+                                        <textarea name="reply" class="top_lvl_reply_textbox" placeholder="Write a reply..." required></textarea>
+                                        <div class="top_lvl_reply_buttons">
+                                            <button type="submit" class="top_lvl_submit_reply_btn" disabled>Reply</button>
+                                            <button type="button" class="top_lvl_cancel_reply_btn">Cancel</button>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>
                         {% if reply.child_replies.exists %}
-                            {% include "blog/blog detail/nested_replies.html" with replies=reply.child_replies.all %}
+                            {% for child_reply in reply.child_replies.all %}
+                                <div class="comment_list list_two">
+                                    <div class="comment_thumb">
+                                        <img src="{% static "pallas/img/blog/comment3.png.jpg" %}" alt="">
+                                    </div>
+                                    <div class="comment_content">
+                                        <div class="comment_meta">
+                                            <h5><a href="#">{{ child_reply.reply_writer }}</a></h5>
+                                            <span>{{ child_reply.created_at }}</span>
+                                        </div>
+                                        <a>@{{ reply.reply_writer.first_name }} {{ reply.reply_writer.last_name }} </a>
+                                        <p>{{ child_reply.reply_content }}</p>
+                                        <div class="comment_reply">
+                                            <a href="#" class="child_lvl_reply_btn">Reply</a>
+                                        </div>
+                                        <div class="child_lvl_reply_form_container" style="display: none;">
+                                            <form id="child_lvl_reply_form">{% csrf_token %}
+                                                <input type="hidden" name="blg_post_detail_id" value="{{ blg_post_detail.id }}">
+                                                <input type="hidden" name="reply_to_reply" value="true">
+                                                <input type="hidden" name="parent_reply_id" value="{{ child_reply.id }}">
+                                                <textarea name="reply" class="child_lvl_reply_textbox" placeholder="Write a reply..." required></textarea>
+                                                <div class="child_lvl_reply_buttons">
+                                                    <button type="submit" class="child_lvl_submit_reply_btn" disabled>Reply</button>
+                                                    <button type="button" class="child_lvl_cancel_reply_btn">Cancel</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% include "blog/blog detail/nested_replies.html" with recursive_replies=child_reply.child_replies.all %}
+                            {% endfor %}
                         {% endif %}
                     {% endfor %}
                 </div>

@@ -1,18 +1,34 @@
 {% load static %}
 {% load custom_filters %}
 
-{% for child_reply in replies|top_level_replies %}
+{% for child_reply in recursive_replies %}
     <div class="comment_list list_two">
-    <div class="comment_thumb">
-        <img src="{% static "pallas/img/blog/comment3.png.jpg" %}" alt="">
-    </div>
-    <div class="comment_content">
-        <div class="comment_meta">
-            <h5><a href="#" class="reply_btn">{{ child_reply.reply_writer }}</a></h5>
-            <span>{{ child_reply.created_at }}</span>
+        <div class="comment_thumb">
+            <img src="{% static "pallas/img/blog/comment3.png.jpg" %}" alt="">
         </div>
-        <a>@{{ reply.reply_writer.first_name }} {{ reply.reply_writer.last_name }} </a>
-        <p>{{ child_reply.reply_content }}</p>
+        <div class="comment_content">
+            <div class="comment_meta">
+                <h5><a href="#">{{ child_reply.reply_writer }}</a></h5>
+                <span>{{ child_reply.created_at }}</span>
+            </div>
+            <a>@{{ child_reply.parent.reply_writer.first_name }} {{ child_reply.parent.reply_writer.last_name }} </a>
+            <p>{{ child_reply.reply_content }}</p>
+            <div class="comment_reply">
+                <a href="#" class="child_lvl_reply_btn">Reply</a>
+            </div>
+            <div class="child_lvl_reply_form_container" style="display: none;">
+                <form id="child_lvl_reply_form">{% csrf_token %}
+                    <input type="hidden" name="blg_post_detail_id" value="{{ blg_post_detail.id }}">
+                    <input type="hidden" name="reply_to_reply" value="true">
+                    <input type="hidden" name="parent_reply_id" value="{{ child_reply.id }}">
+                    <textarea name="reply" class="child_lvl_reply_textbox" placeholder="Write a reply..." required></textarea>
+                    <div class="child_lvl_reply_buttons">
+                        <button type="submit" class="child_lvl_submit_reply_btn" disabled>Reply</button>
+                        <button type="button" class="child_lvl_cancel_reply_btn">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-    </div>
+    {% include "blog/blog detail/nested_replies.html" with recursive_replies=child_reply.child_replies.all %}
 {% endfor %}
