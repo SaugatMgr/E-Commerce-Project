@@ -171,11 +171,14 @@ class ReplyView(View):
     def post(self, request, *args, **kwargs):
         data = request.POST
         reply = data.get("reply")
+        blg_post_detail_id = data.get("blg_post_detail_id")
         comment_id = data.get("comment_id")
+        parent_reply_id = data.get("parent_reply_id")
 
         with transaction.atomic():
             if request.headers.get("X-Requested-With") == "XMLHttpRequest":
-                if reply:
+                blg_post_detail = Post.objects.get(id=blg_post_detail_id)
+                if reply and not parent_reply_id:
                     current_comment = Comment.objects.get(id=comment_id)
                     reply = Reply.objects.create(
                         comment=current_comment,
@@ -185,9 +188,29 @@ class ReplyView(View):
                     html_content = render_to_string(
                         "blog/blog detail/comment_area.html",
                         {
-                            "blg_post_detail": Post.objects.get(
-                                id=data.get("blg_post_detail_id")
-                            ),
+                            "blg_post_detail": blg_post_detail,
+                        },
+                        request,
+                    )
+                    return JsonResponse(
+                        {
+                            "success": True,
+                            "message": "Reply added.",
+                            "html_content": html_content,
+                        },
+                        status=201,
+                    )
+                elif reply and parent_reply_id:
+                    parent = Reply.objects.get(id=parent_reply_id)
+                    reply = Reply.objects.create(
+                        reply_writer=request.user,
+                        reply_content=reply,
+                        parent=parent,
+                    )
+                    html_content = render_to_string(
+                        "blog/blog detail/comment_area.html",
+                        {
+                            "blg_post_detail": blg_post_detail,
                         },
                         request,
                     )
