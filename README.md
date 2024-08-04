@@ -13,6 +13,7 @@ This project is an E-Commerce platform developed using Django. It allows users t
 - Social authentication
 - Checkout
 - Blog integration
+- Comment/Reply functionalities in blog posts
 - Payment gateway integration
 - Send Order details pdf to user on successful payment
 
