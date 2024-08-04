@@ -687,6 +687,88 @@
                     $(this).closest(".reply_form_container").find(".submit_reply_btn").prop('disabled', true);
                 });
             });
+
+            // Top level Reply Form
+            $(document).ready(function() {
+                $(document).on('click', '.top_lvl_reply_btn', function(e) {
+                    e.preventDefault();
+                    $(this).closest(".comment_content").find(".top_lvl_reply_form_container").toggle();
+                });
+            
+                $(document).on('input', '.top_lvl_reply_textbox', function() {
+                    var replyContent = $(this).val().trim();
+                    $(this).closest(".top_lvl_reply_form_container").find(".top_lvl_submit_reply_btn").prop('disabled', replyContent === '');
+                });
+            
+                $(document).on('submit', '#top_lvl_reply_form', function(e) {
+                    e.preventDefault();
+            
+                    $.ajax({
+                        type: "POST",
+                        url: "{% url 'reply' %}",
+                        data: $(this).serialize(),
+                        success: function(response) {
+                            if (response.success && response.html_content) {
+                                let $temp = $('<div>').html(response.html_content);
+                                let new_comments_area_content = $temp.find('.comments_area').html();
+                                $('.comments_area').html(new_comments_area_content);
+                            } else {
+                                console.error('Invalid response format or missing html_content.');
+                            }
+                        },
+                        error: function(response) {
+                            alertify.error('Failed to post reply.');
+                        }
+                    });
+                });
+            
+                $(document).on('click', '.top_lvl_cancel_reply_btn', function() {
+                    $(this).closest(".top_lvl_reply_form_container").hide();
+                    $(this).closest(".top_lvl_reply_form_container").find(".top_lvl_reply_textbox").val('');
+                    $(this).closest(".top_lvl_reply_form_container").find(".top_lvl_submit_reply_btn").prop('disabled', true);
+                });
+            });
+
+            // Child level Reply Form
+            $(document).ready(function() {
+                $(document).on('click', '.child_lvl_reply_btn', function(e) {
+                    e.preventDefault();
+                    $(this).closest(".comment_content").find(".child_lvl_reply_form_container").toggle();
+                });
+            
+                $(document).on('input', '.child_lvl_reply_textbox', function() {
+                    var replyContent = $(this).val().trim();
+                    $(this).closest(".child_lvl_reply_form_container").find(".child_lvl_submit_reply_btn").prop('disabled', replyContent === '');
+                });
+            
+                $(document).on('submit', '#child_lvl_reply_form', function(e) {
+                    e.preventDefault();
+            
+                    $.ajax({
+                        type: "POST",
+                        url: "{% url 'reply' %}",
+                        data: $(this).serialize(),
+                        success: function(response) {
+                            if (response.success && response.html_content) {
+                                let $temp = $('<div>').html(response.html_content);
+                                let new_comments_area_content = $temp.find('.comments_area').html();
+                                $('.comments_area').html(new_comments_area_content);
+                            } else {
+                                console.error('Invalid response format or missing html_content.');
+                            }
+                        },
+                        error: function(response) {
+                            alertify.error('Failed to post reply.');
+                        }
+                    });
+                });
+            
+                $(document).on('click', '.child_lvl_cancel_reply_btn', function() {
+                    $(this).closest(".child_lvl_reply_form_container").hide();
+                    $(this).closest(".child_lvl_reply_form_container").find(".child_lvl_reply_textbox").val('');
+                    $(this).closest(".child_lvl_reply_form_container").find(".child_lvl_submit_reply_btn").prop('disabled', true);
+                });
+            });
         </script>
 
         <!-- ALERTIFY JS -->
