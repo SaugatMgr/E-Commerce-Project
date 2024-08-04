@@ -4,6 +4,7 @@ import json
 import uuid
 import base64
 
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.conf import settings
 from django.shortcuts import render, redirect
@@ -41,7 +42,7 @@ from .models import (
 )
 
 
-class UserAccountView(View):
+class UserAccountView(LoginRequiredMixin, View):
     template_name = "users/my_account/my_account.html"
     form_classes = {
         "user_form": MyAccountDetailsForm(),
@@ -160,7 +161,7 @@ class UserAccountView(View):
             )
 
 
-class CheckOutView(View):
+class CheckOutView(LoginRequiredMixin, View):
     template_name = "users/checkout.html"
     form_classes = {
         "user_form": CustomUserForm(),
@@ -332,7 +333,7 @@ class CheckOutView(View):
                 pass
 
 
-class KhaltiPaymentView(View):
+class KhaltiPaymentView(LoginRequiredMixin, View):
     template_name = "payment/Khalti/khalti.html"
 
     def get(self, request, *args, **kwargs):
@@ -348,7 +349,7 @@ class KhaltiPaymentView(View):
         return render(request, self.template_name, context)
 
 
-class KhaltiPaymentVerifyView(View):
+class KhaltiPaymentVerifyView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         try:
             data = request.body
@@ -478,7 +479,7 @@ class KhaltiPaymentVerifyView(View):
             )
 
 
-class EsewaPaymentView(View):
+class EsewaPaymentView(LoginRequiredMixin, View):
     template_name = "payment/Esewa/esewa.html"
 
     def get(self, request, *args, **kwargs):
@@ -504,7 +505,7 @@ class EsewaPaymentView(View):
         return render(request, self.template_name, context)
 
 
-class EsewaPaymentVerifyView(View):
+class EsewaPaymentVerifyView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         try:
             order_id = kwargs.get("order_id")
@@ -579,7 +580,7 @@ class EsewaPaymentVerifyView(View):
             return redirect(reverse("esewa_payment", args=[order_id]))
 
 
-class WishListView(TemplateView):
+class WishListView(LoginRequiredMixin, TemplateView):
     model = WishList
     template_name = "users/wishlist.html"
 
@@ -593,7 +594,7 @@ class WishListView(TemplateView):
         return context
 
 
-class AddToWishListView(View):
+class AddToWishListView(LoginRequiredMixin, View):
     template_name = "users/wishlist.html"
     model = WishList
 
