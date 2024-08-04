@@ -115,9 +115,7 @@ class Reply(CommonInfo):
     class Meta:
         ordering = ["-created_at"]
 
-    @property
-    def is_parent(self):
-        return self.parent is None
-
     def __str__(self):
-        return f"Reply by {self.reply_writer} on {self.comment.post.title[:20]}"
+        if self.comment:
+            return f"Reply by {self.reply_writer} on {self.comment.post.title[:20]}"
+        return f"Reply by {self.reply_writer} on {self.parent.reply_writer}'s comment"
