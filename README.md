@@ -17,12 +17,6 @@ This project is an E-Commerce platform developed using Django. It allows users t
 - Payment gateway integration
 - Send Order details pdf to user on successful payment
 
-### Ongoing:
-- Code optimization
-
-### Upcoming:
-- Buyer/seller role login functionality
-
 ## Getting Started
 
 To get started with the project, follow these steps:
