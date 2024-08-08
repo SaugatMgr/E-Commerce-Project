@@ -1,6 +1,18 @@
 from django.contrib import admin
 
-from .models import Post, Comment, PostCategory, PostTag, Reply
+from .models import (
+    Post,
+    Comment,
+    PostCategory,
+    PostTag,
+    Reply,
+    PostLikes,
+    PostDislikes,
+    CommentLikes,
+    CommentDislikes,
+    ReplyLikes,
+    ReplyDislikes,
+)
 from .forms import PostAdminForm
 
 
@@ -15,5 +27,11 @@ admin.site.register(
         PostCategory,
         PostTag,
         Reply,
+        PostLikes,
+        PostDislikes,
+        CommentLikes,
+        CommentDislikes,
+        ReplyLikes,
+        ReplyDislikes,
     ]
 )
