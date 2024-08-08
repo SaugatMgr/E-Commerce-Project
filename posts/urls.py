@@ -1,6 +1,7 @@
 from django.urls import path
 
 from .views import (
+    LikeDislikeView,
     MonthlyArchiveView,
     PostByCategoryView,
     PostByTagView,
@@ -37,5 +38,10 @@ urlpatterns = [
         "reply/",
         ReplyView.as_view(),
         name="reply",
+    ),
+    path(
+        "like-dislike/",
+        LikeDislikeView.as_view(),
+        name="like_dislike",
     ),
 ]
