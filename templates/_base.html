@@ -415,48 +415,6 @@
                     });
                 });
             });
-        
-            // Pagination Ajax
-            {% comment %} $(document).on("click", ".search_res_pagination_link", function(e) {
-                e.preventDefault();
-                
-                let current_url = window.location.href.split('?')[0]
-                console.log(current_url);
-                let params = new URL(document.location).searchParams;
-                console.log(params);
-                let select = params.get("select"); // category_id
-                let query = params.get("query"); // j search word ho tei
-                let href = $(this).attr("href"); //?page=pagination_number
-                console.log(href);
-                // http://localhost:8000/post-search/?page=2&query=j search word ho tei
-                let new_url = `${current_url}${href}&select=${select}&query=${query}`;
-                console.log(new_url);
-
-                $.ajax({
-                    url: new_url,
-                    type: 'GET',
-                    dataType: 'json',
-                    success: function(response) {
-
-                        if (response.success && response.html_content) {
-                            // Convert response.html_content to jQuery object
-                            let $html = $(response.html_content);
-                            
-                            let pagination_link_section = $html.find('#pagination-link-div').html();
-                            let search_res_content = $html.find('#search-res-pagination-section').html();
-
-                            $('#pagination-link-div').html(pagination_link_section);
-                            $('#search-res-pagination-section').html(search_res_content);
-                        } else {
-                            console.error('Invalid response format or missing html_content.');
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('AJAX Error:', status, error);
-                    }
-                });
-            }); {% endcomment %}
-
 
             // Sorting Ajax
             $(document).ready(function() {
@@ -480,7 +438,8 @@
                                 $('#search-res-pagination-section').html(search_res_content);
                                 $('#pagination-result').html(pagination_res_content);
                             } else {
-                                console.error('Invalid response format or missing html_content.');
+                                alertify.set("notifier", "position", "top-right")
+                                alertify.error('Invalid response format or missing html_content.');
                             }
                         },
                         error: function(response){
@@ -513,7 +472,8 @@
                                 $('#shop_paginated_content').html(shop_paginated_content);
                                 $('#shop_pagination_info').html(shop_pagination_info);
                             } else {
-                                console.error('Invalid response format or missing html_content.');
+                                alertify.set("notifier", "position", "top-right")
+                                alertify.error('Invalid response format or missing html_content.');
                             }
                         },
                         error: function(response){
@@ -541,7 +501,8 @@
                                 $('#shop_paginated_content').html(shop_paginated_content);
                                 $('#shop_pagination_info').html(shop_pagination_info);
                             } else {
-                                console.error('Invalid response format or missing html_content.');
+                                alertify.set("notifier", "position", "top-right")
+                                alertify.error('Invalid response format or missing html_content.');
                             }
                         },
                         error: function(response){
@@ -569,7 +530,8 @@
                                 $('#search-res-pagination-section').html(search_res_content);
                                 $('#pagination-result').html(pagination_res_content);
                             } else {
-                                console.error('Invalid response format or missing html_content.');
+                                alertify.set("notifier", "position", "top-right")
+                                alertify.error('Invalid response format or missing html_content.');
                             }
                         },
                         error: function(response){
@@ -636,7 +598,8 @@
                                 let new_comments_area_content = $temp.find('.comments_area').html();
                                 $('.comments_area').html(new_comments_area_content);
                             } else {
-                                console.error('Invalid response format or missing html_content.');
+                                alertify.set("notifier", "position", "top-right")
+                                alertify.error('Invalid response format or missing html_content.');
                             }
                         },
                         error: function(response) {
@@ -672,11 +635,13 @@
                                 let new_comments_area_content = $temp.find('.comments_area').html();
                                 $('.comments_area').html(new_comments_area_content);
                             } else {
-                                console.error('Invalid response format or missing html_content.');
+                                alertify.set("notifier", "position", "top-right")
+                                alertify.error('Invalid response format or missing html_content.');
                             }
                         },
                         error: function(response) {
-                            alertify.error('Failed to post reply.');
+                            alertify.set("notifier", "position", "top-right");
+                            alertify.error(response.responseJSON.message);
                         }
                     });
                 });
@@ -713,11 +678,13 @@
                                 let new_comments_area_content = $temp.find('.comments_area').html();
                                 $('.comments_area').html(new_comments_area_content);
                             } else {
-                                console.error('Invalid response format or missing html_content.');
+                                alertify.set("notifier", "position", "top-right")
+                                alertify.error('Invalid response format or missing html_content.');
                             }
                         },
                         error: function(response) {
-                            alertify.error('Failed to post reply.');
+                            alertify.set("notifier", "position", "top-right");
+                            alertify.error(response.responseJSON.message);
                         }
                     });
                 });
@@ -754,11 +721,13 @@
                                 let new_comments_area_content = $temp.find('.comments_area').html();
                                 $('.comments_area').html(new_comments_area_content);
                             } else {
-                                console.error('Invalid response format or missing html_content.');
+                                alertify.set("notifier", "position", "top-right")
+                                alertify.error('Invalid response format or missing html_content.');
                             }
                         },
                         error: function(response) {
-                            alertify.error('Failed to post reply.');
+                            alertify.set("notifier", "position", "top-right");
+                            alertify.error(response.responseJSON.message);
                         }
                     });
                 });
@@ -769,6 +738,32 @@
                     $(this).closest(".child_lvl_reply_form_container").find(".child_lvl_submit_reply_btn").prop('disabled', true);
                 });
             });
+
+        // Post, Comment, Reply Like Dislike Form
+        $(document).on('submit', '.like_form, .dislike_form', function(e) {
+            e.preventDefault();
+
+            var form = $(this);
+            var formData = form.serialize();
+            var formParent = form.closest('.like_dislike_section');
+        
+            $.ajax({
+                type: 'POST',
+                url: "{% url 'like_dislike' %}",
+                data: $(this).serialize(),
+                success: function(response) {
+                    console.log(response);
+                    if (response.success) {
+                        formParent.find('.like_count').text(response.like_count);
+                        formParent.find('.dislike_count').text(response.dislike_count);
+                    }
+                },
+                error: function(response) {
+                    alertify.set("notifier", "position", "top-right");
+                    alertify.error(response.responseJSON.message);
+                }
+            });
+        });
         </script>
 
         <!-- ALERTIFY JS -->
