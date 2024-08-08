@@ -56,6 +56,34 @@
                                         </div>
                                     </div>
                                 </div>
+                                <!-- Like Dislike Section -->
+                                <div class="like_dislike_section">
+                                    <form method="post" class="like_form">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="blg_post_detail_id" value="{{ blg_post_detail.id }}">
+                                        <input type="hidden" name="action" value="like">
+                                        <input type="hidden" name="obj_id" value="{{ blg_post_detail.id }}">
+                                        <input type="hidden" name="model" value="post">
+                                        <button type="submit" class="like_button">
+                                            <i class="fa fa-thumbs-up"></i>
+                                        </button>
+                                    </form>
+                                    <p class="like_count">{{ blg_post_detail.like_count }}</p>
+                                    <form method="post" class="dislike_form">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="blg_post_detail_id" value="{{ blg_post_detail.id }}">
+                                        <input type="hidden" name="action" value="dislike">
+                                        <input type="hidden" name="obj_id" value="{{ blg_post_detail.id }}">
+                                        <input type="hidden" name="model" value="post">
+                                        <button type="submit" class="dislike_button">
+                                            <i class="fa fa-thumbs-down"></i>
+                                        </button>
+                                    </form>
+                                    <p class="dislike_count">{{ blg_post_detail.dislike_count }}</p>
+                                </div>
+                                <!-- Like Dislike Section End -->
+
+                                <!-- Related Posts -->
                                 <div class="related_posts">
                                     <h3>Related posts</h3>
                                     <div class="row">
@@ -73,7 +101,8 @@
                                             </div>
                                         {% endfor %}
                                     </div>
-                                </div> 
+                                </div>
+                                <!-- Related Posts End -->
                             </div>
                         </div>
                         <!-- Comments and Comment Form -->

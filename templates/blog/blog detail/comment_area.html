@@ -26,6 +26,30 @@
                         <span>{{ comment.created_at }}</span> 
                     </div>
                     <p>{{ comment.comment }}</p>
+                    <div class="like_dislike_section">
+                        <form method="post" class="like_form">
+                            {% csrf_token %}
+                            <input type="hidden" name="blg_post_detail_id" value="{{ blg_post_detail.id }}">
+                            <input type="hidden" name="action" value="like">
+                            <input type="hidden" name="obj_id" value="{{ comment.id }}">
+                            <input type="hidden" name="model" value="comment">
+                            <button type="submit" class="like_button">
+                                <i class="fa fa-thumbs-up"></i>
+                            </button>
+                        </form>
+                        <p class="like_count">{{ comment.like_count }}</p>
+                        <form method="post" class="dislike_form">
+                            {% csrf_token %}
+                            <input type="hidden" name="blg_post_detail_id" value="{{ blg_post_detail.id }}">
+                            <input type="hidden" name="action" value="dislike">
+                            <input type="hidden" name="obj_id" value="{{ comment.id }}">
+                            <input type="hidden" name="model" value="comment">
+                            <button type="submit" class="dislike_button">
+                                <i class="fa fa-thumbs-down"></i>
+                            </button>
+                        </form>
+                        <p class="dislike_count">{{ comment.dislike_count }}</p>
+                    </div>
                     <div class="comment_reply">
                         <a href="#" class="reply_btn">Reply</a>
                     </div>
@@ -52,6 +76,30 @@
                                     <span>{{ reply.created_at }}</span>
                                 </div>
                                 <p>{{ reply.reply_content }}</p>
+                                <div class="like_dislike_section">
+                                    <form method="post" class="like_form">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="blg_post_detail_id" value="{{ blg_post_detail.id }}">
+                                        <input type="hidden" name="action" value="like">
+                                        <input type="hidden" name="obj_id" value="{{ reply.id }}">
+                                        <input type="hidden" name="model" value="reply">
+                                        <button type="submit" class="like_button">
+                                            <i class="fa fa-thumbs-up"></i>
+                                        </button>
+                                    </form>
+                                    <p class="like_count">{{ reply.like_count }}</p>
+                                    <form method="post" class="dislike_form">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="blg_post_detail_id" value="{{ blg_post_detail.id }}">
+                                        <input type="hidden" name="action" value="dislike">
+                                        <input type="hidden" name="obj_id" value="{{ reply.id }}">
+                                        <input type="hidden" name="model" value="reply">
+                                        <button type="submit" class="dislike_button">
+                                            <i class="fa fa-thumbs-down"></i>
+                                        </button>
+                                    </form>
+                                    <p class="dislike_count">{{ reply.dislike_count }}</p>
+                                </div>
                                 <div class="comment_reply">
                                     <a href="#" class="top_lvl_reply_btn">Reply</a>
                                 </div>
@@ -81,6 +129,30 @@
                                         </div>
                                         <a>@{{ reply.reply_writer.first_name }} {{ reply.reply_writer.last_name }} </a>
                                         <p>{{ child_reply.reply_content }}</p>
+                                        <div class="like_dislike_section">
+                                            <form method="post" class="like_form">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="blg_post_detail_id" value="{{ blg_post_detail.id }}">
+                                                <input type="hidden" name="action" value="like">
+                                                <input type="hidden" name="obj_id" value="{{ child_reply.id }}">
+                                                <input type="hidden" name="model" value="reply">
+                                                <button type="submit" class="like_button">
+                                                    <i class="fa fa-thumbs-up"></i>
+                                                </button>
+                                            </form>
+                                            <p class="like_count">{{ child_reply.like_count }}</p>
+                                            <form method="post" class="dislike_form">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="blg_post_detail_id" value="{{ blg_post_detail.id }}">
+                                                <input type="hidden" name="action" value="dislike">
+                                                <input type="hidden" name="obj_id" value="{{ child_reply.id }}">
+                                                <input type="hidden" name="model" value="reply">
+                                                <button type="submit" class="dislike_button">
+                                                    <i class="fa fa-thumbs-down"></i>
+                                                </button>
+                                            </form>
+                                            <p class="dislike_count">{{ child_reply.dislike_count }}</p>
+                                        </div>
                                         <div class="comment_reply">
                                             <a href="#" class="child_lvl_reply_btn">Reply</a>
                                         </div>
