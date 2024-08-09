@@ -74,6 +74,12 @@ class Post(CommonInfo):
     def dislike_count(self):
         return self.postdislikes.count()
 
+    def user_has_liked(self, user):
+        return self.postlikes.filter(user=user).exists()
+
+    def user_has_disliked(self, user):
+        return self.postdislikes.filter(user=user).exists()
+
 
 class Comment(CommonInfo):
     post = models.ForeignKey(
@@ -102,6 +108,12 @@ class Comment(CommonInfo):
     @property
     def dislike_count(self):
         return self.commentdislikes.count()
+
+    def user_has_liked(self, user):
+        return self.commentlikes.filter(user=user).exists()
+
+    def user_has_disliked(self, user):
+        return self.commentdislikes.filter(user=user).exists()
 
 
 class Reply(CommonInfo):
@@ -139,6 +151,12 @@ class Reply(CommonInfo):
     @property
     def dislike_count(self):
         return self.replydislikes.count()
+
+    def user_has_liked(self, user):
+        return self.replylikes.filter(user=user).exists()
+
+    def user_has_disliked(self, user):
+        return self.replydislikes.filter(user=user).exists()
 
 
 class LikeDislikeCommonInfo(CommonInfo):
