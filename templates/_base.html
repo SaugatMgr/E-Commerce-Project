@@ -756,6 +756,18 @@
                     if (response.success) {
                         formParent.find('.like_count').text(response.like_count);
                         formParent.find('.dislike_count').text(response.dislike_count);
+
+                        if (response.has_liked) {
+                            formParent.find('.like_button').addClass('liked');
+                        } else {
+                            formParent.find('.like_button').removeClass('liked');
+                        }
+        
+                        if (response.has_disliked) {
+                            formParent.find('.dislike_button').addClass('disliked');
+                        } else {
+                            formParent.find('.dislike_button').removeClass('disliked');
+                        }
                     }
                 },
                 error: function(response) {

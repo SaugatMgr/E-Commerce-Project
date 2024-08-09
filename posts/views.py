@@ -292,6 +292,8 @@ class LikeDislikeView(View):
                                 "success": True,
                                 "like_count": obj.like_count,
                                 "dislike_count": obj.dislike_count,
+                                "has_liked": obj.user_has_liked(user),
+                                "has_disliked": obj.user_has_disliked(user),
                             },
                             status=200,
                         )
@@ -305,6 +307,8 @@ class LikeDislikeView(View):
                                 "success": True,
                                 "like_count": obj.like_count,
                                 "dislike_count": obj.dislike_count,
+                                "has_liked": obj.user_has_liked(user),
+                                "has_disliked": obj.user_has_disliked(user),
                             },
                             status=201,
                         )
@@ -319,6 +323,8 @@ class LikeDislikeView(View):
                                 "success": True,
                                 "like_count": obj.like_count,
                                 "dislike_count": obj.dislike_count,
+                                "has_liked": obj.user_has_liked(user),
+                                "has_disliked": obj.user_has_disliked(user),
                             },
                             status=200,
                         )
@@ -332,6 +338,8 @@ class LikeDislikeView(View):
                                 "success": True,
                                 "like_count": obj.like_count,
                                 "dislike_count": obj.dislike_count,
+                                "has_liked": obj.user_has_liked(user),
+                                "has_disliked": obj.user_has_disliked(user),
                             },
                             status=201,
                         )
