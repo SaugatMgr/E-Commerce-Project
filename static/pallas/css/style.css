@@ -12151,6 +12151,14 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
   transform: scale(1.2);
 }
 
+.like_button.liked i {
+  color: #ea000d;
+}
+
+.dislike_button.disliked i {
+  color: #ea000d;
+}
+
 .comment_list.list_two {
   margin-top: 20px;
   padding-left: 50px;
