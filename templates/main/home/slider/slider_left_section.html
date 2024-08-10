@@ -17,14 +17,12 @@
                                      All {{ category.name }}
                                  </a>
                                  <ul class="categorie_sub_menu">
-                                     {% for sub_cat in product_sub_category %}
-                                         {% if sub_cat.category.name == category.name %}
-                                             <li>
-                                                 <a href="#">
-                                                     {{ sub_cat.name }}
-                                                 </a>
-                                             </li>
-                                         {% endif %}
+                                     {% for sub_cat in category.sub_categories.all %}
+                                        <li>
+                                            <a href="#">
+                                                {{ sub_cat.name }}
+                                            </a>
+                                        </li>
                                      {% endfor %}
                                  </ul>
                              </li>
