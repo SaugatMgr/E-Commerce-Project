@@ -13,16 +13,40 @@ from .models import (
 )
 from django import forms
 
+
 class ProductAdminForm(forms.ModelForm):
-    description = forms.CharField(widget=TinyMCE(attrs={'cols': 80, 'rows': 30}))
+    description = forms.CharField(widget=TinyMCE(attrs={"cols": 80, "rows": 30}))
 
     class Meta:
         model = Product
-        fields = '__all__'
+        fields = "__all__"
+
 
 class ProductAdmin(admin.ModelAdmin):
     form = ProductAdminForm
 
-admin.site.register(Product, ProductAdmin)
 
-admin.site.register([Image, Category, SubCategory, Tag, Review, Contact, NewsLetter, ])
+class SubCategoryInline(admin.TabularInline):
+    model = SubCategory
+    extra = 1
+
+
+class CategoryAdmin(admin.ModelAdmin):
+    inlines = [
+        SubCategoryInline,
+    ]
+
+
+admin.site.register(Product, ProductAdmin)
+admin.site.register(Category, CategoryAdmin)
+
+admin.site.register(
+    [
+        Image,
+        SubCategory,
+        Tag,
+        Review,
+        Contact,
+        NewsLetter,
+    ]
+)
