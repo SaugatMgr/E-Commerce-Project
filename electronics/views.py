@@ -77,18 +77,23 @@ class HomePageView(PaginationMixin, ListView):
 class ShopItemsView(PaginationMixin, ListView):
     model = Product
     template_name = "main/shop/shop.html"
-    paginate_by = 3
+    paginate_by = 12
 
     def get_queryset(self):
-        queryset = Product.objects.all()
         get_data = self.request.GET
-        order_by = get_data.get("orderby", "")
-        filter_by_price_range = get_data.get("text", "")
-        category_id = self.kwargs.get("category_id", "")
-        tag_id = self.kwargs.get("tag_id", "")
+        kwargs_data = self.kwargs
+        queryset = Product.objects.all()
+
+        order_by = get_data.get("orderby")
+        filter_by_price_range = get_data.get("text")
+        category_id = kwargs_data.get("category_id")
+        sub_category_id = kwargs_data.get("sub_category_id")
+        tag_id = kwargs_data.get("tag_id")
 
         if category_id:
             queryset = queryset.filter(category__id=category_id)
+        if sub_category_id:
+            queryset = queryset.filter(sub_category__id=sub_category_id)
         if tag_id:
             queryset = queryset.filter(tag__id=tag_id).distinct()
         if order_by:
