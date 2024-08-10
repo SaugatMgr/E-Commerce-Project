@@ -54,16 +54,12 @@ class HomePageView(PaginationMixin, ListView):
             "-views_count"
         )
         products_by_date = filter_product_by_views.order_by("-added_date")
-        filter_product_by_categories = products_by_date.filter(
-            category__in=all_categories
-        )
 
         context["product_category"] = all_categories[:9]
         context["product_category_rem"] = all_categories[9:12]
         context["product_sub_category"] = SubCategory.objects.all()
 
-        context["today_deals_categories"] = all_categories
-        context["today_deals_products"] = filter_product_by_categories
+        context["today_deals_categories"] = all_categories[:7]
 
         context["best_sellers"] = filter_product_by_higher_views
         context["all_products"] = all_products
@@ -73,7 +69,7 @@ class HomePageView(PaginationMixin, ListView):
         context["new_products_right_sidebar"] = products_by_date[3:5]
 
         context["featured_products"] = all_products.filter(is_featured=True)
-        context["home_product_area_categories"] = all_categories[0:7]
+        context["home_product_area_categories"] = all_categories[:7]
 
         return context
 
