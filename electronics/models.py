@@ -44,7 +44,7 @@ class Category(models.Model):
 
 class SubCategory(models.Model):
     name = models.CharField(max_length=64)
-    category = models.ForeignKey(Category, default="", on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="sub_categories")
 
     class Meta:
         verbose_name = "Sub Category"
@@ -69,6 +69,7 @@ class Product(TimeStamp):
     product_img_thumbnail = models.ImageField(upload_to="product/")
     views_count = models.PositiveBigIntegerField(default=0)
     is_featured = models.BooleanField(default=False)
+    is_today_deal = models.BooleanField(default=False)
     discount = models.PositiveIntegerField(
         default=None,
         validators=[MinValueValidator(1), MaxValueValidator(99)],
