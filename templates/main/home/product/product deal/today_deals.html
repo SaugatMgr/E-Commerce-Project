@@ -1,4 +1,6 @@
 {% load humanize %}
+{% load electronic_filters %}
+
 <div class="deals_product_container">
     <div class="section_title">
         <h2>Today’s <span>Deals</span></h2>
@@ -29,7 +31,7 @@
                          role="tabpanel"
                          aria-labelledby="today-deals-{{ category.name|slugify }}-tab">
                         <div class="deals_product_list">
-                            {% for product in category.products.all %}
+                            {% for product in category.products.all|get_todays_deals_products %}
                                 <div class="single_deals_product">
                                     <div class="product_thumb">
                                         <a href="{% url 'product_detail' product.slug %}">
@@ -44,7 +46,7 @@
                                             </a>
                                         </div>
                                         <div class="product_timing">
-                                            <div data-countdown="2030/12/15"></div>
+                                            <div data-countdown="2025/08/10" data-added-date="{{ product.added_date|date:'Y-m-d\TH:i:s' }}"></div>
                                         </div>
                                     </div>
                                     <div class="product_content">
