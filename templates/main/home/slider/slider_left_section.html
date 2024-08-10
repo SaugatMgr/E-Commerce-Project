@@ -13,13 +13,13 @@
                          </a>
                          <ul class="categories_mega_menu">
                              <li class="menu_item_children">
-                                 <a href="#">
+                                 <a href="{% url "product_by_category" category.name category.id %}">
                                      All {{ category.name }}
                                  </a>
                                  <ul class="categorie_sub_menu">
                                      {% for sub_cat in category.sub_categories.all %}
                                         <li>
-                                            <a href="#">
+                                            <a href="{% url "product_by_sub_category" sub_cat.name sub_cat.id %}">
                                                 {{ sub_cat.name }}
                                             </a>
                                         </li>
