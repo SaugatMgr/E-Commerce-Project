@@ -44,7 +44,9 @@ class Category(models.Model):
 
 class SubCategory(models.Model):
     name = models.CharField(max_length=64)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="sub_categories")
+    category = models.ForeignKey(
+        Category, on_delete=models.CASCADE, related_name="sub_categories"
+    )
 
     class Meta:
         verbose_name = "Sub Category"
@@ -80,6 +82,11 @@ class Product(TimeStamp):
     category = models.ForeignKey(
         Category, related_name="products", on_delete=models.CASCADE
     )
+    sub_category = models.ForeignKey(
+        SubCategory,
+        related_name="products",
+        on_delete=models.CASCADE,
+    )
 
     tag = models.ManyToManyField(Tag, related_name="products")
 
@@ -93,7 +100,7 @@ class Product(TimeStamp):
             new_price = self.price - discount_amount
         else:
             new_price = self.price
-        return new_price.quantize(Decimal('0.01'))
+        return new_price.quantize(Decimal("0.01"))
 
     def __str__(self):
         return self.name
