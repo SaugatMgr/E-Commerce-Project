@@ -22,7 +22,16 @@ urlpatterns = [
     # different pages url
     path("", HomePageView.as_view(), name="home"),
     path("shop/", ShopItemsView.as_view(), name="shop"),
-    path("shop/<int:category_id>/", ShopItemsView.as_view(), name="product_by_category"),
+    path(
+        "category/<str:category_name>/<int:category_id>/",
+        ShopItemsView.as_view(),
+        name="product_by_category",
+    ),
+    path(
+        "sub-category/<str:sub_category_name>/<int:sub_category_id>/",
+        ShopItemsView.as_view(),
+        name="product_by_sub_category",
+    ),
     path("shop/<int:tag_id>/", ShopItemsView.as_view(), name="product_by_tag"),
     path("about/", AboutUsPageView.as_view(), name="about"),
     path("contact/", ContactUsPageView.as_view(), name="contact"),
