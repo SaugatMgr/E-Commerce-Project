@@ -1,19 +1,13 @@
 from tinymce.models import HTMLField
 
-import uuid
 from django.db import models
 
 from accounts.models import CustomUser
+from helpers.services import CommonInfo
 from posts.constants import POST_CHOICES
 
 
-class CommonInfo(models.Model):
-    id = models.UUIDField(default=uuid.uuid4, primary_key=True, editable=False)
-    created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
-    updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
 
-    class Meta:
-        abstract = True
 
 
 class PostCategory(models.Model):
