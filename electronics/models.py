@@ -10,6 +10,7 @@ from django.core.validators import (
     MinValueValidator,
     MaxValueValidator,
 )
+from helpers.services import CommonInfo
 
 CustomUser = settings.AUTH_USER_MODEL
 
@@ -113,6 +114,19 @@ class Product(TimeStamp):
 
     def get_absolute_url(self):
         return reverse("product_detail", kwargs={"slug": self.slug})
+
+
+class Rating(CommonInfo):
+    product = models.ForeignKey(
+        Product, on_delete=models.CASCADE, related_name="ratings"
+    )
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    rating = models.PositiveIntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(5)]
+    )
+
+    def __str__(self):
+        return f"{self.user}: {self.rating} stars on {self.product}"
 
 
 class Review(NameMsgEmail, TimeStamp):
