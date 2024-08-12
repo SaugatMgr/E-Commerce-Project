@@ -4981,6 +4981,10 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
   font-size: 16px;
   color: #f9bb00;
 }
+.product_rating ul li a.active,
+.product_rating ul li a:hover {
+  color: #f9bb00;
+}
 
 .price_box {
   margin-bottom: 17px;
