@@ -1,4 +1,5 @@
 {% load humanize %}
+{% load electronic_filters %}
 
 <div class="widget_list recent_product">
     <h2>Top Rated Products</h2>
@@ -19,15 +20,33 @@
                         {{ top_rated_product.name }}
                         </a>
                     </h3>
-                    <div class="product_rating">
-                        <ul>
-                            <li><a href="#"><i class="zmdi zmdi-star-outline"></i></a></li>
-                            <li><a href="#"><i class="zmdi zmdi-star-outline"></i></a></li>
-                            <li><a href="#"><i class="zmdi zmdi-star-outline"></i></a></li>
-                            <li><a href="#"><i class="zmdi zmdi-star-outline"></i></a></li>
-                            <li><a href="#"><i class="zmdi zmdi-star-outline"></i></a></li>
-                        </ul>
-                    </div>
+                    <form class="rating-form" method="post">{% csrf_token %}
+                        <div class="product_rating">
+                            <ul>
+                                {% for i in '12345' %}
+                                    {% if top_rated_product.ratings.first %}
+                                        <li data-value="{{ i }}">
+                                            {% with i=i|to_int %}
+                                                <a href="#" class="{% if i <= top_rated_product.ratings.first.rating %}active{% endif %}">
+                                                    <i class="zmdi {% if i <= top_rated_product.ratings.first.rating %}zmdi-star{% else %}zmdi-star-outline{% endif %}">
+                                                    </i>
+                                                </a>
+                                            {% endwith %}
+                                        </li>
+                                    {% else %}
+                                        <li data-value="{{ i }}">
+                                            <a href="#">
+                                                <i class="zmdi zmdi-star-outline"></i>
+                                            </a>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                            <input type="hidden" id="rating_value" name="rating" value="{{ top_rated_product.ratings.first.rating|default:0 }}">
+                            <input type="hidden" name="product_id" value="{{ top_rated_product.id }}">
+                        </div>
+                        <button type="submit" style="display:none;">Submit Rating</button>
+                    </form>
                     <div class="price_box">
                         {% if top_rated_product.discount %}
 
