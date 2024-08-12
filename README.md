@@ -9,6 +9,7 @@ This project is an E-Commerce platform developed using Django. It allows users t
 - Add to cart/remove from cart
 - Add to wishlist/add to cart from wishlist/remove from wishlist
 - Advanced search
+- Rate Product
 - Sorting of products based on rating, popularity, price,etc.
 - Social authentication
 - Checkout
