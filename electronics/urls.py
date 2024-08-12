@@ -5,6 +5,7 @@ from .views import (
     AboutUsPageView,
     ContactUsPageView,
     ProductDetailView,
+    ProductRatingView,
     ProductSearchView,
     ReviewView,
     NewsLetterView,
@@ -56,4 +57,6 @@ urlpatterns = [
     path("remove-from-cart/", remove_cart_item, name="remove_from_cart"),
     # Search
     path("search/", ProductSearchView.as_view(), name="search"),
+    # Product Rating
+    path("rating/", ProductRatingView.as_view(), name="product_rating"),
 ]
