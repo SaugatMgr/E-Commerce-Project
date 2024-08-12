@@ -23,6 +23,7 @@ from .models import (
     Category,
     Product,
     Image,
+    Rating,
     Review,
     SubCategory,
 )
@@ -593,3 +594,58 @@ class ProductSearchView(View):
                 "is_paginated": page_obj.has_other_pages(),
             },
         )
+
+
+class ProductRatingView(View):
+    def post(self, request, *args, **kwargs):
+        ajax_format = request.headers.get("x-requested-with")
+
+        if ajax_format == "XMLHttpRequest":
+            data = request.POST
+            product_id = data.get("product_id")
+            rating = data.get("rating")
+            user = request.user
+
+            product = Product.objects.get(pk=product_id)
+
+            if rating:
+                rating = int(rating)
+                existing_rating_by_user = Rating.objects.filter(
+                    product=product, user=user
+                )
+
+                if rating == 0 and existing_rating_by_user.exists():
+                    existing_rating_by_user.delete()
+                    return JsonResponse(
+                        {
+                            "success": True,
+                            "message": "Rating removed successfully.",
+                        },
+                        status=200,
+                    )
+                user_rating, created = Rating.objects.update_or_create(
+                    product=product, user=user, defaults={"rating": rating}
+                )
+                return JsonResponse(
+                    {
+                        "success": True,
+                        "message": "Product rated successfully.",
+                    },
+                    status=201,
+                )
+            else:
+                return JsonResponse(
+                    {
+                        "success": False,
+                        "message": "Rating must be provided.",
+                    },
+                    status=400,
+                )
+        else:
+            return JsonResponse(
+                {
+                    "success": False,
+                    "message": "Cannot process.Must be and AJAX XMLHttpRequest.",
+                },
+                status=400,
+            )
