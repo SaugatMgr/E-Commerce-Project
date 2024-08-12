@@ -575,19 +575,20 @@
             // Blog Comment Form
             $(document).ready(function() {
                 toggleSubmitButton();
-            
+                
                 $(document).on('input', '#review_comment', function() {
                     toggleSubmitButton();
                 });
-            
+                
                 function toggleSubmitButton() {
-                    var commentContent = $("#review_comment").val().trim();
+                    var commentContent = $("#review_comment").val() || '';
+                    commentContent = commentContent.trim();
                     $(".comments_form .button").prop('disabled', commentContent === '');
                 }
-            
+                
                 $(document).on('submit', '#blg_comment_form', function(e) {
                     e.preventDefault();
-            
+                    
                     $.ajax({
                         type: "POST",
                         url: "{% url 'post_comment' %}",
@@ -598,7 +599,7 @@
                                 let new_comments_area_content = $temp.find('.comments_area').html();
                                 $('.comments_area').html(new_comments_area_content);
                             } else {
-                                alertify.set("notifier", "position", "top-right")
+                                alertify.set("notifier", "position", "top-right");
                                 alertify.error('Invalid response format or missing html_content.');
                             }
                         },
@@ -739,47 +740,129 @@
                 });
             });
 
-        // Post, Comment, Reply Like Dislike Form
-        $(document).on('submit', '.like_form, .dislike_form', function(e) {
-            e.preventDefault();
+            // Post, Comment, Reply Like Dislike Form
+            $(document).on('submit', '.like_form, .dislike_form', function(e) {
+                e.preventDefault();
 
-            var form = $(this);
-            var formData = form.serialize();
-            var formParent = form.closest('.like_dislike_section');
-        
-            $.ajax({
-                type: 'POST',
-                url: "{% url 'like_dislike' %}",
-                data: $(this).serialize(),
-                success: function(response) {
-                    console.log(response);
-                    if (response.success) {
-                        formParent.find('.like_count').text(response.like_count);
-                        formParent.find('.dislike_count').text(response.dislike_count);
+                var form = $(this);
+                var formData = form.serialize();
+                var formParent = form.closest('.like_dislike_section');
+            
+                $.ajax({
+                    type: 'POST',
+                    url: "{% url 'like_dislike' %}",
+                    data: $(this).serialize(),
+                    success: function(response) {
+                        console.log(response);
+                        if (response.success) {
+                            formParent.find('.like_count').text(response.like_count);
+                            formParent.find('.dislike_count').text(response.dislike_count);
 
-                        if (response.has_liked) {
-                            formParent.find('.like_button').addClass('liked');
-                        } else {
-                            formParent.find('.like_button').removeClass('liked');
+                            if (response.has_liked) {
+                                formParent.find('.like_button').addClass('liked');
+                            } else {
+                                formParent.find('.like_button').removeClass('liked');
+                            }
+            
+                            if (response.has_disliked) {
+                                formParent.find('.dislike_button').addClass('disliked');
+                            } else {
+                                formParent.find('.dislike_button').removeClass('disliked');
+                            }
                         }
-        
-                        if (response.has_disliked) {
-                            formParent.find('.dislike_button').addClass('disliked');
-                        } else {
-                            formParent.find('.dislike_button').removeClass('disliked');
-                        }
+                    },
+                    error: function(response) {
+                        alertify.set("notifier", "position", "top-right");
+                        alertify.error(response.responseJSON.message);
                     }
-                },
-                error: function(response) {
-                    alertify.set("notifier", "position", "top-right");
-                    alertify.error(response.responseJSON.message);
-                }
+                });
             });
-        });
+
+            // Rating Form        
+            document.addEventListener('DOMContentLoaded', function() {
+                document.querySelectorAll('.rating-form').forEach(function(form) {
+                    var ratingElements = form.querySelectorAll('.product_rating ul li a');
+                    var ratingInput = form.querySelector('input[name="rating"]');
+                    var initialRating = parseInt(ratingInput.value, 10) || 0;
+            
+                    setStars(form, initialRating);
+            
+                    ratingElements.forEach(function(star) {
+                        var value = parseInt(star.parentElement.getAttribute('data-value'), 10);
+            
+                        star.addEventListener('click', function(event) {
+                            event.preventDefault();
+                            var currentRating = parseInt(ratingInput.value, 10) || 0;
+            
+                            if (value === currentRating) {
+                                ratingInput.value = 0;
+                                setStars(form, 0);
+                            } else {
+                                ratingInput.value = value;
+                                setStars(form, value);
+                            }
+            
+                            submitForm(form);
+                        });
+            
+                        star.addEventListener('mouseover', function() {
+                            var value = parseInt(star.parentElement.getAttribute('data-value'), 10);
+                            setStars(form, value, true);
+                        }, { passive: true });
+            
+                        star.addEventListener('mouseleave', function() {
+                            var currentRating = parseInt(ratingInput.value, 10) || 0;
+                            setStars(form, currentRating);
+                        }, { passive: true });
+                    });
+            
+                    function setStars(form, rating, hover = false) {
+                        var stars = form.querySelectorAll('.product_rating ul li a');
+                        stars.forEach(function(star) {
+                            var starValue = parseInt(star.parentElement.getAttribute('data-value'), 10);
+                            var icon = star.querySelector('i');
+            
+                            if (hover) {
+                                if (starValue <= rating) {
+                                    icon.classList.remove('zmdi-star-outline');
+                                    icon.classList.add('zmdi-star');
+                                } else {
+                                    icon.classList.remove('zmdi-star');
+                                    icon.classList.add('zmdi-star-outline');
+                                }
+                            } else {
+                                if (starValue <= rating) {
+                                    icon.classList.remove('zmdi-star-outline');
+                                    icon.classList.add('zmdi-star');
+                                } else {
+                                    icon.classList.remove('zmdi-star');
+                                    icon.classList.add('zmdi-star-outline');
+                                }
+                            }
+                        });
+                    }
+            
+                    function submitForm(form) {  
+                        var $form = $(form);          
+                        $.ajax({
+                            url: '{% url "product_rating" %}',
+                            type: 'POST',
+                            data: $form.serialize(),
+                            success: function(response) {
+                                alertify.set('notifier', 'position', 'top-right');
+                                alertify.success(response.message);
+                            },
+                            error: function(response) {
+                                alertify.set('notifier', 'position', 'top-right');
+                                alertify.error(response.responseJSON.message);
+                            }
+                        });
+                    }
+                });
+            });
         </script>
 
         <!-- ALERTIFY JS -->
         <script src="{% static 'pallas/js/alertify.min.js' %}"></script>
     </body>
-<!-- Mirrored from htmldemo.net/pallas/pallas/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 21 Jul 2023 08:16:14 GMT -->
 </html>
