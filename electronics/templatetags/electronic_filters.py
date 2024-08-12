@@ -10,3 +10,8 @@ def get_todays_deals_products(products):
     time_limit = timezone.now() - timedelta(hours=24)
 
     return products.filter(added_date__gte=time_limit, is_today_deal=True)
+
+
+@register.filter
+def to_int(value):
+    return int(value)
