@@ -10,6 +10,7 @@ from .models import (
     Review,
     Contact,
     NewsLetter,
+    Rating,
 )
 from django import forms
 
@@ -48,5 +49,6 @@ admin.site.register(
         Review,
         Contact,
         NewsLetter,
+        Rating,
     ]
 )
